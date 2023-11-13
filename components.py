@@ -59,7 +59,7 @@ def try_place_ship(board: list[list],
                    ship_name: str,
                    ship_size: int,
                    position: tuple[int, int],
-                   orientation: int) -> list[list] | None:  # Requires 3.10 or higher due to | in type hinting
+                   orientation: int) -> list[list[str | None]] | None:  # Requires 3.10 or higher due to | in type hinting
     """
     Used for the random placement method in place_battleships function
     :param board: A list of lists representing the board
@@ -108,7 +108,7 @@ def place_battleships(board: list[list], ships: dict[str, int], placement_method
     :return: A list of lists representing the board, with tiles filled where ships are
     """
 
-    # Basic placement algorithm
+    # Basic placement algorithm as seen in specification
     if placement_method == 'simple':
 
         row = 0
@@ -137,6 +137,7 @@ def place_battleships(board: list[list], ships: dict[str, int], placement_method
             board = potential_placement
         return board
 
+    # Ships will be placed with a position and orientation as specified in a JSON file
     elif placement_method == 'custom':
         json_data = json.loads(open('placement.json', 'r').read())
         ship_names = [i for i in json_data['ships'].keys()]
@@ -154,12 +155,5 @@ def place_battleships(board: list[list], ships: dict[str, int], placement_method
     return board
 
 
-def print_board(b):
-    if b == None:
-        print("none")
-        return
-
-    for i in b:
-        print(i)
 
 
