@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Battleships Game - Boat Allocation</title>
+    <style>
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            grid-gap: 0px;
+            width: 500px;
+            margin: 0 auto;
+        }
+
+        .grid div {
+            border: 1px solid #000;
+            height: 50px;
+        }
+
+        .grid div:hover {
+            background-color: #ddd;
+        }
+
+        .ship {
+            background-color: grey;
+        }
+
+        .sendButton {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100px;
+            height: 50px;
+            background-color: green;
+            color: white;
+            font-size: 20px;
+            border: none;
+        }
+
+
+        .selected {
+            background-color: #aaa;
+        }
+    </style>
+    <script>
+        function sendBoard(url) {
+            /**
+             * TODO: Post variable with board state
+             * */
+            console.log(createBoardStateFromClasses());
+            let boardState = createBoardStateFromClasses();
+            fetch(url + '?' + '').then(function (response) {
+                return response.json();
+            }).then(function (data) {
+                console.log(data);
+            }).catch(function (err) {
+                console.log('Fetch Error :-S', err);
+            });
+        }
+
+        let boardWidth = 10;
+        let shipsLength = [5, 4, 3, 2, 2];
+        let selectedShip = 0;
+        let horizontal = true;
+
+        function processCells(horizontal, x, y, current_ship_length, cellProcessor) {
+            let limit = horizontal ? x + current_ship_length : y + current_ship_length;
+            for (let i = horizontal ? x : y; i < limit; i++) {
+                let cell = document.getElementById('cell-' + (horizontal ? i : x) + '-' + (horizontal ? y : i));
+                cellProcessor(cell, selectedShip);
+            }
+        }
+
+        function createBoardStateFromClasses(){
+        /***
+         * Creates a string encoding of the elements in the grid from their classes
+         * 0 denotes empty cell
+         * otherwise the number denotes the ship number
+         */
+            let boardState = "";
+            for (let i = 0; i < boardWidth; i++) {
+                for (let j = 0; j < boardWidth; j++) {
+                    let cell = document.getElementById('cell-' + j + '-' + i);
+                    if(cell.classList.contains("ship")){
+                        boardState += cell.classList[1].slice(4);
+                    }else{
+                        boardState += "0";
+                    }
+                }
+            }
+            return boardState;
+        }
+
+        //Checks all cells in a given ship length to see if they are occupied by another ship
+        function checkShipsClash(x, y) {
+            let current_ship_length = shipsLength[selectedShip];
+            if (horizontal) {
+                if (x + current_ship_length > boardWidth) {
+                    return true;
+                } else {
+                    for (let i = x; i < x + current_ship_length; i++) {
+                        let cell = document.getElementById('cell-' + i + '-' + y);
+                        if (cell.classList.contains("ship")) {
+                            return true;
+                        }
+                    }
+                }
+            } else {
+                if (y + current_ship_length > boardWidth) {
+                    return true;
+                } else {
+                    for (let i = y; i < y + current_ship_length; i++) {
+                        let cell = document.getElementById('cell-' + x + '-' + i);
+                        if (cell.classList.contains("ship")) {
+                            return true;
+                        }
+                    }
+                }
+
+            }
+            return false;
+        }
+
+        function placeShip(x, y) {
+            //Adds the ship class to all the elements within length
+            let current_ship_length = shipsLength[selectedShip];
+            if (checkShipsClash(x, y)) {
+                alert("Ship is too long for this position");
+            } else {
+                processCells(horizontal, x, y, current_ship_length, function (cell, selectedShip) {
+                    cell.classList.add("ship");
+                    cell.classList.add("ship" + (selectedShip+1));
+                });
+
+                selectedShip++;
+            }
+            console.log('Placed ship ' + selectedShip + ' at ' + x + ', ' + y);
+        }
+
+        function handleMouseOver(x, y) {
+            // Handle the mouseover event here
+            let current_ship_length = shipsLength[selectedShip];
+            if(checkShipsClash(x, y)) {
+                processCells(horizontal, x, y, current_ship_length, function (cell, selectedShip) {
+                    cell.style.backgroundColor = "red";
+                });
+            }else {
+                processCells(horizontal, x, y, current_ship_length, function (cell, selectedShip) {
+                    cell.style.backgroundColor = "green";
+                });
+            }
+            console.log('Mouse over cell ' + i + ', ' + j);
+
+        }
+
+        function handleMouseOut() {
+            //clears formatting for grid elements
+            for (let i = 0; i < boardWidth; i++) {
+                for (let j = 0; j < boardWidth; j++) {
+                    let cell = document.getElementById('cell-' + i + '-' + j);
+                    cell.style.backgroundColor = "";
+                }
+            }
+        }
+
+        //when R key is pressed toggle horizontal variable
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'r' || event.key === 'R') {
+                horizontal = !horizontal;
+            }
+        });
+
+
+    </script>
+</head>
+
+
+<body>
+<h1>Battleships Game - Boat Allocation</h1>
+
+<div class="grid">
+    {% for i in range(10) %}
+        {% for j in range(10) %}
+            <div id="cell-{{ j }}-{{ i }}" onclick="placeShip({{ j }}, {{ i }});"
+                 onmouseover="handleMouseOver({{ j }},{{ i }})" onmouseout="handleMouseOut()"></div>
+        {% endfor %}
+    {% endfor %}
+</div>
+{#    Insert the url for the send board as the someul string #}
+<button class="sendButton" onclick="sendBoard('someurl')">Send Game</button>
+
+</body>
+</html>

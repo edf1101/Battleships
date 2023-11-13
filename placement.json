@@ -1,0 +1,25 @@
+{
+  "ships": {
+    "Ship1":{
+      "position": [0,1],
+      "orientation": 2
+    },
+    "Ship2":{
+      "position": [0,3],
+      "orientation": 2
+    },
+    "Ship3":{
+      "position": [0,5],
+      "orientation": 2
+    },
+    "Ship4":{
+      "position": [0,7],
+      "orientation": 2
+    },
+    "Ship5":{
+      "position": [0,9],
+      "orientation": 2
+    }
+  }
+
+}

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Battleships Game</title>
+    <style>
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            grid-gap: 0px;
+            width: 500px;
+            margin: 0 auto;
+        }
+
+        .grid div {
+            border: 1px solid #000;
+            height: 50px;
+        }
+
+        .grid div:hover {
+            background-color: #ddd;
+        }
+
+        .ship {
+            background-color: grey;
+        }
+
+        .sendButton {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100px;
+            height: 50px;
+            background-color: green;
+            color: white;
+            font-size: 20px;
+            border: none;
+        }
+
+
+        .selected {
+            background-color: #aaa;
+        }
+    </style>
+</head>
+
+{#TODO: function that renders the hit/miss from response#}
+
+{#TODO FAR DOWN: Hit and miss sprites changeable??#}
+
+{#TODO: ENDGAME/Message Log#}
+
+<body>
+    <h1>Battleships Game</h1>
+    <div class="grid">
+        {% for i in range(10) %}
+            {% for j in range(10) %}
+                <div onclick="location.href='/P1shoot?{{i}}/{{j}}';"></div>
+            {% endfor %}
+        {% endfor %}
+
+    </div>
+</body>
+</html>
