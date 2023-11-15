@@ -3,7 +3,7 @@ import random
 import json
 
 
-def initialise_board(size: int = 10) -> list[list[None]]:
+def initialise_board(size: int = 10) -> list[list]:
     """
     Creates a blank board of size 'size'
     :param size: How big the board should be in both x and y directions
@@ -135,7 +135,10 @@ def place_battleships(board: list[list], ships: dict[str, int], placement_method
 
     # Ships will be placed with a position and orientation as specified in a JSON file
     elif placement_method == 'custom':
-        json_data = json.loads(open('placement.json', 'r').read())
+
+        with open('placement.json', 'r') as file:
+            json_data = json.loads(file.read())
+
         ship_names = [i for i in json_data.keys()]
 
         for ship_name in ship_names:

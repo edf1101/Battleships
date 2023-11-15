@@ -26,6 +26,7 @@ def index():
 
 ```
 board size doesnt work properly?
+Issue with rendering different board sizes in gameplay.html too fixed it tho :)
 
 This part is the variables required to render the gameplay.html file
 ```
