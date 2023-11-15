@@ -59,7 +59,7 @@ def try_place_ship(board: list[list],
                    ship_name: str,
                    ship_size: int,
                    position: tuple[int, int],
-                   orientation: int) -> list[list[str | None]] | None:  # Requires 3.10 or higher due to | in type hinting
+                   orientation: int) -> list[list[str | None]] | None:  # Require version ≥ 3.10 due to '|' type hinting
     """
     Used for the random placement method in place_battleships function
     :param board: A list of lists representing the board
@@ -153,7 +153,3 @@ def place_battleships(board: list[list], ships: dict[str, int], placement_method
             else:
                 board = potential_placement
     return board
-
-
-
-
