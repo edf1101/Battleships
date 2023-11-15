@@ -35,8 +35,7 @@ def create_battleships(filename: str = "battleships.txt") -> dict[str, int]:
     with open(filename, 'r') as file:
         data = file.read()
 
-    data = data.replace('\n', '')  # remove new lines if any
-    data = data.split(',')
+    data = data.split('\n')  # each new line should be data entry
 
     battleships = {}
     for item in data:
@@ -46,7 +45,7 @@ def create_battleships(filename: str = "battleships.txt") -> dict[str, int]:
             raise ValueError("battleships.txt error one key isn't of type str")
 
         try:  # Check the sizes are ints
-            size = int(size)
+            size = int(size.strip())
         except ValueError:
             raise ValueError("battleships.txt error one value isn't of type int")
 
@@ -59,14 +58,14 @@ def try_place_ship(board: list[list],
                    ship_name: str,
                    ship_size: int,
                    position: tuple[int, int],
-                   orientation: int) -> list[list[str | None]] | None:  # Require version ≥ 3.10 due to '|' type hinting
+                   orientation: str) -> list[list[str | None]] | None:  # Require version ≥ 3.10 due to '|' type hinting
     """
     Used for the random placement method in place_battleships function
     :param board: A list of lists representing the board
     :param ship_name: The name of the ship being placed
     :param ship_size: The size of the ship being placed
     :param position: starting position of the ship
-    :param orientation: what direction the ship faces 0 = left, 1 = down, 2 = right, 3 = up
+    :param orientation: what direction the ship faces  'v' = down, 'h' = right
     :return: None if the placement is invalid, else the updated board list of lists
     """
 
@@ -85,17 +84,14 @@ def try_place_ship(board: list[list],
 
         modify_board[position[1]][position[0]] = ship_name
 
-        if orientation == 0:  # Left
-            position = (position[0] - 1, position[1])
-
-        elif orientation == 1:  # Down
+        if orientation == 'v':  # Down
             position = (position[0], position[1] + 1)
 
-        elif orientation == 2:  # Right
+        elif orientation == 'h':  # Right
             position = (position[0] + 1, position[1])
+        else:
+            raise ValueError("Orientation can only be 'v' or 'h'")
 
-        elif orientation == 3:  # Up
-            position = (position[0], position[1] - 1)
     return modify_board
 
 
@@ -126,12 +122,12 @@ def place_battleships(board: list[list], ships: dict[str, int], placement_method
 
             # First guess at a position
             position = (random.randrange(0, len(board)), random.randrange(0, len(board)))
-            orientation = random.randrange(0, 4)
+            orientation = random.choice(['v', 'h'])
             potential_placement = try_place_ship(board, ship_name, ship_size, position, orientation)
 
             while potential_placement is None:  # try random spots until one is valid
                 position = (random.randrange(0, len(board)), random.randrange(0, len(board)))
-                orientation = random.randrange(0, 4)
+                orientation = random.choice(['v', 'h'])
                 potential_placement = try_place_ship(board, ship_name, ship_size, position, orientation)
 
             board = potential_placement
@@ -140,15 +136,17 @@ def place_battleships(board: list[list], ships: dict[str, int], placement_method
     # Ships will be placed with a position and orientation as specified in a JSON file
     elif placement_method == 'custom':
         json_data = json.loads(open('placement.json', 'r').read())
-        ship_names = [i for i in json_data['ships'].keys()]
+        ship_names = [i for i in json_data.keys()]
 
         for ship_name in ship_names:
-            ship_position = json_data['ships'][ship_name]['position']
-            ship_orientation = json_data['ships'][ship_name]['orientation']
+
+            # example file had a dict of ship_name : [position.x,position.y,orientation]
+            ship_position = (int(json_data[ship_name][0]), int(json_data[ship_name][1]))
+            ship_orientation = json_data[ship_name][2]
 
             potential_placement = try_place_ship(board, ship_name, ships[ship_name], ship_position, ship_orientation)
             if potential_placement is None:
-                raise TypeError("Supplied JSON data doesn't fit in the board")
+                raise ValueError("Supplied JSON data doesn't fit in the board")
 
             else:
                 board = potential_placement
