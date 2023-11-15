@@ -8,7 +8,7 @@ def attack(coordinates: tuple[int, int], board: list[list[str | None]], battlesh
     :param coordinates: Coordinates to check if there's a ship
     :param board: The board (list of lists) to check
     :param battleships: The list of enemy ships to decrement if there's a hit
-    :return: Whether anything was hit
+    :return: Bool Whether anything was hit
     """
 
     is_hit = board[coordinates[1]][coordinates[0]] is not None
@@ -21,6 +21,7 @@ def attack(coordinates: tuple[int, int], board: list[list[str | None]], battlesh
 
     else:
         return False
+
 
 
 def cli_coordinates_input() -> tuple[int, int]:
@@ -42,7 +43,7 @@ def cli_coordinates_input() -> tuple[int, int]:
         if not valid_input:
             print("INVALID ENTRY - values must be positive and integers")
 
-    x, y = int(x)-1, int(y)-1
+    x, y = int(x) - 1, int(y) - 1
     return x, y
 
 

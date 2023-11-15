@@ -53,7 +53,6 @@ def ai_opponent_game_loop() -> None:
     :return: None
     """
     print("#### WELCOME TO BATTLESHIPS  AGAINST AI ###")
-
     # Initialise data
     players['Human'] = {'board': components.initialise_board(), 'ships': components.create_battleships()}
     players['AI'] = {'board': components.initialise_board(), 'ships': components.create_battleships()}
@@ -80,7 +79,7 @@ def ai_opponent_game_loop() -> None:
                     0 <= user_coords[1] < len(players['Human']['board']))):
                 print("Coordinates outside of the board")
 
-        attack_status = game_engine.attack(user_coords, players['AI']['board'], players['AI']['ships'])
+        attack_status = game_engine.attack_sunk(user_coords, players['AI']['board'], players['AI']['ships'])
         if attack_status:
             print("You got a HIT!")
         else:

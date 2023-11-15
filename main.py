@@ -23,15 +23,13 @@ def placement_interface():
     if request.method == 'POST':  # received the JSON data of a board set up
         json_data = request.get_json()
 
-        global set_board
-        set_board = True  # so it can redirect to the main game page and start game (outer scope so use global)
-
         # Because we can only read a JSON ship data from file we need to save it then load it in
         with open("placement.json", "w") as outfile:
             json.dump(json_data, outfile)
         players['Human']['board'] = components.place_battleships(players['Human']['board'], players['Human']['ships'],
                                                                  placement_method='custom')
-
+        global set_board
+        set_board = True  # so it can redirect to the main game page and start game (outer scope so use global)
         return json_data  # It wants the data returned to it, so it can check transmission success
 
     # If it's not a POST request (no board data sent just send the usual webpage)
@@ -51,14 +49,14 @@ def handle_attack():
     ai_coords = mp_game_engine.generate_attack(players['AI']['board'])
 
     # Check to see if game over
-    if (game_engine.count_ships_remaining(players['Human']['ships']) == 0 or
-        game_engine.count_ships_remaining(players['AI']['ships']) == 0):
-
+    finished = (game_engine.count_ships_remaining(players['Human']['ships']) == 0 or
+                game_engine.count_ships_remaining(players['AI']['ships']) == 0)
+    if finished:
         # Check who died
         if game_engine.count_ships_remaining(players['Human']['ships']) == 0:
-            print(" The Human LOST! Better luck next time")
+            return {'hit': attack_status, 'AI_Turn': ai_coords, 'finished': " The Human LOST! Better luck next time"}
         else:
-            print(" The Human WON! Well done")
+            return {'hit': attack_status, 'AI_Turn': ai_coords, 'finished': " The Human WON! Well done"}
 
     return {'hit': attack_status, 'AI_Turn': ai_coords}
 
@@ -78,11 +76,12 @@ def root():
                                player_board=players['Human']['board'])
 
 
-players = {}
-set_board = False
-board_size = 10
+
 
 if __name__ == '__main__':
+    players = {}
+    set_board = False
+    board_size = 10
     # Set up game
     players['Human'] = {'board': components.initialise_board(board_size), 'ships': components.create_battleships()}
     players['AI'] = {'board': components.initialise_board(board_size), 'ships': components.create_battleships()}

@@ -12,7 +12,7 @@
 
         .grid {
             display: grid;
-            grid-template-columns: repeat({{player_board|length}}, 1fr);
+            grid-template-columns: repeat({{opp_guess_board|length}}, 1fr);
             grid-gap: 0px;
             width: 40vw; /* 40% of viewport width */
             height: 40vw; /* Equal to width for a square grid */
@@ -20,7 +20,7 @@
 
         .small-grid {
             display: grid;
-            grid-template-columns: repeat({{player_board|length}}, 1fr);
+            grid-template-columns: repeat({{opp_guess_board|length}}, 1fr);
             grid-gap: 0px;
             width: 25vw; /* 25% of viewport width */
             height: 25vw; /* Equal to width for a square grid */
@@ -51,11 +51,13 @@
 </style>
     <script>
         //Get the board that is passed from the python flask code
-        let board = {{player_board|tojson}};
+        let opponent_guess_board = {{opp_guess_board|tojson}};
+        let my_guess_board = {{my_guess_board|tojson}};
 
         // Load the grid format once the page has loaded
         document.addEventListener('DOMContentLoaded', function() {
-            loadPlayersShips();
+            load_opp_guess();
+            load_my_guess();
         }, false);
 
 
@@ -70,35 +72,31 @@
             .then(response => response.json())
             .then(data => {
                 //Process the response
-                // CHANGED SOME STUFF HERE SO WHEN YOU CLICK ON A TILE YOU HAVE ALREADY HIT IT DOESNT SHOW AS MISS
-                let cell = document.getElementById('cell-' + x + '-' + y);
-                if (data['hit'] === true) {
-                    //Change the colour of the div to red if the attack was a hit
-                    cell.style.backgroundColor = 'red';
 
-                } else {
-                    //Change the colour of the div to blue if attack was a miss
-                    cell.style.backgroundColor = 'lightblue';
-                }
-
-                //process the AI turn coordinate tuple
-                if(data['AI_Turn']){
-                    let AI_x = data['AI_Turn'][0];
-                    let AI_y = data['AI_Turn'][1];
-                    var log_string = "AI attacked location ("+AI_x+","+AI_y+")";
-
-                    let cell = document.getElementById('small-cell-' + AI_x + '-' + AI_y);
-                    if (board[AI_y][AI_x] === null) {
-                        cell.style.backgroundColor = 'blue';
-                        log_string+= " and missed";
-                    } else {
-                        cell.style.backgroundColor = 'red';
-                        log_string+= " and hit";
-                    }
-                }
+                // Update the guess boards
+                opponent_guess_board = data['opponent_guess_board'];
+                my_guess_board = data['my_guess_board'];
+                load_opp_guess();
+                load_my_guess();
+                //
+                // //process the AI turn coordinate tuple
+                // if(data['AI_Turn']){
+                //     let AI_x = data['AI_Turn'][0];
+                //     let AI_y = data['AI_Turn'][1];
+                //     var log_string = "AI attacked location ("+AI_x+","+AI_y+")";
+                //
+                //     let cell = document.getElementById('small-cell-' + AI_x + '-' + AI_y);
+                //     if (board[AI_y][AI_x] === null) {
+                //         cell.style.backgroundColor = 'blue';
+                //         log_string+= " and missed";
+                //     } else {
+                //         cell.style.backgroundColor = 'red';
+                //         log_string+= " and hit";
+                //     }
+                // }
 
                 //Update the game log
-                document.getElementById('messageBox').innerHTML = log_string + "<br>" + document.getElementById('messageBox').innerHTML;
+                document.getElementById('messageBox').innerHTML = data['message'] + "<br>" + document.getElementById('messageBox').innerHTML;
 
                 if (data['finished']){
                     //Game is finished
@@ -112,23 +110,53 @@
             });
         }
 
-        function loadPlayersShips() {
+        function load_opp_guess() {
             /**
              * Loops through the board variable is the square is none then sets the cell in the small grid blue.
              * If the cell has a ship name in it then set the cell to lightgrey.
              * else set the cell to lightblue
              */
-            for (let i = 0; i < board.length; i++) {
-                for (let j = 0; j < board[i].length; j++) {
+            for (let i = 0; i < opponent_guess_board.length; i++) {
+                for (let j = 0; j < opponent_guess_board[i].length; j++) {
                     console.log(j, i)
                     let cell = document.getElementById('small-cell-' + j + '-' + i);
                     console.log(cell)
-                    if (board[i][j] === null) {
+                    if (opponent_guess_board[i][j] === 'N') { // none
                         cell.style.backgroundColor = 'lightblue';
-                    } else if (board[i][j] === 'hit') {
+                    } else if (opponent_guess_board[i][j] === 'H') { // hit
                         cell.style.backgroundColor = 'red';
-                    } else {
+                    } else if (opponent_guess_board[i][j] === 'S') { // sunk
+                        cell.style.backgroundColor = 'green';
+                    } else if (opponent_guess_board[i][j] === 'M') { // miss
+                        cell.style.backgroundColor = 'blue';
+                    } else { // ship
                         cell.style.backgroundColor = 'lightgrey';
+                    }
+                }
+            }
+
+        }
+        function load_my_guess() {
+            /**
+             * Loops through the board variable is the square is none then sets the cell in the small grid blue.
+             * If the cell has a ship name in it then set the cell to lightgrey.
+             * else set the cell to lightblue
+             */
+            for (let i = 0; i < my_guess_board.length; i++) {
+                for (let j = 0; j < my_guess_board[i].length; j++) {
+                    console.log(j, i)
+                    let cell = document.getElementById('cell-' + j + '-' + i);
+                    console.log(cell)
+                    if (my_guess_board[i][j] === 'N') { // none
+                        cell.style.backgroundColor = 'lightblue';
+                    } else if (my_guess_board[i][j] === 'H') { // hit
+                        cell.style.backgroundColor = 'red';
+                    } else if (my_guess_board[i][j] === 'S') { // sunk
+                        cell.style.backgroundColor = 'green';
+                    } else if (my_guess_board[i][j] === 'M') { // miss
+                        cell.style.backgroundColor = 'blue';
+                    } else { // ship
+                        cell.style.backgroundColor = 'lightblue';
                     }
                 }
             }
@@ -138,7 +166,7 @@
     </script>
 </head>
 
-<body>
+<body style="background-color:azure;">
     <h1>Battleships Game</h1>
 
     <div class="container">
@@ -147,8 +175,8 @@
             <h2 id="messageBox">  </h2>
         </div>
         <div class="grid">
-            {% for i in range(player_board|length) %}
-                {% for j in range(player_board|length) %}
+            {% for i in range(opp_guess_board|length) %}
+                {% for j in range(opp_guess_board|length) %}
                     <div id="cell-{{ j }}-{{ i }}" onclick="sendAttack({{ j }},{{ i }}, '/attack')"></div>
                 {% endfor %}
             {% endfor %}
@@ -156,14 +184,14 @@
         <div class="small-div">
             <h2 class="PlayersLabel">Players Grid:</h2>
             <div class="small-grid">
-                {% for i in range(player_board|length) %}
-                    {% for j in range(player_board|length) %}
+                {% for i in range(opp_guess_board|length) %}
+                    {% for j in range(opp_guess_board|length) %}
                         <div id="small-cell-{{ j }}-{{ i }}" ></div>
                     {% endfor %}
                 {% endfor %}
             </div>
         </div>
     </div>
-</body>
+</>
 
 </html>
