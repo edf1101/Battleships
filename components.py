@@ -1,3 +1,7 @@
+"""
+Basic functions used mainly for setting up games
+"""
+
 import copy
 import random
 import json

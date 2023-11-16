@@ -48,31 +48,38 @@ def handle_attack():
     :return: The status of the user's attack and where the AI fired back
     """
 
-    message = ""
+    message = ""  # The message we'll send to the web console
+
     user_coords = int(request.args.get('x')), int(request.args.get('y'))
-    message += f'Player attacked {user_coords} and '
     attack_status = gui_extensions.attack_sunk(user_coords,
                                                players['AI']['board'],
                                                players['Human']['guess_board'],
                                                players['AI']['ships'])
-    message += f'{"HIT" if attack_status[0] == "hit" else "SUNK" if attack_status[0] == "sunk" else "MISSED"}'
 
     players['Human']['guess_board'] = gui_extensions.update_guess_board(players['Human']['guess_board'],
                                                                         user_coords,
                                                                         players['AI']['board'],
                                                                         attack_status)
 
-    ai_coords = mp_game_engine.generate_attack(players['AI']['board'])
-    message += f'<br> AI attacked {ai_coords} and '
+    message += f'Player attacked {user_coords} and '  # Send human guess details to console
+    message += f'{"HIT" if attack_status[0] == "hit" else "SUNK" if attack_status[0] == "sunk" else "MISSED"}'
+
+    # Generate attack and update guess board for the AI now
+    ai_coords = mp_game_engine.generate_attack(players['AI']['board'],
+                                               attack_method='smart_random',
+                                               my_guess_board=players['AI']['guess_board'])
     attack_status = gui_extensions.attack_sunk(ai_coords,
                                                players['Human']['board'],
                                                players['AI']['guess_board'],
                                                players['Human']['ships'])
-    message += f'{"HIT" if attack_status[0] == "hit" else "SUNK" if attack_status[0] == "sunk" else "MISSED"}'
     players['AI']['guess_board'] = gui_extensions.update_guess_board(players['AI']['guess_board'],
                                                                      ai_coords,
                                                                      players['Human']['board'],
                                                                      attack_status)
+
+    # Add a message to the web console for the AI's guess
+    message += f'<br> AI attacked {ai_coords} and '
+    message += f'{"HIT" if attack_status[0] == "hit" else "SUNK" if attack_status[0] == "sunk" else "MISSED"}'
 
     response = {'my_guess_board': players['Human']['guess_board'],
                 'opponent_guess_board': players['AI']['guess_board'],

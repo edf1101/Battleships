@@ -1,19 +1,21 @@
 """
-This Module contains extra functions for extending features of the HTML/JS/Flask GUI
+These functions below help with the creation and maintenance of a 'guess_board'. In the extended code the 'board'
+doesn't get modified after generation, instead the 'guess_board' gets modified to state whether a hit/miss/sink was
+there. This means we have a guess history and can handle the displays python side.
 """
 
 
 def attack_sunk(coordinates: tuple[int, int],
                 board: list[list[str | None]],
-                my_guess_board : list[list[str]],
+                my_guess_board: list[list[str]],
                 battleships: dict[str, int]) -> tuple[str: str | None]:
     """
-    This function extends the functionality of 'attack' to return the type of hit
+    Similar to attack, but it doesn't remove the ship from the board and returns type of hit and ship name
     :param coordinates: Coordinates to check if there's a ship
     :param board: The board (list of lists) to check
     :param my_guess_board:  my guess board to check if I've guessed here yet
     :param battleships: The list of enemy ships to check
-    :return: tuple of attack result ('hit', 'miss' or 'sink') then ship_name that was sunk
+    :return: tuple of attack result ('hit', 'miss' or 'sink', 'prev_hit') then ship_name that was sunk
     """
 
     ship_name = board[coordinates[1]][coordinates[0]]  # Name of the ship in the position we're firing at

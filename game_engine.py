@@ -1,3 +1,8 @@
+"""
+Functions used in gameplay
+Also contains a single-player game if module is executed
+"""
+
 import random
 import components
 
@@ -21,7 +26,6 @@ def attack(coordinates: tuple[int, int], board: list[list[str | None]], battlesh
 
     else:
         return False
-
 
 
 def cli_coordinates_input() -> tuple[int, int]:

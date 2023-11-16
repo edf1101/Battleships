@@ -1,3 +1,8 @@
+"""
+Contains functions needed for a multiplayer game, ie generating attacks etc.
+Also contains a simple Command line game when module itself is executed
+"""
+
 import components
 import game_engine
 import random
@@ -5,7 +10,7 @@ import random
 players = {}
 
 
-def generate_attack(board: list[list[str | None]], attack_method: str = 'random') -> tuple[int, int]:
+def generate_attack(board: list[list[str | None]], attack_method: str = 'random', **kwargs) -> tuple[int, int]:
     """
     Generates a position to attack, via a chosen attack algorithm
     :param board: input the board to attack so the algorithm knows how large it is
@@ -16,6 +21,21 @@ def generate_attack(board: list[list[str | None]], attack_method: str = 'random'
     if attack_method == 'random':
         # Purely random attack method
         x, y = random.randrange(0, len(board)), random.randrange(0, len(board))
+        return x, y
+
+    if attack_method == 'smart_random':
+        # 'random' but it won't guess the same position twice
+
+        if 'my_guess_board' not in kwargs:  # Check parameter is in place
+            raise KeyError('my_guess_board needs to be a parameter')
+
+        my_guess_board = kwargs['my_guess_board']
+
+        # Initial guess
+        x, y = random.randrange(0, len(board)), random.randrange(0, len(board))
+        # Redo until we haven't visited on the guess_board
+        while not (my_guess_board[y][x] == 'B' or my_guess_board[y][x] == 'N'):
+            x, y = random.randrange(0, len(board)), random.randrange(0, len(board))
         return x, y
 
 
@@ -76,7 +96,7 @@ def ai_opponent_game_loop() -> None:
                     0 <= user_coords[1] < len(players['Human']['board']))):
             user_coords = game_engine.cli_coordinates_input()
             if not ((0 <= user_coords[0] < len(players['Human']['board']) and
-                    0 <= user_coords[1] < len(players['Human']['board']))):
+                     0 <= user_coords[1] < len(players['Human']['board']))):
                 print("Coordinates outside of the board")
 
         attack_status = game_engine.attack_sunk(user_coords, players['AI']['board'], players['AI']['ships'])
