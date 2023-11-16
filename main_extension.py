@@ -66,7 +66,7 @@ def handle_attack():
 
     # Generate attack and update guess board for the AI now
     ai_coords = mp_game_engine.generate_attack(players['AI']['board'],
-                                               attack_method='smart_random',
+                                               attack_method='challenging',
                                                my_guess_board=players['AI']['guess_board'])
     attack_status = gui_extensions.attack_sunk(ai_coords,
                                                players['Human']['board'],
@@ -120,7 +120,7 @@ if __name__ == '__main__':
                      'ships': components.create_battleships()}
 
     players['AI']['board'] = components.place_battleships(players['AI']['board'], players['AI']['ships'],
-                                                          placement_method='simple')
+                                                          placement_method='random')
 
     players['Human']['guess_board'] = gui_extensions.create_guess_board(players['AI']['board'])
 

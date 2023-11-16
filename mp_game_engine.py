@@ -6,6 +6,7 @@ Also contains a simple Command line game when module itself is executed
 import components
 import game_engine
 import random
+import advanced_attacking
 
 players = {}
 
@@ -14,7 +15,9 @@ def generate_attack(board: list[list[str | None]], attack_method: str = 'random'
     """
     Generates a position to attack, via a chosen attack algorithm
     :param board: input the board to attack so the algorithm knows how large it is
-    :param attack_method: What algorithm to choose a point, default 'random'
+    :param attack_method: What algorithm to choose a point, default 'random' or 'smart_random',
+     'difficult' or 'challenging'
+    :param kwargs: Keywords arguments. 'my_guess_board' needed for 'smart_random' or 'challenging' modes
     :return: a tuple coordinate on the grid
     """
 
@@ -23,7 +26,7 @@ def generate_attack(board: list[list[str | None]], attack_method: str = 'random'
         x, y = random.randrange(0, len(board)), random.randrange(0, len(board))
         return x, y
 
-    if attack_method == 'smart_random':
+    elif attack_method == 'smart_random':
         # 'random' but it won't guess the same position twice
 
         if 'my_guess_board' not in kwargs:  # Check parameter is in place
@@ -37,6 +40,15 @@ def generate_attack(board: list[list[str | None]], attack_method: str = 'random'
         while not (my_guess_board[y][x] == 'B' or my_guess_board[y][x] == 'N'):
             x, y = random.randrange(0, len(board)), random.randrange(0, len(board))
         return x, y
+
+    elif attack_method == 'difficult' or attack_method == 'challenging':
+
+        if 'my_guess_board' not in kwargs:  # Check parameter is in place
+            raise KeyError('my_guess_board needs to be a parameter')
+
+        my_guess_board = kwargs['my_guess_board']
+        min_ship_size = advanced_attacking.calculate_min_ship_size(board)
+        return advanced_attacking.generate_attack_challenging(my_guess_board, min_ship_size, method=attack_method)
 
 
 def display_ascii(board: list[list[str | None]]) -> None:
@@ -99,7 +111,7 @@ def ai_opponent_game_loop() -> None:
                      0 <= user_coords[1] < len(players['Human']['board']))):
                 print("Coordinates outside of the board")
 
-        attack_status = game_engine.attack_sunk(user_coords, players['AI']['board'], players['AI']['ships'])
+        attack_status = game_engine.attack(user_coords, players['AI']['board'], players['AI']['ships'])
         if attack_status:
             print("You got a HIT!")
         else:

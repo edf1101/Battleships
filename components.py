@@ -158,3 +158,25 @@ def place_battleships(board: list[list], ships: dict[str, int], placement_method
             else:
                 board = potential_placement
     return board
+
+
+def clamp(x: float, min_range: float = 0, max_range: float = 1):
+    """
+    Just clamps a variable x between two constraints, by default does clamp01
+    :param x: The variable to clamp
+    :param min_range: The lower constraint, default = 0
+    :param max_range: The lower constraint, default = 1
+    :return: The clamped value
+    """
+    return min(max_range, max(min_range, x))
+
+
+def in_board(location: tuple[int, int], board: list[list]) -> bool:
+    """
+    Returns whether a point is inside the board or not
+    :param location: The point to query
+    :param board: Reference to the board so we can find it's size
+    :return: Whether its inside
+    """
+    inside = 0 <= location[0] < len(board) and 0 <= location[1] < len(board)
+    return inside

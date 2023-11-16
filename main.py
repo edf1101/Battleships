@@ -76,8 +76,6 @@ def root():
                                player_board=players['Human']['board'])
 
 
-
-
 if __name__ == '__main__':
     players = {}
     set_board = False
