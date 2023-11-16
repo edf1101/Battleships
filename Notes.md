@@ -43,3 +43,15 @@ def attacked():
     print('attacked',x,y)
     return {'hit':True,'AI_Turn':(0,0)}
 ```
+
+## Next Code TODO
+- Add an HTML intro screen (difficulty / board size options)
+- Stormy mode , ships move each turn by (x,y) spaces
+- Multiplayer
+
+##  When done with code
+1. Test
+2. Pylint 
+3. Document
+4. README file 
+5. Sort out licensing

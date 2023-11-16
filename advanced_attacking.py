@@ -4,7 +4,6 @@ This module just deals with the AI when its doing more advanced attacking rather
 
 import random
 import numpy as np
-
 import components
 
 
@@ -90,10 +89,12 @@ def calculate_unsunk_attack(my_guess_board: list[list[str]],
 
                 offset = np.array(potential) - np.array(origin)
 
-                # If the move to the in the opposite direction of its offset is a hit then theres a strong chance this
+                # If the move to the in the opposite direction of its offset is a hit then there's a strong chance this
                 # next move will be a hit too
-                if tuple(np.array(origin) - 2 * offset) in unsunk_hits:
+                if tuple(np.array(origin) - offset) in unsunk_hits:
                     great_moves.append(potential)
+        print(great_moves)
+        print(unsunk_hits)
 
         if len(great_moves) == 0:  # If there aren't any moves that form an obvious line choose any potential move
 
