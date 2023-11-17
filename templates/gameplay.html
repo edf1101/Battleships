@@ -70,18 +70,19 @@
             .then(response => response.json())
             .then(data => {
                 //Process the response
-                // CHANGED SOME STUFF HERE SO WHEN YOU CLICK ON A TILE YOU HAVE ALREADY HIT IT DOESNT SHOW AS MISS
-                let cell = document.getElementById('cell-' + x + '-' + y);
-                if (data['hit'] === true) {
+                    let cell = document.getElementById('cell-' + x + '-' + y);
+
+                if (data['hit'] === true || cell.style.backgroundColor === 'red'  ) {
                     //Change the colour of the div to red if the attack was a hit
                     cell.style.backgroundColor = 'red';
 
                 } else {
                     //Change the colour of the div to blue if attack was a miss
+                    let cell = document.getElementById('cell-' + x + '-' + y);
                     cell.style.backgroundColor = 'lightblue';
                 }
 
-                //process the AI turn coordinate tuple
+                //process the AI turn coordinate tupple
                 if(data['AI_Turn']){
                     let AI_x = data['AI_Turn'][0];
                     let AI_y = data['AI_Turn'][1];
@@ -140,7 +141,6 @@
 
 <body>
     <h1>Battleships Game</h1>
-
     <div class="container">
         <div class="gameLog">
             <h2 id="gameLog">Game Log:</h2>

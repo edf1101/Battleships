@@ -1,5 +1,6 @@
 """
 This module is used for testing different versions of the AI against each other
+Also good for brute force testing to see if errors come up
 """
 
 import components

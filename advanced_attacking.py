@@ -62,10 +62,12 @@ def calculate_unsunk_attack(my_guess_board: list[list[str]],
     :return: The location where to fire
     """
 
-    # For each unsunk move add its neighbours to the potential moves list
+    # For each unsunk move add its neighbours to the potential moves dictionary
     potential_moves = {}
     offsets = [(1, 0), (-1, 0), (0, 1), (0, -1)]
     for unsunk in unsunk_hits:
+
+        # For each unsunk hit add the surrounding tiles to the dictionary
         for offset in offsets:
 
             trial_position = (offset[0] + unsunk[0], offset[1] + unsunk[1])  # Get the combination of position + offset
@@ -76,7 +78,7 @@ def calculate_unsunk_attack(my_guess_board: list[list[str]],
             been_guessed = not (my_guess_board[trial_position[1]][trial_position[0]] == 'N' or
                                 my_guess_board[trial_position[1]][trial_position[0]] == 'B')
 
-            if not been_guessed:
+            if not been_guessed:  # As long as they haven't been guessed add to dict
                 if unsunk in potential_moves:
                     potential_moves[unsunk].append(trial_position)
                 else:
@@ -86,10 +88,11 @@ def calculate_unsunk_attack(my_guess_board: list[list[str]],
         # Choose a random option from all the potential moves
 
         all_moves = sum([i for i in potential_moves.values()], [])  # Combine the dictionary values into a list
-        if len(all_moves) !=0:
+
+        if len(all_moves) != 0:
             return random.choice(all_moves)  # Pick a random one from the potential move list
 
-        else:  # If we can't find a move then use a random one instead
+        else:  # If we can't find a move then use a random one instead from existing random point function
             return mp_game_engine.generate_attack_ext(my_guess_board, difficulty=1, my_guess_board=my_guess_board)
 
     elif intelligent:
@@ -111,10 +114,11 @@ def calculate_unsunk_attack(my_guess_board: list[list[str]],
         if len(great_moves) == 0:  # If there aren't any moves that form an obvious line choose any potential move
 
             all_moves = sum([i for i in potential_moves.values()], [])  # Combine the dictionary values into a list
+
             if len(all_moves) != 0:
                 return random.choice(all_moves)  # Pick a random one from the potential move list
 
-            else:  # If we can't find a move then use a random one instead
+            else:  # If we can't find a move then use a random one instead from existing random point function
                 return mp_game_engine.generate_attack_ext(my_guess_board, difficulty=1, my_guess_board=my_guess_board)
 
         else:

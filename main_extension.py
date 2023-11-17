@@ -124,6 +124,7 @@ if __name__ == '__main__':
     board_size = 10
 
     stormy = False
+    storm_direction = (0,0)
 
     if stormy:
         storm_direction = (random.randrange(-1, 2), random.randrange(-1, 2))  # Random between -1,1 in x&y

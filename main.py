@@ -85,6 +85,6 @@ if __name__ == '__main__':
     players['AI'] = {'board': components.initialise_board(board_size), 'ships': components.create_battleships()}
 
     players['AI']['board'] = components.place_battleships(players['AI']['board'], players['AI']['ships'],
-                                                          placement_method='simple')
+                                                          placement_method='random')
 
     app.run()

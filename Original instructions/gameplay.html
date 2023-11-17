@@ -12,7 +12,7 @@
 
         .grid {
             display: grid;
-            grid-template-columns: repeat(10, 1fr);
+            grid-template-columns: repeat({{player_board|length}}, 1fr);
             grid-gap: 0px;
             width: 40vw; /* 40% of viewport width */
             height: 40vw; /* Equal to width for a square grid */
@@ -20,7 +20,7 @@
 
         .small-grid {
             display: grid;
-            grid-template-columns: repeat(10, 1fr);
+            grid-template-columns: repeat({{player_board|length}}, 1fr);
             grid-gap: 0px;
             width: 25vw; /* 25% of viewport width */
             height: 25vw; /* Equal to width for a square grid */
@@ -146,8 +146,8 @@
             <h2 id="messageBox">  </h2>
         </div>
         <div class="grid">
-            {% for i in range(10) %}
-                {% for j in range(10) %}
+            {% for i in range(player_board|length) %}
+                {% for j in range(player_board|length) %}
                     <div id="cell-{{ j }}-{{ i }}" onclick="sendAttack({{ j }},{{ i }}, '/attack')"></div>
                 {% endfor %}
             {% endfor %}
@@ -155,8 +155,8 @@
         <div class="small-div">
             <h2 class="PlayersLabel">Players Grid:</h2>
             <div class="small-grid">
-                {% for i in range(10) %}
-                    {% for j in range(10) %}
+                {% for i in range(player_board|length) %}
+                    {% for j in range(player_board|length) %}
                         <div id="small-cell-{{ j }}-{{ i }}" ></div>
                     {% endfor %}
                 {% endfor %}
