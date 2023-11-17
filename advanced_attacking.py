@@ -3,18 +3,18 @@ This module just deals with the AI when its doing more advanced attacking rather
 """
 
 import random
-import numpy as np
 import components
+import mp_game_engine
 
 
 def generate_attack_challenging(my_guess_board: list[list[str]],
                                 min_ship_size: int,
-                                method: str = 'challenging') -> tuple[int, int]:
+                                difficulty: int) -> tuple[int, int]:
     """
     This generates a more intelligent (not purely random) guess
     :param my_guess_board: The guess board, so we know where we have guessed prior and where has/ hasn't been sunk
     :param min_ship_size: The smallest ship on the board
-    :param method: The attack method to use either 'difficult' or 'expert;
+    :param difficulty: The attack method difficulty, given this is the intelligent AI algorithm its (2-4)
     :return: A tuple location of where to guess
     """
 
@@ -25,30 +25,40 @@ def generate_attack_challenging(my_guess_board: list[list[str]],
             if guess_value == 'H':
                 unsunk_hits.append((x, y))
 
-    if len(unsunk_hits) == 0:  # Haven't got any unsunk hits, we'll need to do an intelligent random guess
-        x, y = generate_blind_point(my_guess_board, min_ship_size)
+    if len(unsunk_hits) == 0:  # Haven't got any unsunk hits, so we need to guess
+
+        if difficulty == 2:  # If difficulty 2 generate a random point if we have no hits to go off
+            # Reuse the attack function but set it to a low difficulty to generate random point
+            x, y = mp_game_engine.generate_attack_ext(my_guess_board, difficulty=1, my_guess_board=my_guess_board)
+            return x, y
+
+        elif difficulty in [3, 4]:  # If difficulty 3 or 4 generate a smart random point if we have no hits to go off
+            x, y = generate_blind_point(my_guess_board, min_ship_size)
+            return x, y
+
+        else:
+            raise SyntaxError(f'difficulty parameter invalid cant be {difficulty}')
+
+    elif difficulty in [2, 3]:  # If the difficulty parameter is 2 or 3 make a semi-intelligent unseen hits guess
+        x, y = calculate_unsunk_attack(my_guess_board, unsunk_hits, intelligent=False)
         return x, y
 
-    elif method == 'difficult':
-        x, y = calculate_unsunk_attack(my_guess_board, unsunk_hits, method='simple')
-        return x, y
-
-    elif method == 'challenging':
-        x, y = calculate_unsunk_attack(my_guess_board, unsunk_hits, method='intelligent')
+    elif difficulty == 4:  # If the difficulty parameter 4 make an intelligent unseen hits guess
+        x, y = calculate_unsunk_attack(my_guess_board, unsunk_hits, intelligent=True)
         return x, y
 
     else:  # error raised if someone uses an invalid method parameter
-        raise SyntaxError(f'Method parameter invalid cant be {method}')
+        raise SyntaxError(f'difficulty parameter invalid cant be {difficulty}')
 
 
 def calculate_unsunk_attack(my_guess_board: list[list[str]],
                             unsunk_hits: list[tuple[int, int]],
-                            method: str = 'intelligent') -> tuple[int, int]:
+                            intelligent: bool = True) -> tuple[int, int]:
     """
     When we have hit (but not sunk) positions on the board we should target around them this function does that
     :param my_guess_board: The guess board, so we know where we have guessed prior and where has/ hasn't been sunk
     :param unsunk_hits: Holds where we know there's been a hit, but not a sink
-    :param method: 'Intelligent' for the best result, or 'simple' is a little less accurate
+    :param intelligent: True for the best result, or False is a little less accurate
     :return: The location where to fire
     """
 
@@ -72,29 +82,27 @@ def calculate_unsunk_attack(my_guess_board: list[list[str]],
                 else:
                     potential_moves[unsunk] = [trial_position]
 
-    if method == 'simple':
+    if not intelligent:
         # Choose a random option from all the potential moves
 
         all_moves = sum([i for i in potential_moves.values()], [])  # Combine the dictionary values into a list
         return random.choice(all_moves)  # Pick a random one
 
-    elif method == 'intelligent':
+    elif intelligent:
         # With this mode it trys to follow lines where previous hits have been
 
         great_moves = []  # potential moves that follow in a line
 
-        for origin, potentials in potential_moves.items():
+        for origin, move_for_tile in potential_moves.items():
 
-            for potential in potentials:  # Go through all the potential moves
+            for potential in move_for_tile:  # Go through all the potential moves
 
-                offset = np.array(potential) - np.array(origin)
+                offset = (potential[0] - origin[0], potential[1] - origin[1])
 
                 # If the move to the in the opposite direction of its offset is a hit then there's a strong chance this
                 # next move will be a hit too
-                if tuple(np.array(origin) - offset) in unsunk_hits:
+                if (origin[0] - offset[0], origin[1] - offset[1]) in unsunk_hits:
                     great_moves.append(potential)
-        print(great_moves)
-        print(unsunk_hits)
 
         if len(great_moves) == 0:  # If there aren't any moves that form an obvious line choose any potential move
 
@@ -104,28 +112,28 @@ def calculate_unsunk_attack(my_guess_board: list[list[str]],
         else:
             return random.choice(great_moves)  # If there are some moves that form a line pick one of them
 
-
     else:
-        raise SyntaxError(f'You used a wrong argument, {method} is not a valid method')
+        raise SyntaxError(f'You used a wrong argument, {intelligent} is not a valid argument for intelligent param')
 
 
 def calculate_min_ship_size(board: list[list[str | None]]) -> int:
     """
     Calculates the size of the smallest ship on the board just from the guess board
-    :param board: The original board containing ship names that gets passed in
+    :param board: Their original board containing ship names that gets passed in
     :return: The size of the smallest ship
     """
 
-    # First calculate the unique list of ships using sets
+    # Goes through each cell and increments the ship's count in a dictionary
     ships_counts = {}
-    for row in board:
-        for cell in row:
+    for y in range(len(board)):
+        for x in range(len(board)):
+            cell = board[y][x]
             if cell and cell in ships_counts:
                 ships_counts[cell] += 1
             elif cell:
                 ships_counts[cell] = 1
 
-    return min(ships_counts.values())
+    return min(ships_counts.values())  # returns the minimum from the dictionary values
 
 
 def generate_blind_point(my_guess_board: list[list[str]], min_ship_size: int) -> tuple[int, int]:

@@ -11,22 +11,20 @@ import advanced_attacking
 players = {}
 
 
-def generate_attack(board: list[list[str | None]], attack_method: str = 'random', **kwargs) -> tuple[int, int]:
+def generate_attack_ext(board: list[list[str | None]], difficulty: int = 0, **kwargs) -> tuple[int, int]:
     """
-    Generates a position to attack, via a chosen attack algorithm
-    :param board: input the board to attack so the algorithm knows how large it is
-    :param attack_method: What algorithm to choose a point, default 'random' or 'smart_random',
-     'difficult' or 'challenging'
-    :param kwargs: Keywords arguments. 'my_guess_board' needed for 'smart_random' or 'challenging' modes
-    :return: a tuple coordinate on the grid
-    """
-
-    if attack_method == 'random':
+       Generates a position to attack, via a chosen attack difficulty algorithm
+       :param board: input the board to attack so the algorithm knows how large it is
+       :param difficulty: What difficulty the AI should be (0-4)
+       :param kwargs: Keywords arguments. 'my_guess_board' needed for 'smart_random' or 'challenging' modes
+       :return: a tuple coordinate on the grid
+       """
+    if difficulty == 0:
         # Purely random attack method
         x, y = random.randrange(0, len(board)), random.randrange(0, len(board))
         return x, y
 
-    elif attack_method == 'smart_random':
+    elif difficulty == 1:
         # 'random' but it won't guess the same position twice
 
         if 'my_guess_board' not in kwargs:  # Check parameter is in place
@@ -41,14 +39,28 @@ def generate_attack(board: list[list[str | None]], attack_method: str = 'random'
             x, y = random.randrange(0, len(board)), random.randrange(0, len(board))
         return x, y
 
-    elif attack_method == 'difficult' or attack_method == 'challenging':
+    elif difficulty == 2 or difficulty == 3 or difficulty == 4:
 
         if 'my_guess_board' not in kwargs:  # Check parameter is in place
             raise KeyError('my_guess_board needs to be a parameter')
 
         my_guess_board = kwargs['my_guess_board']
         min_ship_size = advanced_attacking.calculate_min_ship_size(board)
-        return advanced_attacking.generate_attack_challenging(my_guess_board, min_ship_size, method=attack_method)
+        return advanced_attacking.generate_attack_challenging(my_guess_board, min_ship_size, difficulty=difficulty)
+    else:
+        raise SyntaxError(f'{difficulty} is not a correct difficulty option must be in range (0-4)')
+
+
+def generate_attack(board: list[list[str | None]]) -> tuple[int, int]:
+    """
+    Generates a position to attack via specification random method
+    :param board: input the board to attack so the algorithm knows how large it is
+    :return: a tuple coordinate on the grid
+    """
+
+    # Purely random attack method
+    x, y = random.randrange(0, len(board)), random.randrange(0, len(board))
+    return x, y
 
 
 def display_ascii(board: list[list[str | None]]) -> None:

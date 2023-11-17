@@ -6,6 +6,10 @@ _just for storing thoughts while I work on the CW_
 - check whether input coordinates start at 0, whether they are inputted on one line etc, or if free to interpret
 - Should there be an entry point for AI game loop?
 
+## Requirements
+- Flask
+
+
 ### Flask 
 
 This part is the variables required to render the placement.html file
@@ -55,3 +59,8 @@ def attacked():
 3. Document
 4. README file 
 5. Sort out licensing
+
+
+## difficulties
+:param difficulty: What algorithm to choose a point: 0 is pure random, 1 is random but wont choose same twice
+       2 is medium_ai guessing with random blind guesses, 3 is medium_ai with intelligent blind guesses, 4 is intelligent_ai

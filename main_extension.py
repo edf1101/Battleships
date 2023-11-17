@@ -65,9 +65,9 @@ def handle_attack():
     message += f'{"HIT" if attack_status[0] == "hit" else "SUNK" if attack_status[0] == "sunk" else "MISSED"}'
 
     # Generate attack and update guess board for the AI now
-    ai_coords = mp_game_engine.generate_attack(players['AI']['board'],
-                                               attack_method='challenging',
-                                               my_guess_board=players['AI']['guess_board'])
+    ai_coords = mp_game_engine.generate_attack_ext(players['AI']['board'],
+                                                   difficulty=4,
+                                                   my_guess_board=players['AI']['guess_board'])
     attack_status = gui_extensions.attack_sunk(ai_coords,
                                                players['Human']['board'],
                                                players['AI']['guess_board'],
