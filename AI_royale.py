@@ -6,7 +6,7 @@ import components
 import game_engine
 import mp_game_engine as mpg
 import gui_extensions
-
+import storm_engine
 
 def ai_opponent_game_loop(mode1: int, mode2: int) -> str:
     """
@@ -15,6 +15,8 @@ def ai_opponent_game_loop(mode1: int, mode2: int) -> str:
     :param mode2: The difficulty mode for AI2
     :return: the winner of the match either 'AI1' or 'AI2'
     """
+
+    storm_direction = (0, 0)  # In case you want to add a storm in
 
     # Initialise the AI's as players in a dictionary
     players = {'AI2': {'board': components.initialise_board(), 'ships': components.create_battleships()},
@@ -61,6 +63,11 @@ def ai_opponent_game_loop(mode1: int, mode2: int) -> str:
                                                                          ai_coords,
                                                                          players['AI2']['board'],
                                                                          attack_status)
+        players['AI']['guess_board'] = storm_engine.shift(players['AI']['guess_board'], storm_direction)
+        players['AI2']['board'] = storm_engine.shift(players['AI2']['board'], storm_direction)
+        players['AI2']['guess_board'] = storm_engine.shift(players['AI2']['guess_board'], storm_direction)
+        players['AI']['board'] = storm_engine.shift(players['AI']['board'], storm_direction)
+
 
     # Check who won and return the winner
     if game_engine.count_ships_remaining(players['AI2']['ships']) == 0:
@@ -76,8 +83,11 @@ if __name__ == "__main__":
     AI2 = 0
     total = 2000
 
+    ai1_difficulty = 3
+    ai2_difficulty = 4
+
     for i in range(total): # Run it a good number of times and tally who won
-        result = ai_opponent_game_loop(0, 4)
+        result = ai_opponent_game_loop(ai1_difficulty, ai2_difficulty)
         if result == 'AI1':
             AI1 += 1
         else:

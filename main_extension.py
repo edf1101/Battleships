@@ -1,4 +1,6 @@
 # Import flask libs
+import random
+
 from flask import Flask
 from flask import request
 from flask import render_template
@@ -8,6 +10,7 @@ import game_engine
 import mp_game_engine
 import components
 import gui_extensions
+import storm_engine
 
 # Import other libs
 import json
@@ -81,6 +84,12 @@ def handle_attack():
     message += f'<br> AI attacked {ai_coords} and '
     message += f'{"HIT" if attack_status[0] == "hit" else "SUNK" if attack_status[0] == "sunk" else "MISSED"}'
 
+    # Shift the AI and Human guess_boards and boards by the storm direction variable
+    players['AI']['guess_board'] = storm_engine.shift(players['AI']['guess_board'], storm_direction)
+    players['Human']['board'] = storm_engine.shift(players['Human']['board'], storm_direction)
+    players['Human']['guess_board'] = storm_engine.shift(players['Human']['guess_board'], storm_direction)
+    players['AI']['board'] = storm_engine.shift(players['AI']['board'], storm_direction)
+
     response = {'my_guess_board': players['Human']['guess_board'],
                 'opponent_guess_board': players['AI']['guess_board'],
                 'message': message}
@@ -113,6 +122,12 @@ if __name__ == '__main__':
     players = {}
     set_board = False
     board_size = 10
+
+    stormy = False
+
+    if stormy:
+        storm_direction = (random.randrange(-1, 2), random.randrange(-1, 2))  # Random between -1,1 in x&y
+
     # Set up game
     players['Human'] = {'board': components.initialise_board(board_size),
                         'ships': components.create_battleships()}

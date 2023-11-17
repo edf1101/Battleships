@@ -49,8 +49,7 @@ def attacked():
 ```
 
 ## Next Code TODO
-- Add an HTML intro screen (difficulty / board size options)
-- Stormy mode , ships move each turn by (x,y) spaces
+- Add an HTML intro screen (difficulty / board size options, stormy?)
 - Multiplayer
 
 ##  When done with code

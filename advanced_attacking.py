@@ -86,7 +86,11 @@ def calculate_unsunk_attack(my_guess_board: list[list[str]],
         # Choose a random option from all the potential moves
 
         all_moves = sum([i for i in potential_moves.values()], [])  # Combine the dictionary values into a list
-        return random.choice(all_moves)  # Pick a random one
+        if len(all_moves) !=0:
+            return random.choice(all_moves)  # Pick a random one from the potential move list
+
+        else:  # If we can't find a move then use a random one instead
+            return mp_game_engine.generate_attack_ext(my_guess_board, difficulty=1, my_guess_board=my_guess_board)
 
     elif intelligent:
         # With this mode it trys to follow lines where previous hits have been
@@ -107,7 +111,11 @@ def calculate_unsunk_attack(my_guess_board: list[list[str]],
         if len(great_moves) == 0:  # If there aren't any moves that form an obvious line choose any potential move
 
             all_moves = sum([i for i in potential_moves.values()], [])  # Combine the dictionary values into a list
-            return random.choice(all_moves)  # Pick a random one
+            if len(all_moves) != 0:
+                return random.choice(all_moves)  # Pick a random one from the potential move list
+
+            else:  # If we can't find a move then use a random one instead
+                return mp_game_engine.generate_attack_ext(my_guess_board, difficulty=1, my_guess_board=my_guess_board)
 
         else:
             return random.choice(great_moves)  # If there are some moves that form a line pick one of them
