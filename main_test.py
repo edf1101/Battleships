@@ -15,7 +15,7 @@ app = Flask(__name__)
 
 
 @app.route('/placement', methods=['GET', 'POST'])
-def placement_interface() -> str:
+def placement_interface():
     """
     This handles the placement menu, so when you first put your ships on the board
     :return: Returns a JSON file if it's a POST request, or the HTML webpage if it's not
@@ -36,8 +36,31 @@ def placement_interface() -> str:
     return render_template('placement.html', board_size=board_size, ships=players['Human']['ships'])
 
 
+@app.route('/entry', methods=['GET', 'POST'])
+def entry_interface():
+    if request.method == 'POST':  # received the JSON data of a board set up
+        json_data = json.loads( request.get_json())
+
+        global started_game
+        started_game = True
+        global board_size
+        board_size = int(json_data['board_size'])
+        print(json_data['difficulty'])
+        # Set up game
+        global players
+        players['Human'] = {'board': components.initialise_board(board_size), 'ships': components.create_battleships()}
+        players['AI'] = {'board': components.initialise_board(board_size), 'ships': components.create_battleships()}
+
+        players['AI']['board'] = components.place_battleships(players['AI']['board'], players['AI']['ships'],
+                                                              placement_method='random')
+        return {'return': True}  # It wants the data returned to it, so it can check transmission success
+
+    # If it's not a POST request (no board data sent just send the usual webpage)
+    return render_template('entry.html')
+
+
 @app.route('/attack')
-def handle_attack() -> str:
+def handle_attack():
     """
     This handles When a user sends an attack
     :return: The status of the user's attack and where the AI fired back
@@ -61,30 +84,29 @@ def handle_attack() -> str:
     return {'hit': attack_status, 'AI_Turn': ai_coords}
 
 
-@app.route('/')
-def root() -> str:
+@app.route('/', methods=['GET', 'POST'])
+def root():
     """
     Handles the main gameplay webpage, unless the game isn't set up then it goes to the placement page
     :return: HTML web pages: either placement if the board needs to be set up or gameplay if it has
     """
-    if not set_board:
-        return render_template('placement.html',
-                               board_size=board_size,
-                               ships=players['Human']['ships'])
+    if not started_game:
+        return render_template('entry.html')
     else:
-        return render_template('gameplay.html',
-                               player_board=players['Human']['board'])
+        if not set_board:
+            return render_template('placement.html',
+                                   board_size=board_size,
+                                   ships=players['Human']['ships'])
+        else:
+            return render_template('gameplay.html',
+                                   player_board=players['Human']['board'])
 
 
 if __name__ == '__main__':
     players = {}
+    started_game = False
     set_board = False
     board_size = 10
-    # Set up game
-    players['Human'] = {'board': components.initialise_board(board_size), 'ships': components.create_battleships()}
-    players['AI'] = {'board': components.initialise_board(board_size), 'ships': components.create_battleships()}
 
-    players['AI']['board'] = components.place_battleships(players['AI']['board'], players['AI']['ships'],
-                                                          placement_method='random')
 
     app.run()
