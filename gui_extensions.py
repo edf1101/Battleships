@@ -1,7 +1,8 @@
 """
-These functions below help with the creation and maintenance of a 'guess_board'. In the extended code the 'board'
-doesn't get modified after generation, instead the 'guess_board' gets modified to state whether a hit/miss/sink was
-there. This means we have a guess history and can handle the displays python side.
+These functions below help with the creation and maintenance of a 'guess_board'.
+In the extended code the 'board' doesn't get modified after generation, instead the
+'guess_board' gets modified to state whether a hit/miss/sink was there.
+This means we have a guess history and can handle the displays python side.
 """
 
 
@@ -10,15 +11,17 @@ def attack_sunk(coordinates: tuple[int, int],
                 my_guess_board: list[list[str]],
                 battleships: dict[str, int]) -> tuple[str: str | None]:
     """
-    Similar to attack, but it doesn't remove the ship from the board and returns type of hit and ship name
+    Similar to attack, but it doesn't remove the ship from the board and
+     returns type of hit and ship name
     :param coordinates: Coordinates to check if there's a ship
     :param board: The board (list of lists) to check
     :param my_guess_board:  my guess board to check if I've guessed here yet
     :param battleships: The list of enemy ships to check
-    :return: tuple of attack result ('hit', 'miss' or 'sink', 'prev_hit') then ship_name that was sunk
+    :return: tuple of attack result ('hit', 'miss' or 'sink', 'prev_hit')
+    then ship_name that was sunk
     """
 
-    ship_name = board[coordinates[1]][coordinates[0]]  # Name of the ship in the position we're firing at
+    ship_name = board[coordinates[1]][coordinates[0]]  # Name of the ship we're firing at
 
     is_hit = my_guess_board[coordinates[1]][coordinates[0]] == 'B'  # If it hit anything
     if is_hit:
@@ -26,12 +29,12 @@ def attack_sunk(coordinates: tuple[int, int],
 
     if is_hit and battleships[ship_name] == 0:
         return 'sunk', ship_name
-    elif is_hit and battleships[ship_name] > 0:
+    if is_hit and battleships[ship_name] > 0:
         return 'hit', ship_name
-    elif my_guess_board[coordinates[1]][coordinates[0]] == 'N':
+    if my_guess_board[coordinates[1]][coordinates[0]] == 'N':
         return 'miss', None
-    else:
-        return 'prev_hit', None
+
+    return 'prev_hit', None
 
 
 def create_guess_board(opponent_board: list[list[str | None]]) -> list[list[str]]:
@@ -72,7 +75,7 @@ def update_guess_board(guess_board: list[list[str]],
 
     elif sink_status == 'sunk':
         # If we sunk a ship find all of its tiles on the board and update them as sunk on guess map
-        for y in range(len(opponent_board)):
+        for y, _ in enumerate(opponent_board):
             for x in range(len(opponent_board)):
                 if opponent_board[y][x] == sink_name:
                     guess_board[y][x] = 'S'

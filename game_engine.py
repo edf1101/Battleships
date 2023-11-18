@@ -3,11 +3,12 @@ Functions used in gameplay
 Also contains a single-player game if module is executed
 """
 
-import random
 import components
 
 
-def attack(coordinates: tuple[int, int], board: list[list[str | None]], battleships: dict[str, int]) -> bool:
+def attack(coordinates: tuple[int, int],
+           board: list[list[str | None]],
+           battleships: dict[str, int]) -> bool:
     """
     This function returns whether there is a ship hit when you fire at a location
     :param coordinates: Coordinates to check if there's a ship
@@ -24,8 +25,7 @@ def attack(coordinates: tuple[int, int], board: list[list[str | None]], battlesh
         board[coordinates[1]][coordinates[0]] = None
         return True
 
-    else:
-        return False
+    return False
 
 
 def cli_coordinates_input() -> tuple[int, int]:

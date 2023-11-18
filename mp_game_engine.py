@@ -3,20 +3,21 @@ Contains functions needed for a multiplayer game, ie generating attacks etc.
 Also contains a simple Command line game when module itself is executed
 """
 
+import random
 import components
 import game_engine
-import random
 import advanced_attacking
 
 players = {}
 
 
-def generate_attack_ext(board: list[list[str | None]], difficulty: int = 0, **kwargs) -> tuple[int, int]:
+def generate_attack_ext(board: list[list[str | None]],
+                        difficulty: int = 0, **kwargs) -> tuple[int, int]:
     """
        Generates a position to attack, via a chosen attack difficulty algorithm
        :param board: input the board to attack so the algorithm knows how large it is
        :param difficulty: What difficulty the AI should be (0-4)
-       :param kwargs: Keywords arguments. 'my_guess_board' needed for 'smart_random' or 'challenging' modes
+       :param kwargs: Keywords arguments. 'my_guess_board' for difficulty ≠ 0
        :return: a tuple coordinate on the grid
        """
     if difficulty == 0:
@@ -24,7 +25,7 @@ def generate_attack_ext(board: list[list[str | None]], difficulty: int = 0, **kw
         x, y = random.randrange(0, len(board)), random.randrange(0, len(board))
         return x, y
 
-    elif difficulty == 1:
+    if difficulty == 1:
         # 'random' but it won't guess the same position twice
 
         if 'my_guess_board' not in kwargs:  # Check parameter is in place
@@ -39,16 +40,19 @@ def generate_attack_ext(board: list[list[str | None]], difficulty: int = 0, **kw
             x, y = random.randrange(0, len(board)), random.randrange(0, len(board))
         return x, y
 
-    elif difficulty == 2 or difficulty == 3 or difficulty == 4:
+    if difficulty in (2, 3, 4):
 
         if 'my_guess_board' not in kwargs:  # Check parameter is in place
             raise KeyError('my_guess_board needs to be a parameter')
 
         my_guess_board = kwargs['my_guess_board']
         min_ship_size = advanced_attacking.calculate_min_ship_size(board)
-        return advanced_attacking.generate_attack_challenging(my_guess_board, min_ship_size, difficulty=difficulty)
-    else:
-        raise SyntaxError(f'{difficulty} is not a correct difficulty option must be in range (0-4)')
+        return advanced_attacking.generate_attack_challenging(my_guess_board,
+                                                              min_ship_size,
+                                                              difficulty=difficulty)
+
+    # This only gets called if the difficulty level isn't in 0-4
+    raise SyntaxError(f'{difficulty} is not a correct difficulty option must be in range (0-4)')
 
 
 def generate_attack(board: list[list[str | None]]) -> tuple[int, int]:
@@ -98,8 +102,10 @@ def ai_opponent_game_loop() -> None:
     """
     print("#### WELCOME TO BATTLESHIPS  AGAINST AI ###")
     # Initialise data
-    players['Human'] = {'board': components.initialise_board(), 'ships': components.create_battleships()}
-    players['AI'] = {'board': components.initialise_board(), 'ships': components.create_battleships()}
+    players['Human'] = {'board': components.initialise_board(),
+                        'ships': components.create_battleships()}
+    players['AI'] = {'board': components.initialise_board(),
+                     'ships': components.create_battleships()}
 
     # Place the ships
     players['Human']['board'] = components.place_battleships(players['Human']['board'],
@@ -123,7 +129,9 @@ def ai_opponent_game_loop() -> None:
                      0 <= user_coords[1] < len(players['Human']['board']))):
                 print("Coordinates outside of the board")
 
-        attack_status = game_engine.attack(user_coords, players['AI']['board'], players['AI']['ships'])
+        attack_status = game_engine.attack(user_coords,
+                                           players['AI']['board'],
+                                           players['AI']['ships'])
         if attack_status:
             print("You got a HIT!")
         else:
@@ -131,7 +139,9 @@ def ai_opponent_game_loop() -> None:
 
         print("-- AI'S TURN --")
         ai_coords = generate_attack(players['AI']['board'])
-        attack_status = game_engine.attack(ai_coords, players['Human']['board'], players['Human']['ships'])
+        attack_status = game_engine.attack(ai_coords,
+                                           players['Human']['board'],
+                                           players['Human']['ships'])
         if attack_status:
             print("The AI got a HIT!")
         else:

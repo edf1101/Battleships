@@ -27,10 +27,10 @@ def shift_right(board:list[list]) -> list[list]:
     """
     board = deepcopy(board)  # deep copy of the board we'll write to so we don't modify original
 
-    for row_ind in range(len(board)):  # Go through each row
+    for row_ind, _ in enumerate(board):  # Go through each row
 
         modify_row = board[row_ind].copy()
-        for cell_index in range(len(modify_row)):
+        for cell_index, _ in enumerate(board):
             modify_row[cell_index] = board[row_ind][cell_index - 1]
 
         board[row_ind] = modify_row
@@ -50,10 +50,10 @@ def shift(board:list[list], direction:tuple[int, int]) -> list[list]:
     dir_y = (direction[1] + len(board)) % len(board)
     dir_x = (direction[0] + len(board)) % len(board)
 
-    for i in range(dir_y):
+    for _ in range(dir_y):
         board = shift_down(board)
 
-    for i in range(dir_x):
+    for _ in range(dir_x):
         board = shift_right(board)
 
     return board
