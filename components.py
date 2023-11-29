@@ -17,7 +17,7 @@ def initialise_board(size: int = 10) -> list[list]:
     try:  # Check the size is an int
         size = int(size)
     except ValueError as e:
-        raise ValueError("size should be of type int") from e
+        raise TypeError("size should be of type int") from e
 
     if size < 1:
         raise ValueError("Size must be ≥ 1")
@@ -101,17 +101,30 @@ def try_place_ship(board: list[list],
 
 def place_battleships(board: list[list],
                       ships: dict[str, int],
-                      placement_method: str = 'simple') -> list[list[str]]:
+                      algorithm: str = 'simple') -> list[list[str]]:
     """
     Places all the ships onto the board using a specified placement algorithm
     :param board: A list of lists representing the board
     :param ships: A dictionary of ships in the game and their sizes
-    :param placement_method: either 'simple', 'random' or 'custom'
+    :param algorithm: either 'simple', 'random' or 'custom'
     :return: A list of lists representing the board, with tiles filled where ships are
     """
 
+    # Error checking to see if any of the arguments are present but bad
+    if not isinstance(board, list):
+        raise TypeError('Board parameter is not a list')
+
+    if len(board) == 0 or len(board[0]) == 0:
+        raise ValueError('Board parameter is of size 0')
+
+    if not isinstance(ships, dict):
+        raise TypeError('ships parameter is not a dictionary')
+
+    if len(ships) == 0:
+        raise ValueError('ships parameter is of size 0')
+
     # Basic placement algorithm as seen in specification
-    if placement_method == 'simple':
+    if algorithm == 'simple':
 
         row = 0
         for ship_name, ship_size in ships.items():
@@ -123,7 +136,7 @@ def place_battleships(board: list[list],
         return board
 
     # Ships will be placed with random position + orientation, as long as they fit
-    if placement_method == 'random':
+    if algorithm == 'random':
         for ship_name, ship_size in ships.items():
 
             # First guess at a position
@@ -144,7 +157,7 @@ def place_battleships(board: list[list],
         return board
 
     # Ships will be placed with a position and orientation as specified in a JSON file
-    if placement_method == 'custom':
+    if algorithm == 'custom':
 
         with open('placement.json', 'r', encoding="utf-8") as file:
             json_data = json.loads(file.read())
@@ -166,18 +179,9 @@ def place_battleships(board: list[list],
 
             board = potential_placement
 
-    return board
+        return board
 
-
-def clamp(x: float, min_range: float = 0, max_range: float = 1):
-    """
-    Just clamps a variable x between two constraints, by default does clamp01
-    :param x: The variable to clamp
-    :param min_range: The lower constraint, default = 0
-    :param max_range: The lower constraint, default = 1
-    :return: The clamped value
-    """
-    return min(max_range, max(min_range, x))
+    raise ValueError('Invalid Argument for algorithm parameter')
 
 
 def in_board(location: tuple[int, int], board: list[list]) -> bool:

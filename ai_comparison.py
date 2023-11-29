@@ -7,7 +7,6 @@ import components
 import game_engine
 import mp_game_engine as mpg
 import gui_extensions as gui_ext
-import storm_engine
 
 
 def ai_opponent_game_loop(mode1: int, mode2: int) -> str:
@@ -29,10 +28,10 @@ def ai_opponent_game_loop(mode1: int, mode2: int) -> str:
     # Place the ships randomly
     players['AI2']['board'] = components.place_battleships(players['AI2']['board'],
                                                            players['AI2']['ships'],
-                                                           placement_method='random')
+                                                           algorithm='random')
     players['AI']['board'] = components.place_battleships(players['AI']['board'],
                                                           players['AI']['ships'],
-                                                          placement_method='random')
+                                                          algorithm='random')
 
     # Set up their guess_boards
     players['AI2']['guess_board'] = gui_ext.create_guess_board(players['AI']['board'])
@@ -67,14 +66,14 @@ def ai_opponent_game_loop(mode1: int, mode2: int) -> str:
                                                                   ai_coords,
                                                                   players['AI2']['board'],
                                                                   attack_status)
-        players['AI']['guess_board'] = storm_engine.shift(players['AI']['guess_board'],
-                                                          storm_direction)
-        players['AI2']['board'] = storm_engine.shift(players['AI2']['board'],
-                                                     storm_direction)
-        players['AI2']['guess_board'] = storm_engine.shift(players['AI2']['guess_board'],
-                                                           storm_direction)
-        players['AI']['board'] = storm_engine.shift(players['AI']['board'],
+        players['AI']['guess_board'] = game_engine.shift(players['AI']['guess_board'],
+                                                         storm_direction)
+        players['AI2']['board'] = game_engine.shift(players['AI2']['board'],
                                                     storm_direction)
+        players['AI2']['guess_board'] = game_engine.shift(players['AI2']['guess_board'],
+                                                          storm_direction)
+        players['AI']['board'] = game_engine.shift(players['AI']['board'],
+                                                   storm_direction)
 
     # Check who won and return the winner
     if game_engine.count_ships_remaining(players['AI2']['ships']) == 0:

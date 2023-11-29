@@ -55,15 +55,21 @@ def generate_attack_ext(board: list[list[str | None]],
     raise SyntaxError(f'{difficulty} is not a correct difficulty option must be in range (0-4)')
 
 
-def generate_attack(board: list[list[str | None]]) -> tuple[int, int]:
+def generate_attack(board: list[list[str | None]] = None) -> tuple[int, int]:
     """
     Generates a position to attack via specification random method
-    :param board: input the board to attack so the algorithm knows how large it is
+    :param board: input the board to attack so the algorithm knows how large it is. Unittests assume
+    there are no arguments for generate_attack so if we get not argument assume board_size = 10
     :return: a tuple coordinate on the grid
     """
 
+    if board: # if argument provided for the board make the length the size
+        board_size = len(board)
+    else:
+        board_size = 10
+
     # Purely random attack method
-    x, y = random.randrange(0, len(board)), random.randrange(0, len(board))
+    x, y = random.randrange(0, board_size), random.randrange(0, board_size)
     return x, y
 
 
@@ -110,10 +116,10 @@ def ai_opponent_game_loop() -> None:
     # Place the ships
     players['Human']['board'] = components.place_battleships(players['Human']['board'],
                                                              players['Human']['ships'],
-                                                             placement_method='custom')
+                                                             algorithm='custom')
     players['AI']['board'] = components.place_battleships(players['AI']['board'],
                                                           players['AI']['ships'],
-                                                          placement_method='random')
+                                                          algorithm='random')
 
     while (game_engine.count_ships_remaining(players['Human']['ships']) != 0 and
            game_engine.count_ships_remaining(players['AI']['ships']) != 0):
