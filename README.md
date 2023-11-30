@@ -44,7 +44,7 @@ There are 3 modes to run the game:
 
 
 ## Documentation
-
+[Developer documentation can be found here](docs/index.html)
 
 ## Details
 #### License
