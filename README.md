@@ -55,4 +55,4 @@ MIT License: [found here](LICENSE)
 - Matt Collison (Flask template, unit tests)
 
 #### Source
-Code can be found online at https://github.com/edf1101/Battleships/
+Code hosted (privately) at https://github.com/edf1101/Battleships/
