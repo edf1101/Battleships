@@ -1,0 +1,14 @@
+Battleships
+===========
+
+.. toctree::
+   :maxdepth: 4
+
+   advanced_attacking
+   ai_comparison
+   components
+   game_engine
+   gui_extensions
+   main
+   main_simple
+   mp_game_engine

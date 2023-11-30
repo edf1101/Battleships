@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>gui_extensions module &#8212; Battleships 2023 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=4f649999" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=039e1c02" />
+    <script src="_static/documentation_options.js?v=a4664895"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="module-gui_extensions">
+<span id="gui-extensions-module"></span><h1>gui_extensions module<a class="headerlink" href="#module-gui_extensions" title="Link to this heading">¶</a></h1>
+<p>These functions below help with the creation and maintenance of a ‘guess_board’.
+In the extended code the ‘board’ doesn’t get modified after generation, instead the
+‘guess_board’ gets modified to state whether a hit/miss/sink was there.
+This means we have a guess history and can handle the displays python side.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="gui_extensions.attack_sunk">
+<span class="sig-prename descclassname"><span class="pre">gui_extensions.</span></span><span class="sig-name descname"><span class="pre">attack_sunk</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coordinates</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">board</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">my_guess_board</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">battleships</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple[slice(&lt;class</span> <span class="pre">'str'&gt;,</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">None,</span> <span class="pre">None)]</span></span></span><a class="reference internal" href="_modules/gui_extensions.html#attack_sunk"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gui_extensions.attack_sunk" title="Link to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Similar to attack, but it doesn’t remove the ship from the board and</dt><dd><p>returns type of hit and ship name</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>coordinates</strong> – Coordinates to check if there’s a ship</p></li>
+<li><p><strong>board</strong> – The board (list of lists) to check</p></li>
+<li><p><strong>my_guess_board</strong> – my guess board to check if I’ve guessed here yet</p></li>
+<li><p><strong>battleships</strong> – The list of enemy ships to check</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple of attack result (‘hit’, ‘miss’ or ‘sink’, ‘prev_hit’)</p>
+</dd>
+</dl>
+<p>then ship_name that was sunk</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gui_extensions.create_guess_board">
+<span class="sig-prename descclassname"><span class="pre">gui_extensions.</span></span><span class="sig-name descname"><span class="pre">create_guess_board</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opponent_board</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/gui_extensions.html#create_guess_board"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gui_extensions.create_guess_board" title="Link to this definition">¶</a></dt>
+<dd><p>Creates the starting guess board, if an enemy ship is in that spot it’s ‘S’ if nothing then ‘N’
+:param opponent_board: The opponents starting board
+:return: Starting guess board</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gui_extensions.update_guess_board">
+<span class="sig-prename descclassname"><span class="pre">gui_extensions.</span></span><span class="sig-name descname"><span class="pre">update_guess_board</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">guess_board:</span> <span class="pre">list[list[str]],</span> <span class="pre">location:</span> <span class="pre">tuple[int,</span> <span class="pre">int],</span> <span class="pre">opponent_board:</span> <span class="pre">list[list[str</span> <span class="pre">|</span> <span class="pre">None]],</span> <span class="pre">sink_result:</span> <span class="pre">tuple[slice(&lt;class</span> <span class="pre">'str'&gt;,</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">None,</span> <span class="pre">None)]</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/gui_extensions.html#update_guess_board"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gui_extensions.update_guess_board" title="Link to this definition">¶</a></dt>
+<dd><p>This updates the guess board depending on the result of the attack_sunk function
+:param guess_board: The guess_board to update
+:param location: Where the player attacked
+:param opponent_board: The opponent board
+:param sink_result: The result of whether it was hit/sunk and the ship_name of where hit
+:return: An updated guess board</p>
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Battleships</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2023, Ed.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.2.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="_sources/gui_extensions.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

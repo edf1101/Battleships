@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>main module &#8212; Battleships 2023 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=4f649999" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=039e1c02" />
+    <script src="_static/documentation_options.js?v=a4664895"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="module-main">
+<span id="main-module"></span><h1>main module<a class="headerlink" href="#module-main" title="Link to this heading">¶</a></h1>
+<p>This is my main code for running a flask battleships game
+Includes added extensions:
+- Guessboards (holds move histories and can show ships sunk)
+- all board processing is done in python and HTML is just sent a copy of</p>
+<blockquote>
+<div><p>guessboards  (Means HTML website is persistent)</p>
+</div></blockquote>
+<ul class="simple">
+<li><p>Has the storm mode</p></li>
+<li><p>Has an entry screen</p></li>
+<li><p>Has difficulty modes</p></li>
+<li><p>Game itself encapsulated in OO</p></li>
+</ul>
+<dl class="py class">
+<dt class="sig sig-object py" id="main.BattleshipsGame">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">BattleshipsGame</span></span><a class="reference internal" href="_modules/main.html#BattleshipsGame"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.BattleshipsGame" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Encapsulated the battleships game functions into a class so we don’t
+need to use global variables</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="main.BattleshipsGame.attack">
+<span class="sig-name descname"><span class="pre">attack</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/main.html#BattleshipsGame.attack"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.BattleshipsGame.attack" title="Link to this definition">¶</a></dt>
+<dd><p>This handles When a user sends an attack
+:return: dictionary of the user and AI’s guess boards and game status</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main.BattleshipsGame.entry_interface">
+<span class="sig-name descname"><span class="pre">entry_interface</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="_modules/main.html#BattleshipsGame.entry_interface"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.BattleshipsGame.entry_interface" title="Link to this definition">¶</a></dt>
+<dd><p>When the Start game button gets pressed on the entry interface this gets triggered
+It sets up a game with the data returned
+:return: dictionary to show it was received OK</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main.BattleshipsGame.handle_menu">
+<span class="sig-name descname"><span class="pre">handle_menu</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="_modules/main.html#BattleshipsGame.handle_menu"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.BattleshipsGame.handle_menu" title="Link to this definition">¶</a></dt>
+<dd><p>When the return to menu button gets pressed this gets triggered. Just stops the game
+and will return to the entry screen
+:return: A dict just to show it completed fine</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main.BattleshipsGame.placement_interface">
+<span class="sig-name descname"><span class="pre">placement_interface</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/main.html#BattleshipsGame.placement_interface"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.BattleshipsGame.placement_interface" title="Link to this definition">¶</a></dt>
+<dd><p>This handles the placement menu, so when you first put your ships on the board
+:return: Returns a JSON file if it’s a POST request, or the HTML webpage if it’s not</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main.BattleshipsGame.root">
+<span class="sig-name descname"><span class="pre">root</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/main.html#BattleshipsGame.root"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.BattleshipsGame.root" title="Link to this definition">¶</a></dt>
+<dd><p>Handles rendering all the webpages. If the game isn’t started go to the entry page
+if its started but there’s no board go to the placement page. Else the gameplay page
+:return: HTML web pages: either placement if the board needs to be set up or gameplay</p>
+<blockquote>
+<div><p>if it has</p>
+</div></blockquote>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="main.attack">
+<span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">attack</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/main.html#attack"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.attack" title="Link to this definition">¶</a></dt>
+<dd><p>returns the game instance’s handle_attack function result
+:return: The status of the user’s attack and where the AI fired back</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="main.entry_interface">
+<span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">entry_interface</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/main.html#entry_interface"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.entry_interface" title="Link to this definition">¶</a></dt>
+<dd><p>Returns the game instance’s entry_interface function result
+:return: The dictionary result to respond that the entry_interface function worked</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="main.handle_menu">
+<span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">handle_menu</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/main.html#handle_menu"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.handle_menu" title="Link to this definition">¶</a></dt>
+<dd><p>Returns the game instance’s handle_menu function result
+:return: The dictionary result to respond that the handle_menu function worked</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="main.placement_interface">
+<span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">placement_interface</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/main.html#placement_interface"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.placement_interface" title="Link to this definition">¶</a></dt>
+<dd><p>returns the game instance’s placement_interface function
+:return: Returns a JSON file if it’s a POST request, or the HTML webpage if it’s not</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="main.root">
+<span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">root</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/main.html#root"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.root" title="Link to this definition">¶</a></dt>
+<dd><p>returns the game instance’s root function
+:return: HTML web pages: either placement if the board needs to be set up
+or gameplay if it has already</p>
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Battleships</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2023, Ed.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.2.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="_sources/main.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

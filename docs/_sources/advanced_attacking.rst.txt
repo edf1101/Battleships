@@ -1,0 +1,7 @@
+advanced\_attacking module
+==========================
+
+.. automodule:: advanced_attacking
+   :members:
+   :undoc-members:
+   :show-inheritance:

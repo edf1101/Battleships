@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>advanced_attacking &#8212; Battleships 2023 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=4f649999" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=039e1c02" />
+    <script src="../_static/documentation_options.js?v=a4664895"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for advanced_attacking</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module just deals with the AI when its doing more advanced</span>
+<span class="sd"> attacking rather than random guesses</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">components</span>
+<span class="kn">import</span> <span class="nn">mp_game_engine</span>
+
+
+<div class="viewcode-block" id="generate_attack_challenging">
+<a class="viewcode-back" href="../advanced_attacking.html#advanced_attacking.generate_attack_challenging">[docs]</a>
+<span class="k">def</span> <span class="nf">generate_attack_challenging</span><span class="p">(</span><span class="n">my_guess_board</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+                                <span class="n">min_ship_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                                <span class="n">difficulty</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This generates a more intelligent (not purely random) guess</span>
+<span class="sd">    :param my_guess_board: The guess board, so we know where we have guessed prior</span>
+<span class="sd">     and where has/ hasn&#39;t been sunk</span>
+<span class="sd">    :param min_ship_size: The smallest ship on the board</span>
+<span class="sd">    :param difficulty: The attack method difficulty, given this is the intelligent</span>
+<span class="sd">     AI algorithm its (2-4)</span>
+<span class="sd">    :return: A tuple location of where to guess</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># First going to find the places we have hit but not sunk by iterating through guess board</span>
+    <span class="n">unsunk_hits</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">y</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">my_guess_board</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">my_guess_board</span><span class="p">)):</span>
+            <span class="n">guess_value</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="n">x</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">guess_value</span> <span class="o">==</span> <span class="s1">&#39;H&#39;</span><span class="p">:</span>
+                <span class="n">unsunk_hits</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">unsunk_hits</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># Haven&#39;t got any unsunk hits, so we need to guess</span>
+
+        <span class="k">if</span> <span class="n">difficulty</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>  <span class="c1"># If difficulty 2 generate a random point if we have no hits to go off</span>
+            <span class="c1"># Reuse the attack function but set it to a low difficulty to generate random point</span>
+            <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">mp_game_engine</span><span class="o">.</span><span class="n">generate_attack_ext</span><span class="p">(</span><span class="n">my_guess_board</span><span class="p">,</span>
+                                                      <span class="n">difficulty</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                                                      <span class="n">my_guess_board</span><span class="o">=</span><span class="n">my_guess_board</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span>
+
+        <span class="c1"># If difficulty 3 or 4 generate a smart random point if we have no hits to go off</span>
+        <span class="k">if</span> <span class="n">difficulty</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]:</span>
+            <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">generate_blind_point</span><span class="p">(</span><span class="n">my_guess_board</span><span class="p">,</span> <span class="n">min_ship_size</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span>
+
+        <span class="k">raise</span> <span class="ne">SyntaxError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;difficulty parameter invalid cant be </span><span class="si">{</span><span class="n">difficulty</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="c1"># If the difficulty parameter is 2 or 3 make a semi-intelligent unseen hits guess</span>
+    <span class="k">if</span> <span class="n">difficulty</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]:</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">calculate_unsunk_attack</span><span class="p">(</span><span class="n">my_guess_board</span><span class="p">,</span> <span class="n">unsunk_hits</span><span class="p">,</span> <span class="n">intelligent</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span>
+
+    <span class="k">if</span> <span class="n">difficulty</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>  <span class="c1"># If the difficulty parameter 4 make an intelligent unseen hits guess</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">calculate_unsunk_attack</span><span class="p">(</span><span class="n">my_guess_board</span><span class="p">,</span> <span class="n">unsunk_hits</span><span class="p">,</span> <span class="n">intelligent</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span>
+
+    <span class="c1"># error raised if someone uses an invalid method parameter</span>
+    <span class="k">raise</span> <span class="ne">SyntaxError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;difficulty parameter invalid cant be </span><span class="si">{</span><span class="n">difficulty</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="calculate_unsunk_attack">
+<a class="viewcode-back" href="../advanced_attacking.html#advanced_attacking.calculate_unsunk_attack">[docs]</a>
+<span class="k">def</span> <span class="nf">calculate_unsunk_attack</span><span class="p">(</span><span class="n">my_guess_board</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+                            <span class="n">unsunk_hits</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]],</span>
+                            <span class="n">intelligent</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    When we have hit (but not sunk) positions on the board we should target around</span>
+<span class="sd">     them this function does that</span>
+<span class="sd">    :param my_guess_board: The guess board, so we know where we have guessed prior</span>
+<span class="sd">     and where has/ hasn&#39;t been sunk</span>
+<span class="sd">    :param unsunk_hits: Holds where we know there&#39;s been a hit, but not a sink</span>
+<span class="sd">    :param intelligent: True for the best result, or False is a little less accurate</span>
+<span class="sd">    :return: The location where to fire</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># For each unsunk move add its neighbours to the potential moves dictionary</span>
+    <span class="n">potential_moves</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">offsets</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)]</span>
+    <span class="k">for</span> <span class="n">unsunk</span> <span class="ow">in</span> <span class="n">unsunk_hits</span><span class="p">:</span>
+
+        <span class="c1"># For each unsunk hit add the surrounding tiles to the dictionary</span>
+        <span class="k">for</span> <span class="n">offset</span> <span class="ow">in</span> <span class="n">offsets</span><span class="p">:</span>
+
+            <span class="c1"># Get the combination of position + offset</span>
+            <span class="n">trial_position</span> <span class="o">=</span> <span class="p">(</span><span class="n">offset</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">unsunk</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">offset</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">unsunk</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+            <span class="c1"># If it&#39;s outside the board ignore it</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">components</span><span class="o">.</span><span class="n">in_board</span><span class="p">(</span><span class="n">trial_position</span><span class="p">,</span> <span class="n">my_guess_board</span><span class="p">):</span>
+                <span class="k">continue</span>
+
+            <span class="n">been_guessed</span> <span class="o">=</span> <span class="ow">not</span> <span class="p">(</span><span class="n">my_guess_board</span><span class="p">[</span><span class="n">trial_position</span><span class="p">[</span><span class="mi">1</span><span class="p">]][</span><span class="n">trial_position</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">==</span> <span class="s1">&#39;N&#39;</span> <span class="ow">or</span>
+                                <span class="n">my_guess_board</span><span class="p">[</span><span class="n">trial_position</span><span class="p">[</span><span class="mi">1</span><span class="p">]][</span><span class="n">trial_position</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">==</span> <span class="s1">&#39;B&#39;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">been_guessed</span><span class="p">:</span>  <span class="c1"># As long as they haven&#39;t been guessed add to dict</span>
+                <span class="k">if</span> <span class="n">unsunk</span> <span class="ow">in</span> <span class="n">potential_moves</span><span class="p">:</span>
+                    <span class="n">potential_moves</span><span class="p">[</span><span class="n">unsunk</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">trial_position</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">potential_moves</span><span class="p">[</span><span class="n">unsunk</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">trial_position</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">intelligent</span><span class="p">:</span>
+        <span class="c1"># Choose a random option from all the potential moves</span>
+
+        <span class="c1"># Combine the dictionary values into a list</span>
+        <span class="n">all_moves</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">potential_moves</span><span class="o">.</span><span class="n">values</span><span class="p">()),</span> <span class="p">[])</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">all_moves</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">all_moves</span><span class="p">)</span>  <span class="c1"># Pick a random one from the potential move list</span>
+
+        <span class="c1"># If we can&#39;t find a move then use a random one instead from existing function</span>
+        <span class="k">return</span> <span class="n">mp_game_engine</span><span class="o">.</span><span class="n">generate_attack_ext</span><span class="p">(</span><span class="n">my_guess_board</span><span class="p">,</span> <span class="n">difficulty</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                                                  <span class="n">my_guess_board</span><span class="o">=</span><span class="n">my_guess_board</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">intelligent</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">unsunk_pick_line</span><span class="p">(</span><span class="n">potential_moves</span><span class="p">,</span> <span class="n">unsunk_hits</span><span class="p">,</span> <span class="n">my_guess_board</span><span class="p">)</span>
+
+    <span class="k">raise</span> <span class="ne">SyntaxError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">intelligent</span><span class="si">}</span><span class="s1"> is not a valid argument for intelligent param&#39;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="unsunk_pick_line">
+<a class="viewcode-back" href="../advanced_attacking.html#advanced_attacking.unsunk_pick_line">[docs]</a>
+<span class="k">def</span> <span class="nf">unsunk_pick_line</span><span class="p">(</span><span class="n">potential_moves</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+                     <span class="n">unsunk_hits</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]],</span>
+                     <span class="n">my_guess_board</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    It predicts where ships might be given lines formed by unsunk ships</span>
+<span class="sd">    :param potential_moves: The Dictionary of potential moves around each unsunk ship</span>
+<span class="sd">    :param unsunk_hits: The list of unsunk hits on the board</span>
+<span class="sd">    :param my_guess_board: My guess board</span>
+<span class="sd">    :return: A position to guess</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># With this mode it trys to follow lines where previous hits have been</span>
+
+    <span class="n">great_moves</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># potential moves that follow in a line</span>
+
+    <span class="k">for</span> <span class="n">origin</span><span class="p">,</span> <span class="n">move_for_tile</span> <span class="ow">in</span> <span class="n">potential_moves</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+
+        <span class="k">for</span> <span class="n">potential</span> <span class="ow">in</span> <span class="n">move_for_tile</span><span class="p">:</span>  <span class="c1"># Go through all the potential moves</span>
+
+            <span class="n">offset</span> <span class="o">=</span> <span class="p">(</span><span class="n">potential</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">origin</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">potential</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">origin</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+            <span class="c1"># If the move to the in the opposite direction of its offset</span>
+            <span class="c1"># is a hit then there&#39;s a strong chance this next move will be a hit too</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">origin</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">offset</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">origin</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">offset</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="ow">in</span> <span class="n">unsunk_hits</span><span class="p">:</span>
+                <span class="n">great_moves</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">potential</span><span class="p">)</span>
+
+    <span class="c1"># If there aren&#39;t any moves that form an obvious line choose any potential move</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">great_moves</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+
+        <span class="c1"># Combine the dictionary values into a list</span>
+        <span class="n">all_moves</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">potential_moves</span><span class="o">.</span><span class="n">values</span><span class="p">()),</span> <span class="p">[])</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">all_moves</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">all_moves</span><span class="p">)</span>  <span class="c1"># Pick a random one from the potential move list</span>
+
+        <span class="c1"># If we can&#39;t find a move then use a random one instead from existing function</span>
+        <span class="k">return</span> <span class="n">mp_game_engine</span><span class="o">.</span><span class="n">generate_attack_ext</span><span class="p">(</span><span class="n">my_guess_board</span><span class="p">,</span> <span class="n">difficulty</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                                                  <span class="n">my_guess_board</span><span class="o">=</span><span class="n">my_guess_board</span><span class="p">)</span>
+
+    <span class="c1"># If there are some moves that form a line pick one of them</span>
+    <span class="k">return</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">great_moves</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="calculate_min_ship_size">
+<a class="viewcode-back" href="../advanced_attacking.html#advanced_attacking.calculate_min_ship_size">[docs]</a>
+<span class="k">def</span> <span class="nf">calculate_min_ship_size</span><span class="p">(</span><span class="n">board</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculates the size of the smallest ship on the board just from the guess board</span>
+<span class="sd">    :param board: Their original board containing ship names that gets passed in</span>
+<span class="sd">    :return: The size of the smallest ship</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Goes through each cell and increments the ship&#39;s count in a dictionary</span>
+    <span class="n">ships_counts</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">y</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">board</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">board</span><span class="p">)):</span>
+            <span class="n">cell</span> <span class="o">=</span> <span class="n">board</span><span class="p">[</span><span class="n">y</span><span class="p">][</span><span class="n">x</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">cell</span> <span class="ow">and</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">ships_counts</span><span class="p">:</span>
+                <span class="n">ships_counts</span><span class="p">[</span><span class="n">cell</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">elif</span> <span class="n">cell</span><span class="p">:</span>
+                <span class="n">ships_counts</span><span class="p">[</span><span class="n">cell</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="k">return</span> <span class="nb">min</span><span class="p">(</span><span class="n">ships_counts</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>  <span class="c1"># returns the minimum from the dictionary values</span></div>
+
+
+
+<div class="viewcode-block" id="generate_blind_point">
+<a class="viewcode-back" href="../advanced_attacking.html#advanced_attacking.generate_blind_point">[docs]</a>
+<span class="k">def</span> <span class="nf">generate_blind_point</span><span class="p">(</span><span class="n">my_guess_board</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">min_ship_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    If there are no unsunk hits on the board this function will return the best place to guess</span>
+<span class="sd">    :param my_guess_board: The guess board, so we know where we have guessed prior and</span>
+<span class="sd">    where has/ hasn&#39;t been sunk</span>
+<span class="sd">    :param min_ship_size: The smallest ship on the board</span>
+<span class="sd">    :return: A tuple location in the list of lists</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># First generate a list of points we may want to guess</span>
+    <span class="c1"># Generated in a semi-checkerboard pattern so if we guess them all it&#39;s impossible to miss</span>
+    <span class="n">checkerboard_points_guessed</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">checkerboard_points_not_guessed</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">y</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">my_guess_board</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">int</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">my_guess_board</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="n">y</span> <span class="o">%</span> <span class="n">min_ship_size</span><span class="p">))</span> <span class="o">/</span> <span class="n">min_ship_size</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="n">min_ship_size</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">y</span> <span class="o">%</span> <span class="n">min_ship_size</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">row</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;N&#39;</span> <span class="ow">or</span> <span class="n">row</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;B&#39;</span><span class="p">:</span>  <span class="c1"># Haven&#39;t guessed before</span>
+                <span class="n">checkerboard_points_not_guessed</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">checkerboard_points_guessed</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
+
+    <span class="c1"># To judge the best place to blind guess use 3 metrics then combine them and take the best</span>
+    <span class="n">metrics</span> <span class="o">=</span> <span class="p">([],</span> <span class="p">[],</span> <span class="p">[])</span>
+    <span class="c1"># Metric 0 is the distance to already guessed positions (higher better)</span>
+    <span class="c1"># Metric 1 isThe distance to the positions not guessed yet (lower better)</span>
+    <span class="c1"># Metric 2 for how many guessed tiles nearby</span>
+
+    <span class="k">for</span> <span class="n">point1</span> <span class="ow">in</span> <span class="n">checkerboard_points_not_guessed</span><span class="p">:</span>
+
+        <span class="c1"># Get the distance to already guessed positions, penalise this</span>
+        <span class="c1"># so we don&#39;t get too clumped points</span>
+        <span class="n">metric</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">point2</span> <span class="ow">in</span> <span class="n">checkerboard_points_guessed</span><span class="p">:</span>
+            <span class="n">metric</span> <span class="o">+=</span> <span class="nb">pow</span><span class="p">(</span><span class="n">point1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">point2</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="nb">pow</span><span class="p">(</span><span class="n">point1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">point2</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">metrics</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">metric</span><span class="p">)</span>
+
+        <span class="c1"># Get the distance to not guessed positions, encourage this</span>
+        <span class="c1"># so we space out the points</span>
+        <span class="n">metric</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">point2</span> <span class="ow">in</span> <span class="n">checkerboard_points_not_guessed</span><span class="p">:</span>
+            <span class="n">metric</span> <span class="o">+=</span> <span class="nb">pow</span><span class="p">(</span><span class="n">point1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">point2</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="nb">pow</span><span class="p">(</span><span class="n">point1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">point2</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">metrics</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">metric</span><span class="p">)</span>
+
+        <span class="c1"># If the distance to a guessed tile is less than half the board away</span>
+        <span class="c1"># add 1 to the metric, This prevents grouping</span>
+        <span class="n">metric</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">point2</span> <span class="ow">in</span> <span class="n">checkerboard_points_guessed</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">((</span><span class="nb">pow</span><span class="p">(</span><span class="n">point1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">point2</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="nb">pow</span><span class="p">(</span><span class="n">point1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">point2</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">2</span><span class="p">))</span>
+                    <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">my_guess_board</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">):</span>
+                <span class="n">metric</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">metrics</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">metric</span><span class="p">)</span>
+
+    <span class="c1"># Add the scores in the 3 metric then whichever tile has the lowest position overall is the best</span>
+    <span class="n">combined_metric</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">metric_1</span><span class="p">,</span> <span class="n">metric_2</span><span class="p">,</span> <span class="n">metric_3</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">metrics</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                                            <span class="n">metrics</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                                            <span class="n">metrics</span><span class="p">[</span><span class="mi">2</span><span class="p">]):</span>
+
+        <span class="c1"># Combine the metrics and add it to a combined metrics list</span>
+        <span class="n">combined_metric</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="nb">sorted</span><span class="p">(</span><span class="n">metrics</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">metric_1</span><span class="p">)</span> <span class="o">+</span>
+                                <span class="nb">sorted</span><span class="p">(</span><span class="n">metrics</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">metric_2</span><span class="p">)</span> <span class="o">+</span>
+                                <span class="nb">sorted</span><span class="p">(</span><span class="n">metrics</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">metric_3</span><span class="p">)))</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">combined_metric</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="c1"># If we can&#39;t find a move then use a random one instead from existing function</span>
+        <span class="k">return</span> <span class="n">mp_game_engine</span><span class="o">.</span><span class="n">generate_attack_ext</span><span class="p">(</span><span class="n">my_guess_board</span><span class="p">,</span> <span class="n">difficulty</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                                                  <span class="n">my_guess_board</span><span class="o">=</span><span class="n">my_guess_board</span><span class="p">)</span>
+
+    <span class="c1"># The best tile will be the one with the lowest tile metric</span>
+    <span class="c1"># Get the index of this tile in the checkerboard list and return it</span>
+    <span class="k">return</span> <span class="n">checkerboard_points_not_guessed</span><span class="p">[</span><span class="n">combined_metric</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">combined_metric</span><span class="p">))]</span></div>
+
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Battleships</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2023, Ed.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.2.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
