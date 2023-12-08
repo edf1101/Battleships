@@ -11,7 +11,7 @@ from copy import deepcopy
 import pytest
 import test_helper_functions as thf
 
-testReport = thf.TestReport("../test_report.txt")
+testReport = thf.TestReport("Reports/test_report.txt")
 
 
 @pytest.mark.dependency()
@@ -38,22 +38,27 @@ def test_initialise_board_return_size() -> None:
     :return: None
     """
 
-    components = importlib.import_module('components')
+    try:
+        components = importlib.import_module('components')
 
-    size = 10
-    # Run the function
-    board = components.initialise_board(size)
-    # Check that the return is a list
-    assert isinstance(board, list), "initialise_board function does not return a list"
-    # check that the length of the list is the same as board
-    assert len(board) == size, ("initialise_board function does not return a"
-                                " list of the correct size")
-    for row in board:
-        # Check that each sub element is a list
-        assert isinstance(row, list), "initialise_board function does not return a list of lists"
-        # Check that each sub list is the same size as board
-        assert len(row) == size, ("initialise_board function does not return lists"
-                                  " of the correct size")
+        size = 10
+        # Run the function
+        board = components.initialise_board(size)
+        # Check that the return is a list
+        assert isinstance(board, list), "initialise_board function does not return a list"
+        # check that the length of the list is the same as board
+        assert len(board) == size, ("initialise_board function does not return a"
+                                    " list of the correct size")
+        for row in board:
+            # Check that each sub element is a list
+            assert isinstance(row, list), \
+                "initialise_board function does not return a list of lists"
+            # Check that each sub list is the same size as board
+            assert len(row) == size, ("initialise_board function does not return lists"
+                                      " of the correct size")
+    except AssertionError as msg:
+        testReport.add_message('test_initialise_board_return_size failed')
+        pytest.fail(msg)
 
 
 @pytest.mark.dependency(depends=["test_components_exists"])
@@ -62,65 +67,83 @@ def test_initialise_board_return_none() -> None:
     Test that all the values in the list of list returned by initialise_board are None
     :return: None
     """
-    components = importlib.import_module('components')
-    size = 10
-    # Run the function
-    board = components.initialise_board(size)
+    try:
+        components = importlib.import_module('components')
+        size = 10
+        # Run the function
+        board = components.initialise_board(size)
 
-    for row in board:
-        for cell in row:
-            assert cell is None, ("initialise_board function does not return a list of lists "
-                                  "that are ALL None")
+        for row in board:
+            for cell in row:
+                assert cell is None, ("initialise_board function does not return a list of lists "
+                                      "that are ALL None")
+
+    except AssertionError as msg:
+        testReport.add_message('test_initialise_board_return_none failed')
+        pytest.fail(msg)
+
+    @pytest.mark.dependency(depends=["test_components_exists"])
+    def test_initialise_board_invalid_arguments() -> None:
+        """
+        Tests that if you enter invalid parameters for initialise board it throws an error
+        Testing if size = string or if size is smaller than 1
+        :return: None
+        """
+        try:
+            components = importlib.import_module('components')
+            with pytest.raises(TypeError):
+                components.initialise_board('ten')
+
+            with pytest.raises(ValueError):
+                components.initialise_board(-1)
+
+        except AssertionError as msg:
+            testReport.add_message('test_initialise_board_invalid_arguments failed')
+            pytest.fail(msg)
 
 
 @pytest.mark.dependency(depends=["test_components_exists"])
-def test_initialise_board_invalid_arguments() -> None:
-    """
-    Tests that if you enter invalid parameters for initialise board it throws an error
-    Testing if size = string or if size is smaller than 1
-    :return: None
-    """
-    components = importlib.import_module('components')
-    with pytest.raises(TypeError):
-        components.initialise_board('ten')
-
-    with pytest.raises(ValueError):
-        components.initialise_board(-1)
-
-
-@pytest.mark.dependency(depends=["test_components_exists"])
-def test_initialise_board_argument():
+def test_initialise_board_argument() -> None:
     """
     Test if the initialise_board function accepts an integer argument.
     """
-    components = importlib.import_module('components')
-
     try:
-        components.initialise_board(10)
-    except TypeError:
-        testReport.add_message("initialise_board function does not accept an integer argument")
-        pytest.fail("initialise_board function does not accept an integer argument")
+        components = importlib.import_module('components')
+
+        try:
+            components.initialise_board(10)
+        except TypeError:
+            testReport.add_message("initialise_board function does not accept an integer argument")
+            pytest.fail("initialise_board function does not accept an integer argument")
+
+    except AssertionError as msg:
+        testReport.add_message('test_initialise_board_argument failed')
+        pytest.fail(msg)
 
 
 @pytest.mark.dependency(depends=["test_components_exists"])
-def test_initialise_board_return_type():
+def test_initialise_board_return_type() -> None:
     """
     Test if the initialise_board function returns a list.
     """
-    components = importlib.import_module('components')
-
     try:
-        assert thf.is_list_of_lists(components.initialise_board(10), str)
-    except AssertionError:
-        testReport.add_message("initialise_board function does not return a list")
-        pytest.fail("initialise_board function does not return a list")
+        components = importlib.import_module('components')
+
+        try:
+            assert thf.is_list_of_lists(components.initialise_board(10), str)
+        except AssertionError:
+            testReport.add_message("initialise_board function does not return a list")
+            pytest.fail("initialise_board function does not return a list")
+    except AssertionError as msg:
+        testReport.add_message('test_initialise_board_return_type failed')
+        pytest.fail(msg)
 
 
 ##########################################################################
 # Test create_battleships function
 ##########################################################################
 @pytest.mark.dependency(depends=["test_components_exists"])
-def test_create_battleships_exists():
+def test_create_battleships_exists() -> None:
     """
     Test if the create_battleships function exists.
     """
@@ -135,7 +158,7 @@ def test_create_battleships_exists():
 
 
 @pytest.mark.dependency(depends=["test_components_exists"])
-def test_battleships_txt_exists():
+def test_battleships_txt_exists() -> None:
     """
     Test if the battleships.txt file exists.
     """
@@ -149,7 +172,7 @@ def test_battleships_txt_exists():
 
 
 @pytest.mark.dependency(depends=["test_components_exists"])
-def test_create_battleships_argument():
+def test_create_battleships_argument() -> None:
     """
     Test if the create_battleships function accepts a string argument.
     """
@@ -163,7 +186,7 @@ def test_create_battleships_argument():
 
 
 @pytest.mark.dependency(depends=["test_components_exists"])
-def test_create_battleships_return_type():
+def test_create_battleships_return_type() -> None:
     """
     Test if the create_battleships function returns a dictionary.
     """
@@ -180,7 +203,7 @@ def test_create_battleships_return_type():
 # Test place_battleships function
 ##########################################################################
 @pytest.mark.dependency(depends=["test_components_exists"])
-def test_place_battleships_exists():
+def test_place_battleships_exists() -> None:
     """
     Test if the place_battleships function exists.
     """
@@ -194,7 +217,7 @@ def test_place_battleships_exists():
 
 
 @pytest.mark.dependency(depends=["test_components_exists"])
-def test_place_battleships_arguments():
+def test_place_battleships_arguments() -> None:
     """
     Test if the place_battleships function accepts a list and a dictionary argument.
     """
@@ -230,7 +253,7 @@ def test_place_battleships_arguments():
 
 
 @pytest.mark.dependency(depends=["test_components_exists"])
-def test_place_battleships_return_type():
+def test_place_battleships_return_type() -> None:
     """
     Test if the place_battleships function returns a list of lists of strings/None values.
     """
@@ -256,30 +279,36 @@ def test_place_battleships_argument_errors() -> None:
     Test what happens if we give invalid value arguments to the function place_battleships
     :return: None
     """
-    components = importlib.import_module('components')
-    board = components.initialise_board(10)
-    ships = components.create_battleships("battleships.txt")
-    with pytest.raises(ValueError):
-        components.place_battleships(board, ships, algorithm='nonsense Algorithm')
 
-    # Test giving it a board that's nothing
-    board = []
-    with pytest.raises(ValueError):
-        components.place_battleships(board, ships)
+    try:
+        components = importlib.import_module('components')
+        board = components.initialise_board(10)
+        ships = components.create_battleships("battleships.txt")
+        with pytest.raises(ValueError):
+            components.place_battleships(board, ships, algorithm='nonsense Algorithm')
 
-    # Test what happens if we pass a string as the board parameter
-    with pytest.raises(TypeError):
-        components.place_battleships('board', ships)
+        # Test giving it a board that's nothing
+        board = []
+        with pytest.raises(ValueError):
+            components.place_battleships(board, ships)
 
-    board = components.initialise_board(10)
-    # Test giving it a ships parameter that's nothing
-    ships = {}
-    with pytest.raises(ValueError):
-        components.place_battleships(board, ships)
+        # Test what happens if we pass a string as the board parameter
+        with pytest.raises(TypeError):
+            components.place_battleships('board', ships)
 
-    # Test what happens if we pass a string as the ships parameter
-    with pytest.raises(TypeError):
-        components.place_battleships(board, 'ships')
+        board = components.initialise_board(10)
+        # Test giving it a ships parameter that's nothing
+        ships = {}
+        with pytest.raises(ValueError):
+            components.place_battleships(board, ships)
+
+        # Test what happens if we pass a string as the ships parameter
+        with pytest.raises(TypeError):
+            components.place_battleships(board, 'ships')
+
+    except AssertionError as msg:
+        testReport.add_message('test_place_battleships_argument_errors failed')
+        pytest.fail(msg)
 
 
 @pytest.mark.dependency(depends=["test_components_exists"])
@@ -288,41 +317,62 @@ def test_place_battleships_functionality() -> None:
     Test that the function gives expected outputs
     :return: None
     """
-    components = importlib.import_module('components')
 
-    # Test if the simple mode works
-    board = components.initialise_board(5)
-    ships = {'Submarine': 3, 'Destroyer': 2}
+    try:
 
-    test_board = components.place_battleships(deepcopy(board), ships, algorithm='simple')
-    expected_board = [['Submarine', 'Submarine', 'Submarine', None, None],
-                      ['Destroyer', 'Destroyer', None, None, None],
-                      [None, None, None, None, None],
-                      [None, None, None, None, None],
-                      [None, None, None, None, None]]
+        components = importlib.import_module('components')
 
-    assert expected_board == test_board, "The simple function doesn't work"
+        # Test if the simple mode works
+        board = components.initialise_board(5)
+        ships = {'Submarine': 3, 'Destroyer': 2}
 
-    # For the random mode we will just test that there are the correct number of tiles across
-    # the board as ships dict requires
-    board = components.initialise_board(5)
-    ships = {'Submarine': 3, 'Destroyer': 2}
-    test_board = components.place_battleships(deepcopy(board), ships, algorithm='simple')
+        test_board = components.place_battleships(deepcopy(board), ships, algorithm='simple')
+        expected_board = [['Submarine', 'Submarine', 'Submarine', None, None],
+                          ['Destroyer', 'Destroyer', None, None, None],
+                          [None, None, None, None, None],
+                          [None, None, None, None, None],
+                          [None, None, None, None, None]]
 
-    for ship, expected_count in ships.items():
-        count = 0
-        for row in test_board:
-            for cell in row:
-                if cell == ship:
-                    count += 1
-        assert count == expected_count, "The random function doesn't work"
+        assert expected_board == test_board, "The simple function doesn't work"
+
+        # For the random mode we will just test that there are the correct number of tiles across
+        # the board as ships dict requires
+        board = components.initialise_board(5)
+        ships = {'Submarine': 3, 'Destroyer': 2}
+        test_board = components.place_battleships(deepcopy(board), ships, algorithm='simple')
+
+        for ship, expected_count in ships.items():
+            count = 0
+            for row in test_board:
+                for cell in row:
+                    if cell == ship:
+                        count += 1
+            assert count == expected_count, "The random function doesn't work"
+
+    except AssertionError as msg:
+        testReport.add_message('test_place_battleships_functionality failed')
+        pytest.fail(msg)
 
 
 ##########################################################################
 # Test in_board function
 ##########################################################################
 @pytest.mark.dependency(depends=["test_components_exists"])
-def test_in_board_arguments():
+def test_in_board_exists() -> None:
+    """
+    Test if the place_battleships function exists.
+    """
+    components = importlib.import_module('components')
+
+    try:
+        assert hasattr(components, 'in_board'), "in_board function does not exist"
+    except AssertionError:
+        testReport.add_message("in_board function does not exist in your solution.")
+        pytest.fail("in_board function does not exist")
+
+
+@pytest.mark.dependency(depends=["test_components_exists"])
+def test_in_board_arguments() -> None:
     """
     Test if the in_board function accepts correct arguments.
     """
@@ -341,21 +391,165 @@ def test_in_board_arguments():
 
 
 @pytest.mark.dependency(depends=["test_components_exists"])
-def test_in_board_functionality():
+def test_in_board_functionality() -> None:
     """
     Test that the function gives expected outputs
     :return: None
     """
+    try:
+        components = importlib.import_module('components')
+
+        board = components.initialise_board(5)
+
+        # Edge cases
+        assert components.in_board((-1, 0), board) is False, "Function failed"
+        assert components.in_board((0, 0), board) is True, "Function failed"
+        assert components.in_board((5, 5), board) is False, "Function failed"
+
+        # True examples
+        assert components.in_board((2, 2), board) is True, "Function failed"
+
+    except AssertionError as msg:
+        testReport.add_message('test_in_board_functionality failed')
+        pytest.fail(msg)
+
+
+@pytest.mark.dependency(depends=["test_components_exists"])
+def test_in_board_invalid_arguments() -> None:
+    """
+    Test that the function throws correct errors when given wrong arguments
+    :return: None
+    """
+    try:
+        components = importlib.import_module('components')
+
+        board = components.initialise_board(5)
+
+        # Test giving board parameter as a string not a list of lists
+        with pytest.raises(TypeError):
+            components.in_board((2, 2), 'board')
+
+        # Test giving incorrect parameter for location should be tuple[int,int]
+        with pytest.raises(TypeError):
+            components.in_board([2, 2], board)
+
+        # Test giving tuple of length 3 for location
+        with pytest.raises(ValueError):
+            components.in_board((2, 2, 1), board)
+
+    except AssertionError as msg:
+        testReport.add_message('test_in_board_invalid_arguments failed')
+        pytest.fail(msg)
+
+
+##########################################################################
+# Test try_place_ship function
+##########################################################################
+@pytest.mark.dependency(depends=["test_components_exists"])
+def test_try_place_ship_exists() -> None:
+    """
+    Test if the place_battleships function exists.
+    """
     components = importlib.import_module('components')
 
-    board = components.initialise_board(5)
-
-    # Edge cases
-    assert components.in_board((-1, 0), board) is False, "Function failed"
-    assert components.in_board((0, 0), board) is True, "Function failed"
-    assert components.in_board((5, 5), board) is False, "Function failed"
-
-    # True examples
-    assert components.in_board((2, 2), board) is True, "Function failed"
+    try:
+        assert hasattr(components, 'try_place_ship'), "try_place_ship function does not exist"
+    except AssertionError:
+        testReport.add_message("try_place_ship function does not exist in your solution.")
+        pytest.fail("try_place_ship function does not exist")
 
 
+def test_try_place_ship_invalid_arguments() -> None:
+    """
+    Test that the function throws correct errors when given wrong arguments
+    :return: None
+    """
+
+    try:
+        components = importlib.import_module('components')
+
+        board = components.initialise_board(5)
+        ship_name = 'ship1'
+        ship_size = 3
+        position = (2, 2)
+        orientation = 'h'
+
+        # Test giving board parameter as a string not a list of lists
+        with pytest.raises(TypeError):
+            components.try_place_ship('board', ship_name, ship_size, position, orientation)
+
+        # Test giving ship_name parameter as an int not string
+        with pytest.raises(TypeError):
+            components.try_place_ship(board, 3, ship_size, position, orientation)
+
+        # Test giving ship_size parameter as a string not an int
+        with pytest.raises(TypeError):
+            components.try_place_ship(board, ship_name, 'three', position, orientation)
+
+        # Test giving position as a non tuple[int,int]
+        with pytest.raises(TypeError):
+            components.try_place_ship(board, ship_name, ship_size, [2, 3], orientation)
+        with pytest.raises(TypeError):
+            components.try_place_ship(board, ship_name, ship_size, (1, 'a'), orientation)
+
+        # Test giving orientation as incorrect argument, should be a str of either 'v' or 'h
+        with pytest.raises(ValueError):
+            components.try_place_ship(board, ship_name, ship_size, position, 't')
+        with pytest.raises(TypeError):
+            components.try_place_ship(board, ship_name, ship_size, position, 3)
+
+    except AssertionError as msg:
+        testReport.add_message('test_try_place_ship_invalid_arguments failed')
+        pytest.fail(msg)
+
+
+def test_try_place_ship_incorrect_placement() -> None:
+    """
+    Test that the function gives None back if the parameters for placing a ship are invalid
+    :return: None
+    """
+    try:
+        components = importlib.import_module('components')
+
+        blank_board = components.initialise_board(5)
+        ship_name = 'ship1'
+        ship_size = 3
+        position = (3, 3)
+        orientation = 'h'
+
+        assert components.try_place_ship(blank_board, ship_name,
+                                         ship_size, position, orientation) is None
+
+    except AssertionError as msg:
+        testReport.add_message('test_try_place_ship_incorrect_placement failed')
+        pytest.fail(msg)
+
+
+def test_try_place_ship_correct_placement() -> None:
+    """
+    Test that the function gives the correct board back if the parameters
+     for placing a ship are valid
+    :return: None
+    """
+
+    try:
+        components = importlib.import_module('components')
+
+        blank_board = components.initialise_board(5)
+        ship_name = 'ship1'
+        ship_size = 3
+        position = (2, 2)
+        orientation = 'h'
+
+        correct_board = [[None, None, None, None, None],
+                         [None, None, None, None, None],
+                         [None, None, 'ship1', 'ship1', 'ship1'],
+                         [None, None, None, None, None],
+                         [None, None, None, None, None]]
+
+        assert components.try_place_ship(blank_board, ship_name,
+                                         ship_size, position, orientation) == correct_board
+
+    except AssertionError as msg:
+        testReport.add_message('test_try_place_ship_correct_placement failed')
+        pytest.fail(msg)

@@ -73,6 +73,26 @@ def try_place_ship(board: list[list],
     :return: None if the placement is invalid, else the updated board list of lists
     """
 
+    # Check for incorrect parameters
+    if (not isinstance(orientation, str) or not isinstance(ship_size, int)
+            or not isinstance(ship_name, str)
+            or not isinstance(board, list)):
+        raise TypeError('Incorrect argument type')
+
+    # Check for incorrect board argument
+    for row in board:
+        if not isinstance(row, list):
+            raise TypeError('board argument incorrect')
+
+    # Check for incorrect position argument
+    if (not isinstance(position, tuple) or not isinstance(position[0], int)
+            or not isinstance(position[1], int)):
+        raise TypeError('position argument incorrect')
+
+    # Check orientation is correct
+    if orientation not in ['v','h']:
+        raise ValueError('orientation should be v or h')
+
     modify_board = copy.deepcopy(board)  # so it doesn't modify the board passed through parameters
     for _ in range(ship_size):
 
@@ -111,14 +131,11 @@ def place_battleships(board: list[list],
     """
 
     # Error checking to see if any of the arguments are present but bad
-    if not isinstance(board, list):
-        raise TypeError('Board parameter is not a list')
+    if not isinstance(board, list) or not isinstance(ships, dict):
+        raise TypeError('parameter type error')
 
     if len(board) == 0 or len(board[0]) == 0:
         raise ValueError('Board parameter is of size 0')
-
-    if not isinstance(ships, dict):
-        raise TypeError('ships parameter is not a dictionary')
 
     if len(ships) == 0:
         raise ValueError('ships parameter is of size 0')
@@ -191,5 +208,15 @@ def in_board(location: tuple[int, int], board: list[list]) -> bool:
     :param board: Reference to the board so we can find it's size
     :return: Whether its inside
     """
+
+    if not isinstance(board, list) or not isinstance(location, tuple):
+        raise TypeError('parameter type error')
+
+    if not isinstance(location[0], int) or not isinstance(location[1], int):
+        raise TypeError('incorrect location parameter format')
+
+    if len(location) != 2:
+        raise ValueError('incorrect location parameter length')
+
     inside = 0 <= location[0] < len(board) and 0 <= location[1] < len(board)
     return inside
