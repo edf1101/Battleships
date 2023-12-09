@@ -10,12 +10,10 @@ Includes added extensions:
 - Game itself encapsulated in OO
 """
 
-# Import flask libs
+
 import random
 import json
-from flask import Flask
-from flask import request
-from flask import render_template
+from flask import Flask, request, render_template
 
 # Import gameplay libs
 import game_engine

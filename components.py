@@ -90,7 +90,7 @@ def try_place_ship(board: list[list],
         raise TypeError('position argument incorrect')
 
     # Check orientation is correct
-    if orientation not in ['v','h']:
+    if orientation not in ['v', 'h']:
         raise ValueError('orientation should be v or h')
 
     modify_board = copy.deepcopy(board)  # so it doesn't modify the board passed through parameters
@@ -113,8 +113,6 @@ def try_place_ship(board: list[list],
 
         elif orientation == 'h':  # Right
             position = (position[0] + 1, position[1])
-        else:
-            raise ValueError("Orientation can only be 'v' or 'h'")
 
     return modify_board
 
@@ -220,3 +218,29 @@ def in_board(location: tuple[int, int], board: list[list]) -> bool:
 
     inside = 0 <= location[0] < len(board) and 0 <= location[1] < len(board)
     return inside
+
+
+def get_positions_by_name(board: list[list], names: list[str]) -> list[tuple[int, int]]:
+    """
+    Returns a list of all the tuple positions on the board that are occupied by a ship
+    with name in list names. Primarily used for finding sunk ships
+    :param board: The board to search in
+    :param names: The names of the ships to look for
+    :return: A list of the positions with name in list 'names'
+    """
+    # Check parameters
+    if not isinstance(board, list) or not isinstance(names, list):
+        raise TypeError('parameters are incorrect type')
+    # Check that each row of the board list is also a list
+    for row in board:
+        if not isinstance(row, list):
+            raise TypeError('parameter board is not a list of lists')
+
+    positions = []
+    for row_idx, row in enumerate(board):
+        for idx, cell in enumerate(row):
+
+            if cell in names:  # If the cell name is in names
+                positions.append((idx, row_idx))  # Append the tuple of its coordinates
+
+    return positions

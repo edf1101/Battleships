@@ -3,9 +3,9 @@ This module runs a simple Battleships game with no extensions (albeit using OOP)
 """
 
 import json
-from flask import Flask
-from flask import request
-from flask import render_template
+from copy import deepcopy
+
+from flask import Flask, request, render_template
 
 # Import gameplay libs
 import game_engine
@@ -26,13 +26,18 @@ class BattleshipsGame:
         self.set_board = False
         self.board_size = board_size
         self.players['Human'] = {'board': components.initialise_board(self.board_size),
-                                 'ships': components.create_battleships()}
+                                 'ships': components.create_battleships(),
+                                 'history': []}
         self.players['AI'] = {'board': components.initialise_board(self.board_size),
-                              'ships': components.create_battleships()}
+                              'ships': components.create_battleships(),
+                              'history': []}
 
         self.players['AI']['board'] = components.place_battleships(self.players['AI']['board'],
                                                                    self.players['AI']['ships'],
-                                                                   placement_method='random')
+                                                                   algorithm='random')
+        # Now AI has made its board lets save the original board so we can keep track
+        # of what's sunk and where
+        self.players['AI']['original_board'] = deepcopy(self.players['AI']['board'])
 
     def placement_interface(self) -> str:
         """
@@ -48,8 +53,10 @@ class BattleshipsGame:
 
             new_layout = components.place_battleships(self.players['Human']['board'],
                                                       self.players['Human']['ships'],
-                                                      placement_method='custom')
+                                                      algorithm='custom')
+
             self.players['Human']['board'] = new_layout
+            self.players['Human']['original_board'] = deepcopy(new_layout)
 
             # so it can redirect to the main game page and start game
             self.set_board = True
@@ -62,7 +69,7 @@ class BattleshipsGame:
                                board_size=self.board_size,
                                ships=self.players['Human']['ships'])
 
-    def handle_attack(self) -> str:
+    def handle_attack(self) -> dict:
         """
         This handles When a user sends an attack
         :return: The status of the user's attack and where the AI fired back
@@ -72,22 +79,32 @@ class BattleshipsGame:
         attack_status = game_engine.attack(user_coords, self.players['AI']['board'],
                                            self.players['AI']['ships'])
 
+        # Calculate which of the AI ships we have sunk based on its original board
+        sunk_ship_types = [k for k, v in self.players['AI']['ships'].items() if v == 0]
+        ai_sunken_places = components.get_positions_by_name(self.players['AI']['original_board'],
+                                                            sunk_ship_types)
+
         ai_coords = mp_game_engine.generate_attack(self.players['AI']['board'])
-        attack_status = game_engine.attack(ai_coords, self.players['Human']['board'],
-                                           self.players['Human']['ships'])
+        ai_attack_status = game_engine.attack(ai_coords, self.players['Human']['board'],
+                                              self.players['Human']['ships'])
+
+        # Calculate which of my ships the AI has sunk based on my original board
+        sunk_ship_types = [k for k, v in self.players['Human']['ships'].items() if v == 0]
+        my_sunken_places = components.get_positions_by_name(self.players['Human']['original_board'],
+                                                            sunk_ship_types)
 
         # Check to see if game over
         finished = (game_engine.count_ships_remaining(self.players['Human']['ships']) == 0 or
                     game_engine.count_ships_remaining(self.players['AI']['ships']) == 0)
-        if finished:
-            # Check who died
-            if game_engine.count_ships_remaining(self.players['Human']['ships']) == 0:
-                return {'hit': attack_status, 'AI_Turn': ai_coords,
-                        'finished': " The Human LOST! Better luck next time"}
-            return {'hit': attack_status, 'AI_Turn': ai_coords,
-                    'finished': " The Human WON! Well done"}
 
-        return {'hit': attack_status, 'AI_Turn': ai_coords}
+        return_data = {'hit': attack_status, 'AI_Turn': ai_coords,
+                       'sunk': [ai_sunken_places, my_sunken_places]}
+        
+        if finished:
+            ai_won = game_engine.count_ships_remaining(self.players['Human']['ships']) == 0
+            return_data['finished'] = f"The Human {'LOST' if ai_won else 'WON'}! Game over"
+
+        return return_data
 
     def root(self) -> str:
         """
@@ -101,7 +118,7 @@ class BattleshipsGame:
                                    board_size=self.board_size,
                                    ships=self.players['Human']['ships'])
 
-        return render_template('gameplay.html',
+        return render_template('main.html',
                                player_board=self.players['Human']['board'])
 
 
@@ -115,7 +132,7 @@ def placement_interface() -> str:
 
 
 @app.route('/attack')
-def handle_attack() -> str:
+def handle_attack() -> dict:
     """
     returns the game instance's handle_attack function
     :return: The status of the user's attack and where the AI fired back

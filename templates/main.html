@@ -70,19 +70,17 @@
             .then(response => response.json())
             .then(data => {
                 //Process the response
-                    let cell = document.getElementById('cell-' + x + '-' + y);
 
-                if (data['hit'] === true || cell.style.backgroundColor === 'red'  ) {
+                let cell = document.getElementById('cell-' + x + '-' + y);
+                if (data['hit'] === true || cell.style.backgroundColor === 'red') {
                     //Change the colour of the div to red if the attack was a hit
                     cell.style.backgroundColor = 'red';
 
                 } else {
                     //Change the colour of the div to blue if attack was a miss
-                    let cell = document.getElementById('cell-' + x + '-' + y);
                     cell.style.backgroundColor = 'lightblue';
                 }
-
-                //process the AI turn coordinate tupple
+                //process the AI turn coordinate tuple
                 if(data['AI_Turn']){
                     let AI_x = data['AI_Turn'][0];
                     let AI_y = data['AI_Turn'][1];
@@ -95,6 +93,24 @@
                     } else {
                         cell.style.backgroundColor = 'red';
                         log_string+= " and hit";
+                    }
+                }
+
+                if (data['sunk']){
+                    // mark all the ai_sunken positions as green
+                    let ai_sunken_positions = data['sunk'][0];
+                    for (let i=0; i<ai_sunken_positions.length; i++){
+                        let pos = ai_sunken_positions[i];
+                        let cell = document.getElementById('cell-' + pos[0] + '-' + pos[1]);
+                        cell.style.backgroundColor = 'green';
+                    }
+
+                    // mark all the ai_sunken positions as green
+                    let human_sunken_positions = data['sunk'][1];
+                    for (let i=0; i<human_sunken_positions.length; i++){
+                        let pos = human_sunken_positions[i];
+                        let cell = document.getElementById('small-cell-' + pos[0] + '-' + pos[1]);
+                        cell.style.backgroundColor = 'green';
                     }
                 }
 

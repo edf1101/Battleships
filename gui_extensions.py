@@ -39,7 +39,7 @@ def attack_sunk(coordinates: tuple[int, int],
 
 def create_guess_board(opponent_board: list[list[str | None]]) -> list[list[str]]:
     """
-    Creates the starting guess board, if an enemy ship is in that spot it's 'S' if nothing then 'N'
+    Creates the starting guess board, if an enemy ship is in that spot it's 'B' if nothing then 'N'
     :param opponent_board: The opponents starting board
     :return: Starting guess board
     """

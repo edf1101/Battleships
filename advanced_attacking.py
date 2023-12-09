@@ -21,6 +21,14 @@ def generate_attack_challenging(my_guess_board: list[list[str]],
     :return: A tuple location of where to guess
     """
 
+    # Check parameter types
+    if not isinstance(min_ship_size,int) or not isinstance(difficulty,int) or not isinstance(my_guess_board, list):
+        raise TypeError('parameters incorrect type')
+
+    for row in my_guess_board:
+        if not isinstance(row,list):
+            raise TypeError('not all rows of guess board are lists')
+
     # First going to find the places we have hit but not sunk by iterating through guess board
     unsunk_hits = []
     for y, row in enumerate(my_guess_board):
@@ -43,7 +51,7 @@ def generate_attack_challenging(my_guess_board: list[list[str]],
             x, y = generate_blind_point(my_guess_board, min_ship_size)
             return x, y
 
-        raise SyntaxError(f'difficulty parameter invalid cant be {difficulty}')
+        raise ValueError(f'difficulty parameter invalid cant be {difficulty}')
 
     # If the difficulty parameter is 2 or 3 make a semi-intelligent unseen hits guess
     if difficulty in [2, 3]:
@@ -55,7 +63,7 @@ def generate_attack_challenging(my_guess_board: list[list[str]],
         return x, y
 
     # error raised if someone uses an invalid method parameter
-    raise SyntaxError(f'difficulty parameter invalid cant be {difficulty}')
+    raise ValueError(f'difficulty parameter invalid cant be {difficulty}')
 
 
 def calculate_unsunk_attack(my_guess_board: list[list[str]],
