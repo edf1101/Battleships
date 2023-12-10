@@ -6,7 +6,6 @@ Also contains a simple Command line game when module itself is executed
 import random
 import components
 import game_engine
-import advanced_attacking
 
 players = {}
 

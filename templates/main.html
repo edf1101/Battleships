@@ -152,11 +152,31 @@
 
         }
 
+        function mainMenu(){
+            console.log('Want main menu');
+            fetch('/menu', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                        },
+                body: JSON.stringify({'main_menu':true}),
+            })
+             .then(response => response.json())
+                    .then(data => {
+                        window.location.href = '/';
+
+                    })
+                    .catch((error) => {
+                        alert("Error going to menu: " + error);
+                    });
+        }
+
     </script>
 </head>
 
 <body>
     <h1>Battleships Game</h1>
+    <button class="menuButton" onclick="mainMenu()">Main Menu</button>
     <div class="container">
         <div class="gameLog">
             <h2 id="gameLog">Game Log:</h2>

@@ -1,7 +1,0 @@
-gui\_extensions module
-======================
-
-.. automodule:: gui_extensions
-   :members:
-   :undoc-members:
-   :show-inheritance:

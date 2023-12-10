@@ -6,3 +6,4 @@ recently sunk so we can update them as green. Store the users original board to 
 - Also store move history
 - modify template so if person guesses same place it doesnt change colour to miss colour
 - uses numpy
+- 
