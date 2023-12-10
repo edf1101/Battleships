@@ -63,7 +63,7 @@ def generate_attack(board: list[list[str | None]] = None) -> tuple[int, int]:
     :return: a tuple coordinate on the grid
     """
 
-    if board: # if argument provided for the board make the length the size
+    if board:  # if argument provided for the board make the length the size
         board_size = len(board)
     else:
         board_size = 10

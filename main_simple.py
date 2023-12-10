@@ -9,8 +9,8 @@ from flask import Flask, request, render_template
 
 # Import gameplay libs
 import game_engine
-import mp_game_engine
 import components
+import advanced_ai as ai
 
 app = Flask(__name__)
 
@@ -75,31 +75,33 @@ class BattleshipsGame:
         :return: The status of the user's attack and where the AI fired back
         """
 
+        # Deal with the human attack
         user_coords = int(request.args.get('x')), int(request.args.get('y'))
         attack_status = game_engine.attack(user_coords, self.players['AI']['board'],
                                            self.players['AI']['ships'])
+        self.players['Human']['history'].append(user_coords)
 
         # Calculate which of the AI ships we have sunk based on its original board
-        sunk_ship_types = [k for k, v in self.players['AI']['ships'].items() if v == 0]
-        ai_sunken_places = components.get_positions_by_name(self.players['AI']['original_board'],
-                                                            sunk_ship_types)
+        ai_sunken_places = components.get_sunken_ships(self.players['AI'])
 
-        ai_coords = mp_game_engine.generate_attack(self.players['AI']['board'])
-        ai_attack_status = game_engine.attack(ai_coords, self.players['Human']['board'],
-                                              self.players['Human']['ships'])
+        # The AI's attack
+        ai_coords = ai.generate_advanced_attack(3,
+                                                self.players['Human'],
+                                                self.players['AI']['history'])
+        game_engine.attack(ai_coords, self.players['Human']['board'],
+                           self.players['Human']['ships'])
+        self.players['AI']['history'].append(ai_coords)
 
         # Calculate which of my ships the AI has sunk based on my original board
-        sunk_ship_types = [k for k, v in self.players['Human']['ships'].items() if v == 0]
-        my_sunken_places = components.get_positions_by_name(self.players['Human']['original_board'],
-                                                            sunk_ship_types)
+        my_sunken_places = components.get_sunken_ships(self.players['Human'])
 
-        # Check to see if game over
-        finished = (game_engine.count_ships_remaining(self.players['Human']['ships']) == 0 or
-                    game_engine.count_ships_remaining(self.players['AI']['ships']) == 0)
-
+        # Send back return data to the Front end
         return_data = {'hit': attack_status, 'AI_Turn': ai_coords,
                        'sunk': [ai_sunken_places, my_sunken_places]}
-        
+
+        # bool of whether game is finished
+        finished = (game_engine.count_ships_remaining(self.players['Human']['ships']) == 0 or
+                    game_engine.count_ships_remaining(self.players['AI']['ships']) == 0)
         if finished:
             ai_won = game_engine.count_ships_remaining(self.players['Human']['ships']) == 0
             return_data['finished'] = f"The Human {'LOST' if ai_won else 'WON'}! Game over"

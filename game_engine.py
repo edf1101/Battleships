@@ -64,6 +64,7 @@ def count_ships_remaining(ships: dict[str, int]) -> int:
 
     return total
 
+
 # Functions below are for the extension 'storm' functionality (board moves each turn)
 def shift_down(board: list[list]) -> list[list]:
     """
@@ -79,7 +80,7 @@ def shift_down(board: list[list]) -> list[list]:
     return board_write
 
 
-def shift_right(board:list[list]) -> list[list]:
+def shift_right(board: list[list]) -> list[list]:
     """
     Shifts a list of lists right 1 space
     :param board: The list to shift
@@ -98,7 +99,7 @@ def shift_right(board:list[list]) -> list[list]:
     return board
 
 
-def shift(board:list[list], direction:tuple[int, int]) -> list[list]:
+def shift(board: list[list], direction: tuple[int, int]) -> list[list]:
     """
     Shifts a board in any direction
     :param board: The board to shift
@@ -117,7 +118,6 @@ def shift(board:list[list], direction:tuple[int, int]) -> list[list]:
         board = shift_right(board)
 
     return board
-
 
 
 def simple_game_loop() -> None:

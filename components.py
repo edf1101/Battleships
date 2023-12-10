@@ -244,3 +244,18 @@ def get_positions_by_name(board: list[list], names: list[str]) -> list[tuple[int
                 positions.append((idx, row_idx))  # Append the tuple of its coordinates
 
     return positions
+
+
+def get_sunken_ships(player_data: dict) -> list[tuple[int, int]]:
+    """
+    Calculate which of a player's ships we have sunk based on its original board
+    :param player_data: The dict containing boards, ships etc.
+    :return: A list of positions that have been sunk
+    """
+    if 'ships' not in player_data or 'original_board' not in player_data:
+        raise ValueError('incomplete player data variable')
+
+    sunk_ship_types = [k for k, v in player_data['ships'].items() if v == 0]
+    sunken_places = get_positions_by_name(player_data['original_board'],
+                                          sunk_ship_types)
+    return sunken_places
