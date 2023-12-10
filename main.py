@@ -66,6 +66,7 @@ class BattleshipsGame:
 
             # Reset the player dictionaries and create boards, ships etc
             self.players = {}
+            self.moves = 0
             self.players = {'Human': {'board': components.initialise_board(self.board_size),
                                       'ships': components.create_battleships()},
                             'AI': {'board': components.initialise_board(self.board_size),
@@ -131,6 +132,7 @@ class BattleshipsGame:
         This handles When a user sends an attack
         :return: dictionary of the user and AI's guess boards and game status
         """
+
 
         message = ""  # The message we'll send to the web console
 

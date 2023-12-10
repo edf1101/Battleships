@@ -11,50 +11,6 @@ import advanced_attacking
 players = {}
 
 
-def generate_attack_ext(board: list[list[str | None]],
-                        difficulty: int = 0, **kwargs) -> tuple[int, int]:
-    """
-       Generates a position to attack, via a chosen attack difficulty algorithm
-       :param board: input the board to attack so the algorithm knows how large it is
-       :param difficulty: What difficulty the AI should be (0-4)
-       :param kwargs: Keywords arguments. 'my_guess_board' for difficulty ≠ 0
-       :return: a tuple coordinate on the grid
-       """
-    if difficulty == 0:
-        # Purely random attack method
-        x, y = random.randrange(0, len(board)), random.randrange(0, len(board))
-        return x, y
-
-    if difficulty == 1:
-        # 'random' but it won't guess the same position twice
-
-        if 'my_guess_board' not in kwargs:  # Check parameter is in place
-            raise KeyError('my_guess_board needs to be a parameter')
-
-        my_guess_board = kwargs['my_guess_board']
-
-        # Initial guess
-        x, y = random.randrange(0, len(board)), random.randrange(0, len(board))
-        # Redo until we haven't visited on the guess_board
-        while not (my_guess_board[y][x] == 'B' or my_guess_board[y][x] == 'N'):
-            x, y = random.randrange(0, len(board)), random.randrange(0, len(board))
-        return x, y
-
-    if difficulty in (2, 3, 4):
-
-        if 'my_guess_board' not in kwargs:  # Check parameter is in place
-            raise KeyError('my_guess_board needs to be a parameter')
-
-        my_guess_board = kwargs['my_guess_board']
-        min_ship_size = advanced_attacking.calculate_min_ship_size(board)
-        return advanced_attacking.generate_attack_challenging(my_guess_board,
-                                                              min_ship_size,
-                                                              difficulty=difficulty)
-
-    # This only gets called if the difficulty level isn't in 0-4
-    raise SyntaxError(f'{difficulty} is not a correct difficulty option must be in range (0-4)')
-
-
 def generate_attack(board: list[list[str | None]] = None) -> tuple[int, int]:
     """
     Generates a position to attack via specification random method

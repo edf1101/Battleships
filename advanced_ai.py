@@ -4,6 +4,8 @@ This module just deals with the AI when its doing more advanced
 """
 # import libs
 import random
+import numpy as np
+
 import components
 
 
@@ -46,7 +48,7 @@ def generate_advanced_attack(difficulty: int, enemy_dict: dict, history: list) -
     if difficulty == 4:
         # If it has unsunk hits then it does the same as difficulty 3
         # But if no unsunk hits found then it does more intelligent random guessing
-        return generate_attack_difficulty_4(enemy_dict,history)
+        return generate_attack_difficulty_4(enemy_dict, history)
 
     raise ValueError('Difficulty not in range 0-4!')
 
@@ -124,6 +126,10 @@ def generate_attack_difficulty_3(enemy_dict: dict,
     :param history: list of where has been guessed before
     :return: The guess location
     """
+    # Error check enemy dict
+    if 'board' not in enemy_dict or 'original_board' not in enemy_dict:
+        raise ValueError("enemy_dict is incomplete")
+
     unsunk_hits = get_unsunk_hits(enemy_dict)
 
     if len(unsunk_hits) == 0:  # No unsunk hits so guess randomly
@@ -141,32 +147,93 @@ def generate_attack_difficulty_4(enemy_dict: dict,
     :param history: list of where has been guessed before
     :return: The guess location
     """
+    # error check enemy dict
+    if 'board' not in enemy_dict or 'original_board' not in enemy_dict:
+        raise ValueError("enemy_dict is incomplete")
 
     unsunk_hits = get_unsunk_hits(enemy_dict)
     if len(unsunk_hits) != 0:
         # Do a guess with difficulty 3
         return generate_advanced_attack(3, enemy_dict, history)
 
-    # No unsunk hits found so do a better random guess
-    # This works by finding the largest ship on the board
-    return 0, 0
+    # No unsunk hits found so do an intelligent blind guess
+
+    pos = generate_intelligent_blind_guess(enemy_dict, history)
+    pos = (int(pos[0]),int(pos[1]))
+    # print(pos)
+    return pos
 
 
 ####################
 # OTHER FUNCTIONS
 ####################
+def generate_intelligent_blind_guess(enemy_dict, history):
+    """
+    When there are no unsunk ships to guess around this algorithm gives the best place to
+    try and look for a ship
+    :param enemy_dict: So we can get the enemy's board and original board
+    :param history: list of where has been guessed before
+    :return: A location to guess
+    """
+
+    # The algorithm works by trying to put each ship in every cell on the grid
+    # we then pick the cell that has the most ships potentially in it
+
+    # enemy dict error checking
+    if 'board' not in enemy_dict or 'original_board' not in enemy_dict:
+        raise ValueError("enemy_dict is incomplete")
+
+    board_size = len(enemy_dict['board'])
+    enemy_ships = enemy_dict['ships']
+
+    # Find a list of the ships we haven't hit any of yet
+    ships_unseen = sorted(list({i for i in enemy_ships.values() if i != 0}), reverse=True)
+
+    # We'll create a blank board then fill it up with our guess history
+    blank_board = components.initialise_board(board_size)
+    for i in history:
+        blank_board[i[1]][i[0]] = 'Guessed'
+
+    # This numpy array stores the frequencies of a ship being in a tile for each cell
+    frequencies = np.zeros((board_size, board_size))
+
+    for y in range(board_size):  # Go through every possible cell
+        for x in range(board_size):
+
+            for ship in ships_unseen:  # Go through all unseen ships
+
+                # Test whether that ship fits into the position either vertically or horizontally
+                fitted = components.try_place_ship(blank_board, 'test', ship, (x, y), 'h')
+                if fitted: # If it fits then add 1 to the frequency array
+                    frequencies += np.where(np.array(fitted), 1, 0)
+
+                fitted = components.try_place_ship(blank_board, 'test', ship, (x, y), 'v')
+                if fitted:
+                    frequencies += np.where(np.array(fitted), 1, 0)
+
+    for i in history: # remove all the guesses in our history from the frequency array
+        frequencies[i[1]][i[0]] = 0
+
+    # There may be multiple cells that share a maximum ship potential so put them in a list
+    positions = list(zip(np.where(frequencies == np.max(frequencies))[1],
+                         np.where(frequencies == np.max(frequencies))[0]))
+
+    return random.choice(positions)  # and pick a random one from the list
+
+
 def guess_line_attack(enemy_dict: dict, history: list[tuple[int, int]]) -> tuple[int, int]:
     """
-    Generates a guess based on following lines in the unsunk hits to try and find ships
-    :param enemy_dict: So we can get the enemy's board and original board
-    :param history: Our move history, so we know where we have already guessed
-    :return: A guess following a line if possible
-    """
+        Generates a guess based on following lines in the unsunk hits to try and find ships
+        :param enemy_dict: So we can get the enemy's board and original board
+        :param history: Our move history, so we know where we have already guessed
+        :return: A guess following a line if possible
+        """
 
     # Error checking for enemy_dict
     if 'board' not in enemy_dict or 'original_board' not in enemy_dict:
         raise ValueError("enemy_dict is incomplete")
 
+    board_size = len(enemy_dict['board'])
     unsunk_hits = get_unsunk_hits(enemy_dict)
 
     line_moves = []  # will hold the moves that form a line
@@ -178,7 +245,9 @@ def guess_line_attack(enemy_dict: dict, history: list[tuple[int, int]]) -> tuple
             # if the tile on the opposite side to the offset we are currently looking at
             # is also unsunk hit, then it's likely that current offset is part of a line
             if (unsunk_hit[0] - offset[0], unsunk_hit[1] - offset[1]) in unsunk_hits:
-                line_moves.append((unsunk_hit[0] + offset[0], unsunk_hit[1] + offset[1]))
+                potential_move = (unsunk_hit[0] + offset[0], unsunk_hit[1] + offset[1])
+                if board_size > potential_move[0] >= 0 and board_size > potential_move[1] >= 0:
+                    line_moves.append(potential_move)
 
     # just make sure line_moves doesn't contain anywhere we have guessed already
     line_moves = list(set(line_moves).difference(set(history)))

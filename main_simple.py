@@ -39,6 +39,7 @@ class BattleshipsGame:
         # of what's sunk and where
         self.players['AI']['original_board'] = deepcopy(self.players['AI']['board'])
 
+
     def placement_interface(self) -> str:
         """
         This handles the placement menu, so when you first put your ships on the board
@@ -85,7 +86,7 @@ class BattleshipsGame:
         ai_sunken_places = components.get_sunken_ships(self.players['AI'])
 
         # The AI's attack
-        ai_coords = ai.generate_advanced_attack(3,
+        ai_coords = ai.generate_advanced_attack(4,
                                                 self.players['Human'],
                                                 self.players['AI']['history'])
         game_engine.attack(ai_coords, self.players['Human']['board'],
