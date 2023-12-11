@@ -42,13 +42,6 @@ class BattleshipsGame:
             self.board_size = int(json_data['board_size'])
             self.ai_difficulty = int(json_data['difficulty'])
 
-            # If its using stormy mode then set a direction
-            # if json_data['stormy_mode']:
-            #     # Choose a random direction but not (0,0)
-            #     self.storm_direction = (random.choice([-1, 1]), random.choice([-1, 1]))
-            # else:
-            #     self.storm_direction = (0, 0)
-
             # Start the game but make sure the board isn't set
             self.game_running = True
             self.set_board = False
@@ -224,5 +217,4 @@ game = BattleshipsGame()
 
 if __name__ == '__main__':
     # Set up game
-
     app.run()

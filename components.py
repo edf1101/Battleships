@@ -14,10 +14,8 @@ def initialise_board(size: int = 10) -> list[list]:
     :return: An empty list of lists (filled with None values)
     """
 
-    try:  # Check the size is an int
-        size = int(size)
-    except ValueError as e:
-        raise TypeError("size should be of type int") from e
+    if not isinstance(size, int):
+        raise TypeError("size should be of type int")
 
     if size < 1:
         raise ValueError("Size must be ≥ 1")
@@ -36,17 +34,20 @@ def create_battleships(filename: str = "battleships.txt") -> dict[str, int]:
     :return: A dictionary with the ships' names and sizes
     """
 
-    with open(filename, 'r', encoding="utf-8") as file:
-        data = file.read()
+    if not isinstance(filename, str):
+        raise TypeError('filename parameter should be a string')
+
+    try:
+        with open(filename, 'r', encoding="utf-8") as file:
+            data = file.read()
+    except FileNotFoundError as ex:
+        raise ValueError("filename parameter doesn't exist")
 
     data = data.split('\n')  # each new line should be data entry
 
     battleships = {}
     for item in data:
         name, size = item.split(':')
-
-        if not isinstance(name, str):  # Check the keys are strings
-            raise ValueError("battleships.txt error one key isn't of type str")
 
         try:  # Check the sizes are ints
             size = int(size.strip())
@@ -252,7 +253,8 @@ def get_sunken_ships(player_data: dict) -> list[tuple[int, int]]:
     :param player_data: The dict containing boards, ships etc.
     :return: A list of positions that have been sunk
     """
-    if 'ships' not in player_data or 'original_board' not in player_data:
+    if ('ships' not in player_data or 'original_board' not in player_data
+            or not isinstance(player_data, dict)):
         raise ValueError('incomplete player data variable')
 
     sunk_ship_types = [k for k, v in player_data['ships'].items() if v == 0]
