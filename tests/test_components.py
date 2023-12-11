@@ -11,7 +11,7 @@ from copy import deepcopy
 import pytest
 import test_helper_functions as thf
 
-testReport = thf.TestReport("Reports/test_report.txt")
+testReport = thf.TestReport("test_report.txt")
 
 
 @pytest.mark.dependency()
@@ -165,7 +165,7 @@ def test_battleships_txt_exists() -> None:
     """
 
     try:
-        with open("../battleships.txt", 'r', encoding="utf-8"):
+        with open("../Battleships/battleships.txt", 'r', encoding="utf-8"):
             pass
     except FileNotFoundError:
         testReport.add_message("battleships.txt file does not exist in your solution.")

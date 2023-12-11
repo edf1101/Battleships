@@ -132,8 +132,6 @@ class BattleshipsGame:
         # Calculate which of my ships the AI has sunk based on my original board
         my_sunken_places = components.get_sunken_ships(self.players['Human'])
 
-        print(self.players['Human'])
-        print(self.players['AI']['history'])
         # Send back return data to the Front end
         return_data = {'hit': attack_status, 'AI_Turn': ai_coords,
                        'sunk': [ai_sunken_places, my_sunken_places]}

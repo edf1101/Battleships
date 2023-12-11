@@ -10,6 +10,7 @@ class TestReport:
         # Open the file in append mode and add the message
         with open(self.filename, 'a') as f:
             f.write(message + "\n")
+        pass
 
 
 def is_list_of_lists(obj, subtype):

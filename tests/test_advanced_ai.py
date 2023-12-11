@@ -10,7 +10,7 @@ import importlib
 import pytest
 import test_helper_functions as thf
 
-testReport = thf.TestReport("Reports/test_report.txt")
+testReport = thf.TestReport("test_report.txt")
 
 
 @pytest.mark.dependency()
