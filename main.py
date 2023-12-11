@@ -113,7 +113,7 @@ class BattleshipsGame:
                                board_size=self.board_size,
                                ships=self.players['Human']['ships'])
 
-    def handle_attack(self) -> dict:
+    def process_attack(self) -> dict:
         """
         This handles When a user sends an attack
         :return: The status of the user's attack and where the AI fired back
@@ -184,12 +184,12 @@ def placement_interface() -> str:
 
 
 @app.route('/attack')
-def handle_attack() -> dict:
+def process_attack() -> dict:
     """
     returns the game instance's handle_attack function
     :return: The status of the user's attack and where the AI fired back
     """
-    return game.handle_attack()
+    return game.process_attack()
 
 
 @app.route('/menu', methods=['POST'])
