@@ -22,6 +22,10 @@ def generate_advanced_attack(difficulty: int, enemy_dict: dict, history: list) -
     :return: A location on the board as a tuple
     """
 
+    if (not isinstance(difficulty,int) or not isinstance(enemy_dict,dict)
+            or not isinstance(history,list)):
+        raise TypeError('A parameter is of incorrect type')
+
     try:  # Error checking for incorrect enemy_dict parameter
         enemy_board = enemy_dict['board']
     except KeyError as exc:
