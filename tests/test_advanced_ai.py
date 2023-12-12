@@ -1,7 +1,7 @@
 """
 This module runs unit tests for advanced_ai.py file
 Authors:
-Ed Fillingham (Test Functions)
+Student 130003140 (Test Functions)
 """
 
 import importlib

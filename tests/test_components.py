@@ -1,7 +1,7 @@
 """
 This module runs unit tests for components.py file
 Authors:
-Ed Fillingham (Additional Test Functions)
+Student 130003140 (Additional Test Functions)
 Matt Collison (Example Unit Tests provided)
 """
 

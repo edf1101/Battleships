@@ -1,7 +1,7 @@
 """
 This module runs unit tests for ai_comparison.py file
 Authors:
-Ed Fillingham (Additional Functionality Tests)
+Student 130003140  (Additional Functionality Tests)
 """
 
 import importlib

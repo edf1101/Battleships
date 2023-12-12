@@ -9,16 +9,14 @@ All features required by specification are complete (including testing & logging
 #### Entry Screen
 The user can select the game settings (size, difficulty) on an Entry page.
 Game screen has a return to menu button so games can be replayed
-#### Storm Mode
-When this is turned on The board will shift 1 space each turn in a predetermined direction
 #### HTML Template Sunken ships
 If a ship has been sunk, the main.py script sends a list of sunk positions for
 either the AI or Player to the HTML code, and it colours those tiles green
 #### Other Frontend modifications
 In the placement HTML file originally allowed users to place fewer than required number of ships. This was fixed.
 #### Storm mode
-To make it a more challenging if you select storm mode the player's board will shift one space each turn. Since the HTML
-grid isn't persistent this had to be coded in javascript
+When turned on the player's board will shift one space each turn (as suggested by specification). Since the HTML grid isn't persistent this had to be
+coded in javascript
 #### AI attacking
 There are 5 AI difficulties [code here](battleships/advanced_ai.py)
 0. Pure Random Guessing
@@ -42,18 +40,30 @@ Wrote [a script](battleships/ai_comparison.py) to test AI's against each other
 
 _Version used in running = Python 3.11.4_
 
-## Installation
-There are two ways to install
-### Manually
-
-
-### pip
-
-## Getting Started
+## Installation and Getting Started
 There are 3 modes to run the game:
 - Run the [game_engine file](battleships/game_engine.py) as a module for a CLI game against yourself
 - Run the [mp_game_engine file](battleships/mp_game_engine.py) for a CLI game against an AI
 - Run the [main file](battleships/main.py) for a full GUI game
+
+<br>
+There are two ways to install the package:
+
+### pip (recommended)
+- In a new venv or for the whole computer run ```pip install battleships-edf1101```
+- This will automatically install Flask and numpy
+- You can then run ```python -m battleships.main``` or ```python -m battleships.game_engine``` or 
+```python -m battleships.mp_game_engine``` to run each mode
+
+### Manually
+- Get the this repository's folder (clone from github, or download otherwise)
+- Open it either either with a virtual environment (useful if using PyCharm) and install Flask and numpy manually as 
+shown in prerequisites
+- Or you can install Flask and numpy for the whole PC
+- To open files you can cd to the battleships directory (the source code folder not the project root) and run python -m
+main etc
+- Alternatively you could open them manually in a file browser and run them
+
 
 
 ## Developer Documentation
@@ -67,7 +77,7 @@ In general
 - [advanced_ai.py](battleships/advanced_ai.py): Contains the functions needed for the extension 5 versions of AI
 - [ai_comparison.py](battleships/ai_comparison.py): Contains functions to compare different versions of AI difficulties
 
-## Testing
+### Testing
 If pytest & plugins are installed then you can test in 2 ways.
 
 _Note scripts like game_engine.py, mp_game_engine and main.py don't have full coverage as some functions require input statements which
@@ -75,6 +85,9 @@ my unittests were not intended to mock_
 1. Use an IDE like PyCharm to run the tests manually
 2. Navigate to the tests folder in the project (from the root directory it would be
 ```cd tests``` then run ```pytest``` )
+### pylint
+pylint can be run by going to either the root of the project or the source code folder in the terminal then running
+```pylint battleships```
 
 ## Details
 #### License
@@ -84,4 +97,5 @@ MIT License: [found here](LICENSE)
 - Student 730003140
 
 #### Source
-Code hosted (may be public or private depending on time of reading) at https://github.com/edf1101/Battleships/
+Code hosted (may be public or private depending on time of reading) on [GitHub](https://github.com/edf1101/Battleships/)
+Packaged at : [PyPi](https://pypi.org/project/battleships-edf1101/)

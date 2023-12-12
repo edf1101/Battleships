@@ -1,7 +1,7 @@
 """
 This module runs unit tests for game_engine.py file
 Authors:
-Ed Fillingham (Additional Functionality Tests)
+Student 130003140  (Additional Functionality Tests)
 Matt Collison (Example Unit Tests provided)
 """
 
