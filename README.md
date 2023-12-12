@@ -1,7 +1,7 @@
 # ECM1400 Battleships
 
 ## Introduction
-A python application to simulate a Battleships game against an AI in both a command line interface and a Flask GUI.
+A python package (availible on PyPi) to simulate a Battleships game against an AI in both a command line interface and a Flask GUI.
 
 ## Coursework Self assessment
 All features required by specification are complete (including testing & logging)
