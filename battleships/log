@@ -1,0 +1,461 @@
+2023-12-12 15:34:46,629-INFO-starting a game in mp_game_engine.py
+2023-12-12 15:34:49,142-WARNING- user entered an invalid input of {'a', 'b'}
+2023-12-12 15:34:54,574-WARNING- user entered an invalid input of {'5', '1.3'}
+2023-12-12 15:34:57,292-INFO-the human guessed (0, 1)
+2023-12-12 15:34:57,293-INFO-the AI guessed (2, 4)
+2023-12-12 15:34:57,293-INFO-the AI missed
+[2023-12-12 16:16:49,196-INFO -             <module>() ] starting a game in game_engine.py
+[2023-12-12 16:17:02,385-INFO -             <module>() ] starting a game in game_engine.py
+[2023-12-12 16:17:04,466-DEBUG -     simple_game_loop() ] user got a hit
+[2023-12-12 16:23:04,503-DEBUG -             <module>() ] This is an info message.
+[2023-12-12 16:23:04,508-INFO -                 _log() ] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+[2023-12-12 16:23:04,508-INFO -                 _log() ] [33mPress CTRL+C to quit[0m
+[2023-12-12 16:23:06,858-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:23:06] "GET / HTTP/1.1" 200 -
+[2023-12-12 16:23:06,871-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:23:06] "[36mGET /static/images/menu.jpeg HTTP/1.1[0m" 304 -
+[2023-12-12 16:23:08,181-INFO -      entry_interface() ] Just loaded into the placement interface
+[2023-12-12 16:23:08,184-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:23:08] "POST /entry HTTP/1.1" 200 -
+[2023-12-12 16:23:08,197-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:23:08] "GET / HTTP/1.1" 200 -
+[2023-12-12 16:23:11,705-INFO -  placement_interface() ] Just received placement ship data
+[2023-12-12 16:23:11,707-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:23:11] "POST /placement HTTP/1.1" 200 -
+[2023-12-12 16:23:12,044-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:23:12] "GET / HTTP/1.1" 200 -
+[2023-12-12 16:23:12,642-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:23:12,643-INFO -       process_attack() ]  user guesses (4, 3)
+[2023-12-12 16:23:12,695-INFO -       process_attack() ] ai guessed (5, 5)
+[2023-12-12 16:23:12,695-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:23:12] "GET /attack?x=4&y=3 HTTP/1.1" 200 -
+[2023-12-12 16:23:13,088-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:23:13,088-INFO -       process_attack() ]  user guesses (2, 5)
+[2023-12-12 16:23:13,088-INFO -       process_attack() ] ai guessed (4, 5)
+[2023-12-12 16:23:13,089-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:23:13] "GET /attack?x=2&y=5 HTTP/1.1" 200 -
+[2023-12-12 16:23:13,440-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:23:13,441-INFO -       process_attack() ]  user guesses (7, 6)
+[2023-12-12 16:23:13,441-INFO -       process_attack() ] ai guessed (3, 5)
+[2023-12-12 16:23:13,441-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:23:13] "GET /attack?x=7&y=6 HTTP/1.1" 200 -
+[2023-12-12 16:23:13,848-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:23:13,848-INFO -       process_attack() ]  user guesses (3, 8)
+[2023-12-12 16:23:13,849-INFO -       process_attack() ] ai guessed (6, 5)
+[2023-12-12 16:23:13,849-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:23:13] "GET /attack?x=3&y=8 HTTP/1.1" 200 -
+[2023-12-12 16:23:14,273-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:23:14,273-INFO -       process_attack() ]  user guesses (7, 2)
+[2023-12-12 16:23:14,326-INFO -       process_attack() ] ai guessed (2, 4)
+[2023-12-12 16:23:14,326-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:23:14] "GET /attack?x=7&y=2 HTTP/1.1" 200 -
+[2023-12-12 16:23:14,654-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:23:14,655-INFO -       process_attack() ]  user guesses (2, 2)
+[2023-12-12 16:23:14,694-INFO -       process_attack() ] ai guessed (7, 4)
+[2023-12-12 16:23:14,694-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:23:14] "GET /attack?x=2&y=2 HTTP/1.1" 200 -
+[2023-12-12 16:23:15,102-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:23:15,102-INFO -       process_attack() ]  user guesses (6, 2)
+[2023-12-12 16:23:15,154-INFO -       process_attack() ] ai guessed (4, 2)
+[2023-12-12 16:23:15,154-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:23:15] "GET /attack?x=6&y=2 HTTP/1.1" 200 -
+[2023-12-12 16:23:15,787-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:23:15,787-INFO -       process_attack() ]  user guesses (7, 3)
+[2023-12-12 16:23:15,836-INFO -       process_attack() ] ai guessed (1, 3)
+[2023-12-12 16:23:15,836-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:23:15] "GET /attack?x=7&y=3 HTTP/1.1" 200 -
+[2023-12-12 16:23:16,292-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:23:16,292-INFO -       process_attack() ]  user guesses (7, 4)
+[2023-12-12 16:23:16,340-INFO -       process_attack() ] ai guessed (8, 3)
+[2023-12-12 16:23:16,340-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:23:16] "GET /attack?x=7&y=4 HTTP/1.1" 200 -
+[2023-12-12 16:23:16,921-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:23:16,922-INFO -       process_attack() ]  user guesses (7, 5)
+[2023-12-12 16:23:16,965-INFO -       process_attack() ] ai guessed (5, 1)
+[2023-12-12 16:23:16,966-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:23:16] "GET /attack?x=7&y=5 HTTP/1.1" 200 -
+[2023-12-12 16:23:17,588-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:23:17,588-INFO -       process_attack() ]  user guesses (7, 1)
+[2023-12-12 16:23:17,638-INFO -       process_attack() ] ai guessed (7, 7)
+[2023-12-12 16:23:17,638-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:23:17] "GET /attack?x=7&y=1 HTTP/1.1" 200 -
+[2023-12-12 16:23:18,257-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:23:18,257-INFO -       process_attack() ]  user guesses (7, 0)
+[2023-12-12 16:23:18,315-INFO -       process_attack() ] ai guessed (5, 8)
+[2023-12-12 16:23:18,316-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:23:18] "GET /attack?x=7&y=0 HTTP/1.1" 200 -
+[2023-12-12 16:23:19,556-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:23:19,556-INFO -       process_attack() ]  user guesses (6, 8)
+[2023-12-12 16:23:19,604-INFO -       process_attack() ] ai guessed (2, 7)
+[2023-12-12 16:23:19,604-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:23:19] "GET /attack?x=6&y=8 HTTP/1.1" 200 -
+[2023-12-12 16:23:20,134-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:23:20,134-INFO -       process_attack() ]  user guesses (7, 9)
+[2023-12-12 16:23:20,186-INFO -       process_attack() ] ai guessed (8, 6)
+[2023-12-12 16:23:20,186-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:23:20] "GET /attack?x=7&y=9 HTTP/1.1" 200 -
+[2023-12-12 16:23:21,014-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:23:21,015-INFO -       process_attack() ]  user guesses (0, 9)
+[2023-12-12 16:23:21,015-INFO -       process_attack() ] ai guessed (8, 5)
+[2023-12-12 16:23:21,015-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:23:21] "GET /attack?x=0&y=9 HTTP/1.1" 200 -
+[2023-12-12 16:23:21,479-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:23:21,479-INFO -       process_attack() ]  user guesses (1, 8)
+[2023-12-12 16:23:21,518-INFO -       process_attack() ] ai guessed (0, 6)
+[2023-12-12 16:23:21,518-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:23:21] "GET /attack?x=1&y=8 HTTP/1.1" 200 -
+[2023-12-12 16:23:21,927-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:23:21,927-INFO -       process_attack() ]  user guesses (3, 6)
+[2023-12-12 16:23:21,962-INFO -       process_attack() ] ai guessed (6, 0)
+[2023-12-12 16:23:21,963-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:23:21] "GET /attack?x=3&y=6 HTTP/1.1" 200 -
+[2023-12-12 16:23:22,748-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:23:22,749-INFO -       process_attack() ]  user guesses (4, 6)
+[2023-12-12 16:23:22,785-INFO -       process_attack() ] ai guessed (4, 9)
+[2023-12-12 16:23:22,786-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:23:22] "GET /attack?x=4&y=6 HTTP/1.1" 200 -
+[2023-12-12 16:23:23,540-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:23:23,540-INFO -       process_attack() ]  user guesses (2, 6)
+[2023-12-12 16:23:23,578-INFO -       process_attack() ] ai guessed (9, 2)
+[2023-12-12 16:23:23,578-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:23:23] "GET /attack?x=2&y=6 HTTP/1.1" 200 -
+[2023-12-12 16:23:24,085-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:23:24,085-INFO -       process_attack() ]  user guesses (3, 7)
+[2023-12-12 16:23:24,125-INFO -       process_attack() ] ai guessed (3, 3)
+[2023-12-12 16:23:24,125-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:23:24] "GET /attack?x=3&y=7 HTTP/1.1" 200 -
+[2023-12-12 16:23:24,686-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:23:24,686-INFO -       process_attack() ]  user guesses (3, 5)
+[2023-12-12 16:23:24,686-INFO -       process_attack() ] ai guessed (2, 3)
+[2023-12-12 16:23:24,687-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:23:24] "GET /attack?x=3&y=5 HTTP/1.1" 200 -
+[2023-12-12 16:23:25,182-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:23:25,183-INFO -       process_attack() ]  user guesses (3, 4)
+[2023-12-12 16:23:25,183-INFO -       process_attack() ] ai guessed (3, 4)
+[2023-12-12 16:23:25,184-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:23:25] "GET /attack?x=3&y=4 HTTP/1.1" 200 -
+[2023-12-12 16:23:26,486-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:23:26,486-INFO -       process_attack() ]  user guesses (3, 1)
+[2023-12-12 16:23:26,487-INFO -       process_attack() ] ai guessed (4, 3)
+[2023-12-12 16:23:26,487-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:23:26] "GET /attack?x=3&y=1 HTTP/1.1" 200 -
+[2023-12-12 16:23:27,064-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:23:27,064-INFO -       process_attack() ]  user guesses (2, 0)
+[2023-12-12 16:23:27,065-INFO -       process_attack() ] ai guessed (5, 3)
+[2023-12-12 16:23:27,065-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:23:27] "GET /attack?x=2&y=0 HTTP/1.1" 200 -
+[2023-12-12 16:23:28,067-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:23:28,067-INFO -       process_attack() ]  user guesses (0, 3)
+[2023-12-12 16:23:28,068-INFO -       process_attack() ] ai guessed (6, 3)
+[2023-12-12 16:23:28,068-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:23:28] "GET /attack?x=0&y=3 HTTP/1.1" 200 -
+[2023-12-12 16:23:28,865-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:23:28,865-INFO -       process_attack() ]  user guesses (0, 6)
+[2023-12-12 16:23:28,866-INFO -       process_attack() ] ai guessed (7, 3)
+[2023-12-12 16:23:28,866-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:23:28] "GET /attack?x=0&y=6 HTTP/1.1" 200 -
+[2023-12-12 16:23:29,639-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:23:29,639-INFO -       process_attack() ]  user guesses (9, 6)
+[2023-12-12 16:23:29,667-INFO -       process_attack() ] ai guessed (1, 6)
+[2023-12-12 16:23:29,667-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:23:29] "GET /attack?x=9&y=6 HTTP/1.1" 200 -
+[2023-12-12 16:23:30,495-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:23:30,495-INFO -       process_attack() ]  user guesses (8, 3)
+[2023-12-12 16:23:30,495-INFO -       process_attack() ] ai guessed (1, 5)
+[2023-12-12 16:23:30,496-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:23:30] "GET /attack?x=8&y=3 HTTP/1.1" 200 -
+[2023-12-12 16:23:31,195-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:23:31,196-INFO -       process_attack() ]  user guesses (9, 1)
+[2023-12-12 16:23:31,196-INFO -       process_attack() ] ai guessed (1, 7)
+[2023-12-12 16:23:31,197-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:23:31] "GET /attack?x=9&y=1 HTTP/1.1" 200 -
+[2023-12-12 16:23:32,041-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:23:32,042-INFO -       process_attack() ]  user guesses (8, 8)
+[2023-12-12 16:23:32,042-INFO -       process_attack() ] ai guessed (1, 4)
+[2023-12-12 16:23:32,043-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:23:32] "GET /attack?x=8&y=8 HTTP/1.1" 200 -
+[2023-12-12 16:23:33,086-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:23:33,086-INFO -       process_attack() ]  user guesses (6, 7)
+[2023-12-12 16:23:33,102-INFO -       process_attack() ] ai guessed (3, 8)
+[2023-12-12 16:23:33,103-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:23:33] "GET /attack?x=6&y=7 HTTP/1.1" 200 -
+[2023-12-12 16:23:34,023-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:23:34,023-INFO -       process_attack() ]  user guesses (3, 9)
+[2023-12-12 16:23:34,038-INFO -       process_attack() ] ai guessed (3, 0)
+[2023-12-12 16:23:34,039-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:23:34] "GET /attack?x=3&y=9 HTTP/1.1" 200 -
+[2023-12-12 16:23:36,386-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:23:36,387-INFO -       process_attack() ]  user guesses (5, 9)
+[2023-12-12 16:23:36,402-INFO -       process_attack() ] ai guessed (4, 6)
+[2023-12-12 16:23:36,402-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:23:36] "GET /attack?x=5&y=9 HTTP/1.1" 200 -
+[2023-12-12 16:23:36,950-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:23:36,950-INFO -       process_attack() ]  user guesses (5, 6)
+[2023-12-12 16:23:36,962-INFO -       process_attack() ] ai guessed (0, 2)
+[2023-12-12 16:23:36,963-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:23:36] "GET /attack?x=5&y=6 HTTP/1.1" 200 -
+[2023-12-12 16:23:37,705-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:23:37,706-INFO -       process_attack() ]  user guesses (5, 4)
+[2023-12-12 16:23:37,720-INFO -       process_attack() ] ai guessed (2, 1)
+[2023-12-12 16:23:37,721-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:23:37] "GET /attack?x=5&y=4 HTTP/1.1" 200 -
+[2023-12-12 16:23:38,912-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:23:38,912-INFO -       process_attack() ]  user guesses (5, 1)
+[2023-12-12 16:23:38,923-INFO -       process_attack() ] ai guessed (8, 9)
+[2023-12-12 16:23:38,924-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:23:38] "GET /attack?x=5&y=1 HTTP/1.1" 200 -
+[2023-12-12 16:23:39,677-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:23:39,677-INFO -       process_attack() ]  user guesses (4, 1)
+[2023-12-12 16:23:39,685-INFO -       process_attack() ] ai guessed (6, 7)
+[2023-12-12 16:23:39,685-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:23:39] "GET /attack?x=4&y=1 HTTP/1.1" 200 -
+[2023-12-12 16:23:40,159-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:23:40,159-INFO -       process_attack() ]  user guesses (5, 0)
+[2023-12-12 16:23:40,159-INFO -       process_attack() ] ai guessed (6, 6)
+[2023-12-12 16:23:40,160-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:23:40] "GET /attack?x=5&y=0 HTTP/1.1" 200 -
+[2023-12-12 16:23:40,610-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:23:40,610-INFO -       process_attack() ]  user guesses (5, 2)
+[2023-12-12 16:23:40,610-INFO -       process_attack() ] ai guessed (6, 8)
+[2023-12-12 16:23:40,611-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:23:40] "GET /attack?x=5&y=2 HTTP/1.1" 200 -
+[2023-12-12 16:23:43,340-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:23:43,340-INFO -       process_attack() ]  user guesses (9, 3)
+[2023-12-12 16:23:43,340-INFO -       process_attack() ] ai guessed (6, 9)
+[2023-12-12 16:23:43,340-INFO -       process_attack() ] The Human LOST! Game over
+[2023-12-12 16:23:43,341-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:23:43] "GET /attack?x=9&y=3 HTTP/1.1" 200 -
+[2023-12-12 16:24:08,610-INFO -          handle_menu() ] Gone back to main menu
+[2023-12-12 16:24:08,611-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:24:08] "POST /menu HTTP/1.1" 200 -
+[2023-12-12 16:24:08,622-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:24:08] "GET / HTTP/1.1" 200 -
+[2023-12-12 16:24:08,634-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:24:08] "[36mGET /static/images/menu.jpeg HTTP/1.1[0m" 304 -
+[2023-12-12 16:24:44,178-DEBUG -             <module>() ] This is an info message.
+[2023-12-12 16:24:44,202-INFO -                 _log() ] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+[2023-12-12 16:24:44,203-INFO -                 _log() ] [33mPress CTRL+C to quit[0m
+[2023-12-12 16:24:45,971-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:24:45] "GET / HTTP/1.1" 200 -
+[2023-12-12 16:24:45,982-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:24:45] "[36mGET /static/images/menu.jpeg HTTP/1.1[0m" 304 -
+[2023-12-12 16:24:47,581-INFO -      entry_interface() ] Just loaded into the placement interface
+[2023-12-12 16:24:47,583-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:24:47] "POST /entry HTTP/1.1" 200 -
+[2023-12-12 16:24:47,597-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:24:47] "GET / HTTP/1.1" 200 -
+[2023-12-12 16:24:51,747-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:24:51] "GET / HTTP/1.1" 200 -
+[2023-12-12 16:24:54,386-INFO -  placement_interface() ] Just received placement ship data
+[2023-12-12 16:24:54,388-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:24:54] "POST /placement HTTP/1.1" 200 -
+[2023-12-12 16:24:55,584-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:24:55] "GET / HTTP/1.1" 200 -
+[2023-12-12 16:26:24,319-DEBUG -             <module>() ] This is an info message.
+[2023-12-12 16:26:24,326-INFO -                 _log() ] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+[2023-12-12 16:26:24,326-INFO -                 _log() ] [33mPress CTRL+C to quit[0m
+[2023-12-12 16:26:25,696-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:26:25] "GET / HTTP/1.1" 200 -
+[2023-12-12 16:26:25,703-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:26:25] "[36mGET /static/images/menu.jpeg HTTP/1.1[0m" 304 -
+[2023-12-12 16:26:25,765-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:26:25] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+[2023-12-12 16:26:36,184-INFO -      entry_interface() ] Just loaded into the placement interface
+[2023-12-12 16:26:36,186-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:26:36] "POST /entry HTTP/1.1" 200 -
+[2023-12-12 16:26:36,198-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:26:36] "GET / HTTP/1.1" 200 -
+[2023-12-12 16:26:40,993-INFO -  placement_interface() ] Just received placement ship data
+[2023-12-12 16:26:40,996-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:26:40] "POST /placement HTTP/1.1" 200 -
+[2023-12-12 16:26:44,167-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:26:44] "GET / HTTP/1.1" 200 -
+[2023-12-12 16:27:31,093-DEBUG -             <module>() ] This is an info message.
+[2023-12-12 16:27:31,097-INFO -                 _log() ] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+[2023-12-12 16:27:31,097-INFO -                 _log() ] [33mPress CTRL+C to quit[0m
+[2023-12-12 16:27:35,090-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:27:35] "GET / HTTP/1.1" 200 -
+[2023-12-12 16:27:35,108-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:27:35] "[36mGET /static/images/menu.jpeg HTTP/1.1[0m" 304 -
+[2023-12-12 16:27:36,273-INFO -      entry_interface() ] Just loaded into the placement interface
+[2023-12-12 16:27:36,275-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:27:36] "POST /entry HTTP/1.1" 200 -
+[2023-12-12 16:27:36,286-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:27:36] "GET / HTTP/1.1" 200 -
+[2023-12-12 16:27:38,209-INFO -  placement_interface() ] Just received placement ship data
+[2023-12-12 16:27:38,212-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:27:38] "POST /placement HTTP/1.1" 200 -
+[2023-12-12 16:27:39,121-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:27:39] "GET / HTTP/1.1" 200 -
+[2023-12-12 16:28:28,275-DEBUG -             <module>() ] This is an info message.
+[2023-12-12 16:28:28,278-INFO -                 _log() ] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+[2023-12-12 16:28:28,278-INFO -                 _log() ] [33mPress CTRL+C to quit[0m
+[2023-12-12 16:28:31,318-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:28:31] "GET / HTTP/1.1" 200 -
+[2023-12-12 16:28:31,337-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:28:31] "[36mGET /static/images/menu.jpeg HTTP/1.1[0m" 304 -
+[2023-12-12 16:28:32,454-INFO -      entry_interface() ] Just loaded into the placement interface
+[2023-12-12 16:28:32,456-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:28:32] "POST /entry HTTP/1.1" 200 -
+[2023-12-12 16:28:32,470-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:28:32] "GET / HTTP/1.1" 200 -
+[2023-12-12 16:28:34,428-INFO -  placement_interface() ] Just received placement ship data
+[2023-12-12 16:28:34,430-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:28:34] "POST /placement HTTP/1.1" 200 -
+[2023-12-12 16:28:35,446-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:28:35] "GET / HTTP/1.1" 200 -
+[2023-12-12 16:28:36,572-INFO -          handle_menu() ] Gone back to main menu
+[2023-12-12 16:28:36,573-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:28:36] "POST /menu HTTP/1.1" 200 -
+[2023-12-12 16:28:36,581-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:28:36] "GET / HTTP/1.1" 200 -
+[2023-12-12 16:28:36,592-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:28:36] "[36mGET /static/images/menu.jpeg HTTP/1.1[0m" 304 -
+[2023-12-12 16:28:38,152-INFO -      entry_interface() ] Just loaded into the placement interface
+[2023-12-12 16:28:38,154-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:28:38] "POST /entry HTTP/1.1" 200 -
+[2023-12-12 16:28:38,164-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:28:38] "GET / HTTP/1.1" 200 -
+[2023-12-12 16:28:46,525-INFO -  placement_interface() ] Just received placement ship data
+[2023-12-12 16:28:46,527-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:28:46] "POST /placement HTTP/1.1" 200 -
+[2023-12-12 16:28:48,028-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:28:48] "GET / HTTP/1.1" 200 -
+[2023-12-12 16:30:18,390-DEBUG -             <module>() ] This is an info message.
+[2023-12-12 16:30:18,395-INFO -                 _log() ] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+[2023-12-12 16:30:18,395-INFO -                 _log() ] [33mPress CTRL+C to quit[0m
+[2023-12-12 16:30:23,197-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:30:23] "GET / HTTP/1.1" 200 -
+[2023-12-12 16:30:23,207-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:30:23] "[36mGET /static/images/menu.jpeg HTTP/1.1[0m" 304 -
+[2023-12-12 16:30:24,622-INFO -      entry_interface() ] Just loaded into the placement interface
+[2023-12-12 16:30:24,624-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:30:24] "POST /entry HTTP/1.1" 200 -
+[2023-12-12 16:30:24,636-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:30:24] "GET / HTTP/1.1" 200 -
+[2023-12-12 16:30:29,075-INFO -  placement_interface() ] Just received placement ship data
+[2023-12-12 16:30:29,077-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:30:29] "POST /placement HTTP/1.1" 200 -
+[2023-12-12 16:30:29,336-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:30:29] "GET / HTTP/1.1" 200 -
+[2023-12-12 16:30:30,244-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:30:30,245-INFO -       process_attack() ]  user guesses (3, 3)
+[2023-12-12 16:30:30,300-INFO -       process_attack() ] ai guessed (5, 5)
+[2023-12-12 16:30:30,300-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:30:30] "GET /attack?x=3&y=3 HTTP/1.1" 200 -
+[2023-12-12 16:30:30,839-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:30:30,839-INFO -       process_attack() ]  user guesses (4, 1)
+[2023-12-12 16:30:30,890-INFO -       process_attack() ] ai guessed (4, 4)
+[2023-12-12 16:30:30,890-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:30:30] "GET /attack?x=4&y=1 HTTP/1.1" 200 -
+[2023-12-12 16:30:31,229-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:30:31,229-INFO -       process_attack() ]  user guesses (5, 4)
+[2023-12-12 16:30:31,230-INFO -       process_attack() ] ai guessed (4, 3)
+[2023-12-12 16:30:31,230-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:30:31] "GET /attack?x=5&y=4 HTTP/1.1" 200 -
+[2023-12-12 16:30:31,523-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:30:31,524-INFO -       process_attack() ]  user guesses (3, 5)
+[2023-12-12 16:30:31,524-INFO -       process_attack() ] ai guessed (5, 4)
+[2023-12-12 16:30:31,524-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:30:31] "GET /attack?x=3&y=5 HTTP/1.1" 200 -
+[2023-12-12 16:30:32,021-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:30:32,021-INFO -       process_attack() ]  user guesses (3, 6)
+[2023-12-12 16:30:32,021-INFO -       process_attack() ] ai guessed (3, 4)
+[2023-12-12 16:30:32,022-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:30:32] "GET /attack?x=3&y=6 HTTP/1.1" 200 -
+[2023-12-12 16:30:33,069-INFO -          handle_menu() ] Gone back to main menu
+[2023-12-12 16:30:33,070-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:30:33] "POST /menu HTTP/1.1" 200 -
+[2023-12-12 16:30:33,078-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:30:33] "GET / HTTP/1.1" 200 -
+[2023-12-12 16:30:33,092-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:30:33] "[36mGET /static/images/menu.jpeg HTTP/1.1[0m" 304 -
+[2023-12-12 16:30:34,829-INFO -      entry_interface() ] Just loaded into the placement interface
+[2023-12-12 16:30:34,831-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:30:34] "POST /entry HTTP/1.1" 200 -
+[2023-12-12 16:30:34,839-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:30:34] "GET / HTTP/1.1" 200 -
+[2023-12-12 16:30:40,951-INFO -  placement_interface() ] Just received placement ship data
+[2023-12-12 16:30:40,954-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:30:40] "POST /placement HTTP/1.1" 200 -
+[2023-12-12 16:30:41,161-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:30:41] "GET / HTTP/1.1" 200 -
+[2023-12-12 16:30:42,423-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:30:42,423-INFO -       process_attack() ]  user guesses (2, 3)
+[2023-12-12 16:30:42,476-INFO -       process_attack() ] ai guessed (5, 4)
+[2023-12-12 16:30:42,477-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:30:42] "GET /attack?x=2&y=3 HTTP/1.1" 200 -
+[2023-12-12 16:30:42,935-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:30:42,936-INFO -       process_attack() ]  user guesses (4, 5)
+[2023-12-12 16:30:42,988-INFO -       process_attack() ] ai guessed (4, 5)
+[2023-12-12 16:30:42,988-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:30:42] "GET /attack?x=4&y=5 HTTP/1.1" 200 -
+[2023-12-12 16:30:43,803-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:30:43,803-INFO -       process_attack() ]  user guesses (3, 8)
+[2023-12-12 16:30:43,804-INFO -       process_attack() ] ai guessed (4, 6)
+[2023-12-12 16:30:43,804-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:30:43] "GET /attack?x=3&y=8 HTTP/1.1" 200 -
+[2023-12-12 16:30:44,387-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:30:44,387-INFO -       process_attack() ]  user guesses (8, 5)
+[2023-12-12 16:30:44,388-INFO -       process_attack() ] ai guessed (3, 5)
+[2023-12-12 16:30:44,388-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:30:44] "GET /attack?x=8&y=5 HTTP/1.1" 200 -
+[2023-12-12 16:30:44,945-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:30:44,945-INFO -       process_attack() ]  user guesses (5, 1)
+[2023-12-12 16:30:44,945-INFO -       process_attack() ] ai guessed (2, 5)
+[2023-12-12 16:30:44,946-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:30:44] "GET /attack?x=5&y=1 HTTP/1.1" 200 -
+[2023-12-12 16:30:45,491-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:30:45,492-INFO -       process_attack() ]  user guesses (5, 3)
+[2023-12-12 16:30:45,492-INFO -       process_attack() ] ai guessed (5, 5)
+[2023-12-12 16:30:45,492-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:30:45] "GET /attack?x=5&y=3 HTTP/1.1" 200 -
+[2023-12-12 16:30:46,547-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:30:46,547-INFO -       process_attack() ]  user guesses (6, 3)
+[2023-12-12 16:30:46,547-INFO -       process_attack() ] ai guessed (6, 5)
+[2023-12-12 16:30:46,548-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:30:46] "GET /attack?x=6&y=3 HTTP/1.1" 200 -
+[2023-12-12 16:30:47,033-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:30:47,033-INFO -       process_attack() ]  user guesses (7, 3)
+[2023-12-12 16:30:47,077-INFO -       process_attack() ] ai guessed (7, 3)
+[2023-12-12 16:30:47,077-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:30:47] "GET /attack?x=7&y=3 HTTP/1.1" 200 -
+[2023-12-12 16:30:48,077-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:30:48,077-INFO -       process_attack() ]  user guesses (4, 3)
+[2023-12-12 16:30:48,118-INFO -       process_attack() ] ai guessed (4, 2)
+[2023-12-12 16:30:48,118-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:30:48] "GET /attack?x=4&y=3 HTTP/1.1" 200 -
+[2023-12-12 16:30:49,122-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:30:49,122-INFO -       process_attack() ]  user guesses (6, 2)
+[2023-12-12 16:30:49,122-INFO -       process_attack() ] ai guessed (4, 3)
+[2023-12-12 16:30:49,123-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:30:49] "GET /attack?x=6&y=2 HTTP/1.1" 200 -
+[2023-12-12 16:30:49,593-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:30:49,593-INFO -       process_attack() ]  user guesses (6, 4)
+[2023-12-12 16:30:49,594-INFO -       process_attack() ] ai guessed (3, 2)
+[2023-12-12 16:30:49,594-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:30:49] "GET /attack?x=6&y=4 HTTP/1.1" 200 -
+[2023-12-12 16:30:50,531-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:30:50,531-INFO -       process_attack() ]  user guesses (6, 1)
+[2023-12-12 16:30:50,532-INFO -       process_attack() ] ai guessed (2, 2)
+[2023-12-12 16:30:50,532-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:30:50] "GET /attack?x=6&y=1 HTTP/1.1" 200 -
+[2023-12-12 16:30:51,411-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:30:51,415-INFO -       process_attack() ]  user guesses (5, 7)
+[2023-12-12 16:30:51,416-INFO -       process_attack() ] ai guessed (5, 2)
+[2023-12-12 16:30:51,416-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:30:51] "GET /attack?x=5&y=7 HTTP/1.1" 200 -
+[2023-12-12 16:30:51,818-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:30:51,818-INFO -       process_attack() ]  user guesses (7, 8)
+[2023-12-12 16:30:51,818-INFO -       process_attack() ] ai guessed (6, 2)
+[2023-12-12 16:30:51,819-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:30:51] "GET /attack?x=7&y=8 HTTP/1.1" 200 -
+[2023-12-12 16:30:52,559-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:30:52,559-INFO -       process_attack() ]  user guesses (6, 8)
+[2023-12-12 16:30:52,560-INFO -       process_attack() ] ai guessed (7, 2)
+[2023-12-12 16:30:52,560-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:30:52] "GET /attack?x=6&y=8 HTTP/1.1" 200 -
+[2023-12-12 16:30:53,057-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:30:53,058-INFO -       process_attack() ]  user guesses (5, 8)
+[2023-12-12 16:30:53,085-INFO -       process_attack() ] ai guessed (7, 6)
+[2023-12-12 16:30:53,086-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:30:53] "GET /attack?x=5&y=8 HTTP/1.1" 200 -
+[2023-12-12 16:30:53,603-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:30:53,603-INFO -       process_attack() ]  user guesses (4, 8)
+[2023-12-12 16:30:53,633-INFO -       process_attack() ] ai guessed (8, 7)
+[2023-12-12 16:30:53,634-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:30:53] "GET /attack?x=4&y=8 HTTP/1.1" 200 -
+[2023-12-12 16:30:54,230-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:30:54,231-INFO -       process_attack() ]  user guesses (8, 8)
+[2023-12-12 16:30:54,262-INFO -       process_attack() ] ai guessed (2, 8)
+[2023-12-12 16:30:54,262-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:30:54] "GET /attack?x=8&y=8 HTTP/1.1" 200 -
+[2023-12-12 16:30:55,326-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:30:55,326-INFO -       process_attack() ]  user guesses (3, 9)
+[2023-12-12 16:30:55,356-INFO -       process_attack() ] ai guessed (1, 3)
+[2023-12-12 16:30:55,357-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:30:55] "GET /attack?x=3&y=9 HTTP/1.1" 200 -
+[2023-12-12 16:30:56,377-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:30:56,377-INFO -       process_attack() ]  user guesses (0, 9)
+[2023-12-12 16:30:56,409-INFO -       process_attack() ] ai guessed (1, 6)
+[2023-12-12 16:30:56,410-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:30:56] "GET /attack?x=0&y=9 HTTP/1.1" 200 -
+[2023-12-12 16:30:57,175-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:30:57,176-INFO -       process_attack() ]  user guesses (6, 9)
+[2023-12-12 16:30:57,202-INFO -       process_attack() ] ai guessed (3, 7)
+[2023-12-12 16:30:57,203-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:30:57] "GET /attack?x=6&y=9 HTTP/1.1" 200 -
+[2023-12-12 16:30:57,950-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:30:57,951-INFO -       process_attack() ]  user guesses (9, 9)
+[2023-12-12 16:30:57,951-INFO -       process_attack() ] ai guessed (3, 8)
+[2023-12-12 16:30:57,952-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:30:57] "GET /attack?x=9&y=9 HTTP/1.1" 200 -
+[2023-12-12 16:30:59,030-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:30:59,030-INFO -       process_attack() ]  user guesses (9, 4)
+[2023-12-12 16:30:59,031-INFO -       process_attack() ] ai guessed (2, 7)
+[2023-12-12 16:30:59,031-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:30:59] "GET /attack?x=9&y=4 HTTP/1.1" 200 -
+[2023-12-12 16:31:00,965-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:31:00,965-INFO -       process_attack() ]  user guesses (8, 1)
+[2023-12-12 16:31:00,965-INFO -       process_attack() ] ai guessed (1, 7)
+[2023-12-12 16:31:00,966-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:31:00] "GET /attack?x=8&y=1 HTTP/1.1" 200 -
+[2023-12-12 16:31:01,845-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:31:01,846-INFO -       process_attack() ]  user guesses (5, 0)
+[2023-12-12 16:31:01,846-INFO -       process_attack() ] ai guessed (4, 7)
+[2023-12-12 16:31:01,846-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:31:01] "GET /attack?x=5&y=0 HTTP/1.1" 200 -
+[2023-12-12 16:31:03,259-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:31:03,259-INFO -       process_attack() ]  user guesses (2, 0)
+[2023-12-12 16:31:03,289-INFO -       process_attack() ] ai guessed (8, 4)
+[2023-12-12 16:31:03,290-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:31:03] "GET /attack?x=2&y=0 HTTP/1.1" 200 -
+[2023-12-12 16:31:04,036-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:31:04,036-INFO -       process_attack() ]  user guesses (1, 5)
+[2023-12-12 16:31:04,063-INFO -       process_attack() ] ai guessed (6, 8)
+[2023-12-12 16:31:04,063-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:31:04] "GET /attack?x=1&y=5 HTTP/1.1" 200 -
+[2023-12-12 16:31:04,950-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:31:04,950-INFO -       process_attack() ]  user guesses (2, 6)
+[2023-12-12 16:31:04,977-INFO -       process_attack() ] ai guessed (8, 1)
+[2023-12-12 16:31:04,978-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:31:04] "GET /attack?x=2&y=6 HTTP/1.1" 200 -
+[2023-12-12 16:31:05,737-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:31:05,737-INFO -       process_attack() ]  user guesses (2, 7)
+[2023-12-12 16:31:05,768-INFO -       process_attack() ] ai guessed (1, 1)
+[2023-12-12 16:31:05,768-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:31:05] "GET /attack?x=2&y=7 HTTP/1.1" 200 -
+[2023-12-12 16:31:06,449-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:31:06,449-INFO -       process_attack() ]  user guesses (2, 8)
+[2023-12-12 16:31:06,476-INFO -       process_attack() ] ai guessed (9, 5)
+[2023-12-12 16:31:06,477-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:31:06] "GET /attack?x=2&y=8 HTTP/1.1" 200 -
+[2023-12-12 16:31:07,173-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:31:07,173-INFO -       process_attack() ]  user guesses (2, 5)
+[2023-12-12 16:31:07,200-INFO -       process_attack() ] ai guessed (7, 9)
+[2023-12-12 16:31:07,200-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:31:07] "GET /attack?x=2&y=5 HTTP/1.1" 200 -
+[2023-12-12 16:31:11,526-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:31:11,526-INFO -       process_attack() ]  user guesses (0, 4)
+[2023-12-12 16:31:11,526-INFO -       process_attack() ] ai guessed (6, 9)
+[2023-12-12 16:31:11,527-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:31:11] "GET /attack?x=0&y=4 HTTP/1.1" 200 -
+[2023-12-12 16:31:12,847-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:31:12,847-INFO -       process_attack() ]  user guesses (1, 2)
+[2023-12-12 16:31:12,847-INFO -       process_attack() ] ai guessed (7, 8)
+[2023-12-12 16:31:12,848-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:31:12] "GET /attack?x=1&y=2 HTTP/1.1" 200 -
+[2023-12-12 16:31:14,398-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:31:14,398-INFO -       process_attack() ]  user guesses (6, 6)
+[2023-12-12 16:31:14,399-INFO -       process_attack() ] ai guessed (7, 7)
+[2023-12-12 16:31:14,399-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:31:14] "GET /attack?x=6&y=6 HTTP/1.1" 200 -
+[2023-12-12 16:31:17,678-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:31:17,679-INFO -       process_attack() ]  user guesses (3, 4)
+[2023-12-12 16:31:17,694-INFO -       process_attack() ] ai guessed (0, 5)
+[2023-12-12 16:31:17,695-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:31:17] "GET /attack?x=3&y=4 HTTP/1.1" 200 -
+[2023-12-12 16:31:18,485-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:31:18,485-INFO -       process_attack() ]  user guesses (3, 5)
+[2023-12-12 16:31:18,502-INFO -       process_attack() ] ai guessed (6, 1)
+[2023-12-12 16:31:18,503-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:31:18] "GET /attack?x=3&y=5 HTTP/1.1" 200 -
+[2023-12-12 16:31:19,221-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:31:19,222-INFO -       process_attack() ]  user guesses (3, 3)
+[2023-12-12 16:31:19,234-INFO -       process_attack() ] ai guessed (3, 0)
+[2023-12-12 16:31:19,234-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:31:19] "GET /attack?x=3&y=3 HTTP/1.1" 200 -
+[2023-12-12 16:31:19,960-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:31:19,960-INFO -       process_attack() ]  user guesses (3, 2)
+[2023-12-12 16:31:19,977-INFO -       process_attack() ] ai guessed (9, 8)
+[2023-12-12 16:31:19,978-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:31:19] "GET /attack?x=3&y=2 HTTP/1.1" 200 -
+[2023-12-12 16:31:20,745-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:31:20,745-INFO -       process_attack() ]  user guesses (2, 4)
+[2023-12-12 16:31:20,759-INFO -       process_attack() ] ai guessed (5, 0)
+[2023-12-12 16:31:20,759-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:31:20] "GET /attack?x=2&y=4 HTTP/1.1" 200 -
+[2023-12-12 16:31:21,256-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:31:21,257-INFO -       process_attack() ]  user guesses (4, 4)
+[2023-12-12 16:31:21,271-INFO -       process_attack() ] ai guessed (5, 7)
+[2023-12-12 16:31:21,271-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:31:21] "GET /attack?x=4&y=4 HTTP/1.1" 200 -
+[2023-12-12 16:31:21,691-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:31:21,691-INFO -       process_attack() ]  user guesses (5, 4)
+[2023-12-12 16:31:21,707-INFO -       process_attack() ] ai guessed (4, 1)
+[2023-12-12 16:31:21,707-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:31:21] "GET /attack?x=5&y=4 HTTP/1.1" 200 -
+[2023-12-12 16:31:22,294-INFO -       process_attack() ] Now processing player attack
+[2023-12-12 16:31:22,295-INFO -       process_attack() ]  user guesses (1, 4)
+[2023-12-12 16:31:22,310-INFO -       process_attack() ] ai guessed (0, 2)
+[2023-12-12 16:31:22,310-INFO -       process_attack() ] The Human WON! Game over
+[2023-12-12 16:31:22,311-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:31:22] "GET /attack?x=1&y=4 HTTP/1.1" 200 -
+[2023-12-12 16:31:28,428-INFO -          handle_menu() ] Gone back to main menu
+[2023-12-12 16:31:28,429-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:31:28] "POST /menu HTTP/1.1" 200 -
+[2023-12-12 16:31:28,437-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:31:28] "GET / HTTP/1.1" 200 -
+[2023-12-12 16:31:28,450-INFO -                 _log() ] 127.0.0.1 - - [12/Dec/2023 16:31:28] "[36mGET /static/images/menu.jpeg HTTP/1.1[0m" 304 -

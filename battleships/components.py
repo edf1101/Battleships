@@ -5,19 +5,29 @@ Basic functions used mainly for setting up games
 import copy
 import random
 import json
+import os
+import logging
+
+# Set up the logging
+logging.basicConfig(filename='log', level=logging.DEBUG,
+                    format="[%(asctime)s-%(levelname)s - %(funcName)20s() ] %(message)s",
+                    filemode='a')
 
 
 def initialise_board(size: int = 10) -> list[list]:
     """
     Creates a blank board of size 'size'
+
     :param size: How big the board should be in both x and y directions
     :return: An empty list of lists (filled with None values)
     """
 
     if not isinstance(size, int):
+        logging.error("size should be of type int")
         raise TypeError("size should be of type int")
 
     if size < 1:
+        logging.error("Size must be ≥ 1")
         raise ValueError("Size must be ≥ 1")
 
     board = []
@@ -30,17 +40,24 @@ def initialise_board(size: int = 10) -> list[list]:
 def create_battleships(filename: str = "battleships.txt") -> dict[str, int]:
     """
     This function extracts the battleship data from a file
+
     :param filename: The file to read ship data from
     :return: A dictionary with the ships' names and sizes
     """
 
     if not isinstance(filename, str):
+        logging.error('filename parameter should be a string')
         raise TypeError('filename parameter should be a string')
+
+    # recreate filename using absolute path
+    working_directory = os.path.dirname(os.path.abspath(__file__))
+    filename = os.path.join(working_directory, filename)
 
     try:
         with open(filename, 'r', encoding="utf-8") as file:
             data = file.read()
     except FileNotFoundError as ex:
+        logging.error("filename doesn't exist")
         raise ValueError(f"filename {filename} doesn't exist") from ex
 
     data = data.split('\n')  # each new line should be data entry
@@ -52,6 +69,7 @@ def create_battleships(filename: str = "battleships.txt") -> dict[str, int]:
         try:  # Check the sizes are ints
             size = int(size.strip())
         except ValueError as e:
+            logging.error("battleships.txt error one value isn't of type int")
             raise ValueError("battleships.txt error one value isn't of type int") from e
 
         battleships[str(name)] = size
@@ -66,6 +84,7 @@ def try_place_ship(board: list[list],
                    orientation: str) -> list[list[str | None]] | None:
     """
     Used for the random placement method in place_battleships function
+
     :param board: A list of lists representing the board
     :param ship_name: The name of the ship being placed
     :param ship_size: The size of the ship being placed
@@ -78,20 +97,24 @@ def try_place_ship(board: list[list],
     if (not isinstance(orientation, str) or not isinstance(ship_size, int)
             or not isinstance(ship_name, str)
             or not isinstance(board, list)):
+        logging.error('Incorrect argument type')
         raise TypeError('Incorrect argument type')
 
     # Check for incorrect board argument
     for row in board:
         if not isinstance(row, list):
+            logging.error('board argument incorrect')
             raise TypeError('board argument incorrect')
 
     # Check for incorrect position argument
     if (not isinstance(position, tuple) or not isinstance(position[0], int)
             or not isinstance(position[1], int)):
+        logging.error('position argument incorrect')
         raise TypeError('position argument incorrect')
 
     # Check orientation is correct
     if orientation not in ['v', 'h']:
+        logging.error('orientation should be v or h')
         raise ValueError('orientation should be v or h')
 
     modify_board = copy.deepcopy(board)  # so it doesn't modify the board passed through parameters
@@ -123,6 +146,7 @@ def place_battleships(board: list[list],
                       algorithm: str = 'simple') -> list[list[str]]:
     """
     Places all the ships onto the board using a specified placement algorithm
+
     :param board: A list of lists representing the board
     :param ships: A dictionary of ships in the game and their sizes
     :param algorithm: either 'simple', 'random' or 'custom'
@@ -131,12 +155,15 @@ def place_battleships(board: list[list],
 
     # Error checking to see if any of the arguments are present but bad
     if not isinstance(board, list) or not isinstance(ships, dict):
+        logging.error('parameter type error')
         raise TypeError('parameter type error')
 
     if len(board) == 0 or len(board[0]) == 0:
+        logging.error('Board parameter is of size 0')
         raise ValueError('Board parameter is of size 0')
 
     if len(ships) == 0:
+        logging.error('ships parameter is of size 0')
         raise ValueError('ships parameter is of size 0')
 
     # Basic placement algorithm as seen in specification
@@ -175,7 +202,9 @@ def place_battleships(board: list[list],
     # Ships will be placed with a position and orientation as specified in a JSON file
     if algorithm == 'custom':
 
-        with open('placement.json', 'r', encoding="utf-8") as file:
+        # recreate placement.json filename using absolute path
+        with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'placement.json'),
+                  'r', encoding="utf-8") as file:
             json_data = json.loads(file.read())
 
         ship_names = list(json_data.keys())
@@ -191,30 +220,36 @@ def place_battleships(board: list[list],
                                                  ship_position,
                                                  ship_orientation)
             if potential_placement is None:
+                logging.error("Supplied JSON data doesn't fit in the board")
                 raise ValueError("Supplied JSON data doesn't fit in the board")
 
             board = potential_placement
 
         return board
 
+    logging.error('Invalid Argument for algorithm parameter')
     raise ValueError('Invalid Argument for algorithm parameter')
 
 
 def in_board(location: tuple[int, int], board: list[list]) -> bool:
     """
     Returns whether a point is inside the board or not
+
     :param location: The point to query
     :param board: Reference to the board so we can find it's size
     :return: Whether its inside
     """
 
     if not isinstance(board, list) or not isinstance(location, tuple):
+        logging.error('parameter type error')
         raise TypeError('parameter type error')
 
     if not isinstance(location[0], int) or not isinstance(location[1], int):
+        logging.error('incorrect location parameter format')
         raise TypeError('incorrect location parameter format')
 
     if len(location) != 2:
+        logging.error('incorrect location parameter length')
         raise ValueError('incorrect location parameter length')
 
     inside = 0 <= location[0] < len(board) and 0 <= location[1] < len(board)
@@ -225,16 +260,19 @@ def get_positions_by_name(board: list[list], names: list[str]) -> list[tuple[int
     """
     Returns a list of all the tuple positions on the board that are occupied by a ship
     with name in list names. Primarily used for finding sunk ships
+
     :param board: The board to search in
     :param names: The names of the ships to look for
     :return: A list of the positions with name in list 'names'
     """
     # Check parameters
     if not isinstance(board, list) or not isinstance(names, list):
+        logging.error('parameters are incorrect type')
         raise TypeError('parameters are incorrect type')
     # Check that each row of the board list is also a list
     for row in board:
         if not isinstance(row, list):
+            logging.error('parameter board is not a list of lists')
             raise TypeError('parameter board is not a list of lists')
 
     positions = []
@@ -250,11 +288,13 @@ def get_positions_by_name(board: list[list], names: list[str]) -> list[tuple[int
 def get_sunken_ships(player_data: dict) -> list[tuple[int, int]]:
     """
     Calculate which of a player's ships we have sunk based on its original board
+
     :param player_data: The dict containing boards, ships etc.
     :return: A list of positions that have been sunk
     """
     if ('ships' not in player_data or 'original_board' not in player_data
             or not isinstance(player_data, dict)):
+        logging.error('incomplete player data variable')
         raise ValueError('incomplete player data variable')
 
     sunk_ship_types = [k for k, v in player_data['ships'].items() if v == 0]

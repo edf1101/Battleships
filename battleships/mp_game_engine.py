@@ -4,6 +4,7 @@ Also contains a simple Command line game when module itself is executed
 """
 
 import random
+import logging
 # Import battleships libs, pycharm likes it one way, terminal likes it the other
 # using this try except bit here makes it work either way round
 try:
@@ -15,10 +16,16 @@ except ImportError:
 
 players = {}
 
+# Set up the logging
+logging.basicConfig(filename='log', level=logging.DEBUG,
+                    format="[%(asctime)s-%(levelname)s - %(funcName)20s() ] %(message)s",
+                    filemode='a')
+
 
 def generate_attack(board: list[list[str | None]] = None) -> tuple[int, int]:
     """
     Generates a position to attack via specification random method
+
     :param board: input the board to attack so the algorithm knows how large it is. Unittests assume
     there are no arguments for generate_attack so if we get not argument assume board_size = 10
     :return: a tuple coordinate on the grid
@@ -37,6 +44,7 @@ def generate_attack(board: list[list[str | None]] = None) -> tuple[int, int]:
 def display_ascii(board: list[list[str | None]]) -> None:
     """
     Displays a given board on the command line
+
     :param board: The board to display
     :return: None, it prints the result
     """
@@ -65,6 +73,7 @@ def display_ascii(board: list[list[str | None]]) -> None:
 def ai_opponent_game_loop() -> None:
     """
     Plays a command line game of battleships against an AI
+
     :return: None
     """
     print("#### WELCOME TO BATTLESHIPS  AGAINST AI ###")
@@ -89,13 +98,9 @@ def ai_opponent_game_loop() -> None:
 
         # Input validation for the coordinates, check they're in board range
         user_coords = (-1, -1)
-        while not ((0 <= user_coords[0] < len(players['Human']['board']) and
-                    0 <= user_coords[1] < len(players['Human']['board']))):
-            user_coords = game_engine.cli_coordinates_input()
-            if not ((0 <= user_coords[0] < len(players['Human']['board']) and
-                     0 <= user_coords[1] < len(players['Human']['board']))):
-                print("Coordinates outside of the board")
+        user_coords = game_engine.cli_coordinates_input()
 
+        logging.info('the human guessed %s', user_coords)
         attack_status = game_engine.attack(user_coords,
                                            players['AI']['board'],
                                            players['AI']['ships'])
@@ -106,22 +111,28 @@ def ai_opponent_game_loop() -> None:
 
         print("-- AI'S TURN --")
         ai_coords = generate_attack(players['AI']['board'])
+        logging.info('the AI guessed %s',ai_coords)
         attack_status = game_engine.attack(ai_coords,
                                            players['Human']['board'],
                                            players['Human']['ships'])
         if attack_status:
             print("The AI got a HIT!")
+            logging.info('the AI hit')
         else:
             print("The AI got a MISS!")
+            logging.info('the AI missed')
 
         print(" Player's Board :")
         display_ascii(players['Human']['board'])
 
     if game_engine.count_ships_remaining(players['Human']['ships']) == 0:
         print(" The Human LOST! Better luck next time")
+        logging.info('the AI won')
     else:
         print(" The Human WON! Well done")
+        logging.info('the human won')
 
 
 if __name__ == "__main__":
+    logging.info('starting a game in mp_game_engine.py')
     ai_opponent_game_loop()

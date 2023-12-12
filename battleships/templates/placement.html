@@ -69,22 +69,31 @@
 
         function sendBoard(url) {
             console.log(boardConfig);
-            fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                        },
-                body: JSON.stringify(boardConfig),
-            })
-                .then(response => response.json())
-                .then(data => {
-                    alert("Board sent successfully, Redirecting to game");
-                    window.location.href = '/';
 
+            let placedShips = Object.keys(boardConfig).length; // how many ships placed
+            let shouldBeShips = Object.keys(myships).length; // how many should be placed
+            // can only submit ships if correct amount
+            if (placedShips === shouldBeShips) {
+                fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(boardConfig),
                 })
-                .catch((error) => {
-                    alert("Error sending board: " + error);
-                });
+                    .then(response => response.json())
+                    .then(data => {
+                        alert("Board sent successfully, Redirecting to game");
+                        window.location.href = '/';
+
+                    })
+                    .catch((error) => {
+                        alert("Error sending board: " + error);
+                    });
+            }
+            else{
+                alert("Haven't placed correct number of ships");
+            }
         }
 
 

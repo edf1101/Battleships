@@ -69,6 +69,7 @@ def generate_advanced_attack(difficulty: int, enemy_dict: dict, history: list) -
 def generate_attack_difficulty_0(board_size: int) -> tuple[int, int]:
     """
     Purely random attacking method (what's defined in the spec)
+
     :param board_size: Size of the board
     :return: attack coordinate
     """
@@ -81,6 +82,7 @@ def generate_attack_difficulty_1(board_size: int,
                                  history: list[tuple[int, int]]) -> tuple[int, int]:
     """
     Semi random guess - ie its random but it won't guess the same place twice
+
     :param board_size: Size of board
     :param history: list of where has been guessed before
     :return: The guess
@@ -101,6 +103,7 @@ def generate_attack_difficulty_2(enemy_dict: dict,
     """
     This does semi intelligent guessing around unsunk hits (it chooses a random
     location adjacent to unsunk hits) if no unsunk hits it guesses randomly
+
     :param enemy_dict: So we can get the enemy's board and original board
     :param history: list of where has been guessed before
     :return: The guess
@@ -130,6 +133,7 @@ def generate_attack_difficulty_3(enemy_dict: dict,
     """
     A bit better than difficulty 2, this tries to follow lines in the unsunk hits
     Still does random guessing if it can't find any unsunk hits
+
     :param enemy_dict: So we can get the enemy's board and original board
     :param history: list of where has been guessed before
     :return: The guess location
@@ -151,6 +155,7 @@ def generate_attack_difficulty_4(enemy_dict: dict,
     """
     If it has unsunk hits then it does the same as difficulty 3
     But if no unsunk hits found then it does more intelligent random guessing
+
     :param enemy_dict: So we can get the enemy's board and original board
     :param history: list of where has been guessed before
     :return: The guess location
@@ -179,6 +184,7 @@ def generate_intelligent_blind_guess(enemy_dict, history):
     """
     When there are no unsunk ships to guess around this algorithm gives the best place to
     try and look for a ship
+
     :param enemy_dict: So we can get the enemy's board and original board
     :param history: list of where has been guessed before
     :return: A location to guess
@@ -232,6 +238,7 @@ def generate_intelligent_blind_guess(enemy_dict, history):
 def guess_line_attack(enemy_dict: dict, history: list[tuple[int, int]]) -> tuple[int, int]:
     """
         Generates a guess based on following lines in the unsunk hits to try and find ships
+
         :param enemy_dict: So we can get the enemy's board and original board
         :param history: Our move history, so we know where we have already guessed
         :return: A guess following a line if possible
@@ -274,6 +281,7 @@ def get_surrounding_tiles(search_tiles: list[tuple[int, int]],
     """
     Gives a list of the tiles surrounding the tiles given by 'search_tiles' parameter
     primarily used for finding tiles around unsunk hits
+
     :param search_tiles: The tiles to look around
     :param board_size: The size of the board
     :return: The list of surrounding tiles
@@ -295,6 +303,7 @@ def get_surrounding_tiles(search_tiles: list[tuple[int, int]],
 def get_unsunk_hits(enemy_dict: dict) -> list[tuple[int, int]]:
     """
     Find all the cells in the board that have been hit but not sunk
+
     :param enemy_dict: So we can get the enemy's board and original board
     :return: The list of unsunk hit locations
     """

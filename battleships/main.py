@@ -4,6 +4,7 @@ This module runs the main battleships game
 
 import json
 from copy import deepcopy
+import logging
 from flask import Flask, request, render_template
 
 # Import battleships libs, pycharm likes it one way, terminal likes it the other
@@ -18,6 +19,11 @@ except ImportError:
     import advanced_ai as ai
 
 app = Flask(__name__)
+
+# Set up the logging
+logging.basicConfig(filename='log', level=logging.DEBUG,
+                    format='%(asctime)s-%(levelname)s-%(message)s', filemode='a')
+logging.getLogger().addHandler(logging.StreamHandler())
 
 
 class BattleshipsGame:
@@ -38,9 +44,12 @@ class BattleshipsGame:
         """
         When the Start game button gets pressed on the entry interface this gets triggered
         It sets up a game with the data returned
+
         :return: dictionary to show it was received OK
         """
         if request.method == 'POST':  # received data to set up a game
+
+            app.logger.info('Just loaded into the placement interface')
 
             # Initialise the new game with the JSON data arguments
             json_data = json.loads(request.get_json())
@@ -72,21 +81,25 @@ class BattleshipsGame:
         """
         When the return to menu button gets pressed this gets triggered. Just stops the game
         and will return to the entry screen
+
         :return: A dict just to show it completed fine
         """
         if request.method == 'POST':  # received the JSON data of a board set up
             self.set_board = False
             self.game_running = False
+            app.logger.info('Gone back to main menu')
 
         return {'success': True}  # needs some JSON returned to show it worked
 
     def placement_interface(self) -> str:
         """
         This handles the placement menu, so when you first put your ships on the board
+
         :return: Returns a JSON file if it's a POST request, or the HTML webpage if it's not
         """
         if request.method == 'POST':  # received the JSON data of a board set up
             json_data = request.get_json()
+            app.logger.info('Just received placement ship data')
 
             # Because we can only read a JSON ship data from file we need to save it then load it in
             with open("placement.json", "w", encoding="utf-8") as outfile:
@@ -113,8 +126,11 @@ class BattleshipsGame:
     def process_attack(self) -> dict:
         """
         This handles When a user sends an attack
+
         :return: The status of the user's attack and where the AI fired back
         """
+
+        app.logger.info('Now processing player attack')
 
         # Deal with the human attack
         valid_coordinate = False
@@ -123,9 +139,11 @@ class BattleshipsGame:
             if (0 <= user_coords[0] < len(self.players['AI']['board']) and
                     0 <= user_coords[1] < len(self.players['AI']['board'])):
                 valid_coordinate = True
+            app.logger.info(' user guesses %s',user_coords)
 
         except ValueError:
             user_coords = (0, 0)
+            app.logger.warning('User tried to enter invalid coordinates')
 
         if valid_coordinate:  # If we didn't enter valid coordinates then assume we missed
             attack_status = game_engine.attack(user_coords, self.players['AI']['board'],
@@ -144,6 +162,7 @@ class BattleshipsGame:
         game_engine.attack(ai_coords, self.players['Human']['board'],
                            self.players['Human']['ships'])
         self.players['AI']['history'].append(ai_coords)
+        app.logger.info('ai guessed %s', ai_coords)
 
         # Calculate which of my ships the AI has sunk based on my original board
         my_sunken_places = components.get_sunken_ships(self.players['Human'])
@@ -158,6 +177,7 @@ class BattleshipsGame:
         if finished:
             ai_won = game_engine.count_ships_remaining(self.players['Human']['ships']) == 0
             return_data['finished'] = f"The Human {'LOST' if ai_won else 'WON'}! Game over"
+            app.logger.info("The Human %s! Game over", 'LOST' if ai_won else 'WON')
 
         return return_data
 
@@ -165,6 +185,7 @@ class BattleshipsGame:
         """
         Handles the main gameplay webpage, if game isn't set up then it goes
         to the placement page
+
         :return: HTML web pages: either placement if the board needs to be set up
          or gameplay if it has already
         """
@@ -187,6 +208,7 @@ class BattleshipsGame:
 def placement_interface() -> str:
     """
     returns the game instance's placement_interface function
+
     :return: Returns a JSON file if it's a POST request, or the HTML webpage if it's not
     """
     return game.placement_interface()
@@ -196,6 +218,7 @@ def placement_interface() -> str:
 def process_attack() -> dict:
     """
     returns the game instance's handle_attack function
+
     :return: The status of the user's attack and where the AI fired back
     """
     return game.process_attack()
@@ -205,6 +228,7 @@ def process_attack() -> dict:
 def handle_menu() -> dict:
     """
     Returns the game instance's handle_menu function result
+
     :return: The dictionary result to respond that the handle_menu function worked
     """
     return game.handle_menu()
@@ -214,6 +238,7 @@ def handle_menu() -> dict:
 def entry_interface() -> dict:
     """
     Returns the game instance's entry_interface function result
+
     :return: The dictionary result to respond that the entry_interface function worked
     """
     return game.entry_interface()
@@ -223,9 +248,11 @@ def entry_interface() -> dict:
 def root() -> str:
     """
     returns the game instance's root function
+
     :return: HTML web pages: either placement if the board needs to be set up
     or gameplay if it has already
     """
+
     return game.root()
 
 
@@ -233,4 +260,6 @@ game = BattleshipsGame()
 
 if __name__ == '__main__':
     # Set up game
+
+    app.logger.debug("This is an info message.")
     app.run()

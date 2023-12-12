@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>battleships.components &#8212; Battleships 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=4f649999" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css?v=039e1c02" />
+    <script src="../../_static/documentation_options.js?v=f2a433a1"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for battleships.components</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Basic functions used mainly for setting up games</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="c1"># Set up the logging</span>
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">,</span>
+                    <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;[</span><span class="si">%(asctime)s</span><span class="s2">-</span><span class="si">%(levelname)s</span><span class="s2"> - </span><span class="si">%(funcName)20s</span><span class="s2">() ] </span><span class="si">%(message)s</span><span class="s2">&quot;</span><span class="p">,</span>
+                    <span class="n">filemode</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="initialise_board">
+<a class="viewcode-back" href="../../battleships.html#battleships.components.initialise_board">[docs]</a>
+<span class="k">def</span> <span class="nf">initialise_board</span><span class="p">(</span><span class="n">size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates a blank board of size &#39;size&#39;</span>
+
+<span class="sd">    :param size: How big the board should be in both x and y directions</span>
+<span class="sd">    :return: An empty list of lists (filled with None values)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;size should be of type int&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;size should be of type int&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">size</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Size must be ≥ 1&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Size must be ≥ 1&quot;</span><span class="p">)</span>
+
+    <span class="n">board</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">size</span><span class="p">):</span>
+        <span class="n">row</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">size</span><span class="p">)]</span>
+        <span class="n">board</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">board</span></div>
+
+
+
+<div class="viewcode-block" id="create_battleships">
+<a class="viewcode-back" href="../../battleships.html#battleships.components.create_battleships">[docs]</a>
+<span class="k">def</span> <span class="nf">create_battleships</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;battleships.txt&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function extracts the battleship data from a file</span>
+
+<span class="sd">    :param filename: The file to read ship data from</span>
+<span class="sd">    :return: A dictionary with the ships&#39; names and sizes</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;filename parameter should be a string&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;filename parameter should be a string&#39;</span><span class="p">)</span>
+
+    <span class="c1"># recreate filename using absolute path</span>
+    <span class="n">working_directory</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">working_directory</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+    <span class="k">except</span> <span class="ne">FileNotFoundError</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;filename doesn&#39;t exist&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;filename </span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2"> doesn&#39;t exist&quot;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">ex</span>
+
+    <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>  <span class="c1"># each new line should be data entry</span>
+
+    <span class="n">battleships</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+        <span class="n">name</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>  <span class="c1"># Check the sizes are ints</span>
+            <span class="n">size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">size</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+        <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;battleships.txt error one value isn&#39;t of type int&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;battleships.txt error one value isn&#39;t of type int&quot;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
+
+        <span class="n">battleships</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">name</span><span class="p">)]</span> <span class="o">=</span> <span class="n">size</span>
+
+    <span class="k">return</span> <span class="n">battleships</span></div>
+
+
+
+<div class="viewcode-block" id="try_place_ship">
+<a class="viewcode-back" href="../../battleships.html#battleships.components.try_place_ship">[docs]</a>
+<span class="k">def</span> <span class="nf">try_place_ship</span><span class="p">(</span><span class="n">board</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">],</span>
+                   <span class="n">ship_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                   <span class="n">ship_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                   <span class="n">position</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span>
+                   <span class="n">orientation</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Used for the random placement method in place_battleships function</span>
+
+<span class="sd">    :param board: A list of lists representing the board</span>
+<span class="sd">    :param ship_name: The name of the ship being placed</span>
+<span class="sd">    :param ship_size: The size of the ship being placed</span>
+<span class="sd">    :param position: starting position of the ship</span>
+<span class="sd">    :param orientation: what direction the ship faces  &#39;v&#39; = down, &#39;h&#39; = right</span>
+<span class="sd">    :return: None if the placement is invalid, else the updated board list of lists</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Check for incorrect parameters</span>
+    <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">orientation</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ship_size</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span>
+            <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ship_name</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+            <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">board</span><span class="p">,</span> <span class="nb">list</span><span class="p">)):</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Incorrect argument type&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Incorrect argument type&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Check for incorrect board argument</span>
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">board</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;board argument incorrect&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;board argument incorrect&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Check for incorrect position argument</span>
+    <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">position</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">position</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">int</span><span class="p">)</span>
+            <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">position</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="nb">int</span><span class="p">)):</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;position argument incorrect&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;position argument incorrect&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Check orientation is correct</span>
+    <span class="k">if</span> <span class="n">orientation</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;v&#39;</span><span class="p">,</span> <span class="s1">&#39;h&#39;</span><span class="p">]:</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;orientation should be v or h&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;orientation should be v or h&#39;</span><span class="p">)</span>
+
+    <span class="n">modify_board</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">board</span><span class="p">)</span>  <span class="c1"># so it doesn&#39;t modify the board passed through parameters</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ship_size</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">position</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">board</span><span class="p">)</span> <span class="ow">and</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">position</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">board</span><span class="p">):</span>
+            <span class="k">pass</span>  <span class="c1"># inside board</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>  <span class="c1"># out of bounds of the board</span>
+
+        <span class="k">if</span> <span class="n">board</span><span class="p">[</span><span class="n">position</span><span class="p">[</span><span class="mi">1</span><span class="p">]][</span><span class="n">position</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">pass</span>  <span class="c1"># empty space</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>  <span class="c1"># on another ship</span>
+
+        <span class="n">modify_board</span><span class="p">[</span><span class="n">position</span><span class="p">[</span><span class="mi">1</span><span class="p">]][</span><span class="n">position</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="n">ship_name</span>
+
+        <span class="k">if</span> <span class="n">orientation</span> <span class="o">==</span> <span class="s1">&#39;v&#39;</span><span class="p">:</span>  <span class="c1"># Down</span>
+            <span class="n">position</span> <span class="o">=</span> <span class="p">(</span><span class="n">position</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">position</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">orientation</span> <span class="o">==</span> <span class="s1">&#39;h&#39;</span><span class="p">:</span>  <span class="c1"># Right</span>
+            <span class="n">position</span> <span class="o">=</span> <span class="p">(</span><span class="n">position</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">position</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">modify_board</span></div>
+
+
+
+<div class="viewcode-block" id="place_battleships">
+<a class="viewcode-back" href="../../battleships.html#battleships.components.place_battleships">[docs]</a>
+<span class="k">def</span> <span class="nf">place_battleships</span><span class="p">(</span><span class="n">board</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">],</span>
+                      <span class="n">ships</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span>
+                      <span class="n">algorithm</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;simple&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Places all the ships onto the board using a specified placement algorithm</span>
+
+<span class="sd">    :param board: A list of lists representing the board</span>
+<span class="sd">    :param ships: A dictionary of ships in the game and their sizes</span>
+<span class="sd">    :param algorithm: either &#39;simple&#39;, &#39;random&#39; or &#39;custom&#39;</span>
+<span class="sd">    :return: A list of lists representing the board, with tiles filled where ships are</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Error checking to see if any of the arguments are present but bad</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">board</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ships</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;parameter type error&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;parameter type error&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">board</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">board</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Board parameter is of size 0&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Board parameter is of size 0&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ships</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;ships parameter is of size 0&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;ships parameter is of size 0&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Basic placement algorithm as seen in specification</span>
+    <span class="k">if</span> <span class="n">algorithm</span> <span class="o">==</span> <span class="s1">&#39;simple&#39;</span><span class="p">:</span>
+
+        <span class="n">row</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">ship_name</span><span class="p">,</span> <span class="n">ship_size</span> <span class="ow">in</span> <span class="n">ships</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+
+            <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ship_size</span><span class="p">):</span>
+                <span class="n">board</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="n">x</span><span class="p">]</span> <span class="o">=</span> <span class="n">ship_name</span>
+            <span class="n">row</span> <span class="o">+=</span> <span class="mi">1</span>  <span class="c1"># go down a row</span>
+
+        <span class="k">return</span> <span class="n">board</span>
+
+    <span class="c1"># Ships will be placed with random position + orientation, as long as they fit</span>
+    <span class="k">if</span> <span class="n">algorithm</span> <span class="o">==</span> <span class="s1">&#39;random&#39;</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">ship_name</span><span class="p">,</span> <span class="n">ship_size</span> <span class="ow">in</span> <span class="n">ships</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+
+            <span class="c1"># First guess at a position</span>
+            <span class="n">position</span> <span class="o">=</span> <span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">randrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">board</span><span class="p">)),</span> <span class="n">random</span><span class="o">.</span><span class="n">randrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">board</span><span class="p">)))</span>
+            <span class="n">orientation</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="s1">&#39;v&#39;</span><span class="p">,</span> <span class="s1">&#39;h&#39;</span><span class="p">])</span>
+            <span class="n">potential_placement</span> <span class="o">=</span> <span class="n">try_place_ship</span><span class="p">(</span><span class="n">board</span><span class="p">,</span> <span class="n">ship_name</span><span class="p">,</span> <span class="n">ship_size</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">orientation</span><span class="p">)</span>
+
+            <span class="k">while</span> <span class="n">potential_placement</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># try random spots until one is valid</span>
+                <span class="n">position</span> <span class="o">=</span> <span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">randrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">board</span><span class="p">)),</span> <span class="n">random</span><span class="o">.</span><span class="n">randrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">board</span><span class="p">)))</span>
+                <span class="n">orientation</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="s1">&#39;v&#39;</span><span class="p">,</span> <span class="s1">&#39;h&#39;</span><span class="p">])</span>
+                <span class="n">potential_placement</span> <span class="o">=</span> <span class="n">try_place_ship</span><span class="p">(</span><span class="n">board</span><span class="p">,</span>
+                                                     <span class="n">ship_name</span><span class="p">,</span>
+                                                     <span class="n">ship_size</span><span class="p">,</span>
+                                                     <span class="n">position</span><span class="p">,</span>
+                                                     <span class="n">orientation</span><span class="p">)</span>
+
+            <span class="n">board</span> <span class="o">=</span> <span class="n">potential_placement</span>
+        <span class="k">return</span> <span class="n">board</span>
+
+    <span class="c1"># Ships will be placed with a position and orientation as specified in a JSON file</span>
+    <span class="k">if</span> <span class="n">algorithm</span> <span class="o">==</span> <span class="s1">&#39;custom&#39;</span><span class="p">:</span>
+
+        <span class="c1"># recreate placement.json filename using absolute path</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)),</span> <span class="s1">&#39;placement.json&#39;</span><span class="p">),</span>
+                  <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+            <span class="n">json_data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+
+        <span class="n">ship_names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">json_data</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+
+        <span class="k">for</span> <span class="n">ship_name</span> <span class="ow">in</span> <span class="n">ship_names</span><span class="p">:</span>
+
+            <span class="c1"># example file had a dict of ship_name : [position.x,position.y,orientation]</span>
+            <span class="n">ship_position</span> <span class="o">=</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">json_data</span><span class="p">[</span><span class="n">ship_name</span><span class="p">][</span><span class="mi">0</span><span class="p">]),</span> <span class="nb">int</span><span class="p">(</span><span class="n">json_data</span><span class="p">[</span><span class="n">ship_name</span><span class="p">][</span><span class="mi">1</span><span class="p">]))</span>
+            <span class="n">ship_orientation</span> <span class="o">=</span> <span class="n">json_data</span><span class="p">[</span><span class="n">ship_name</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span>
+
+            <span class="n">potential_placement</span> <span class="o">=</span> <span class="n">try_place_ship</span><span class="p">(</span><span class="n">board</span><span class="p">,</span> <span class="n">ship_name</span><span class="p">,</span>
+                                                 <span class="n">ships</span><span class="p">[</span><span class="n">ship_name</span><span class="p">],</span>
+                                                 <span class="n">ship_position</span><span class="p">,</span>
+                                                 <span class="n">ship_orientation</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">potential_placement</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Supplied JSON data doesn&#39;t fit in the board&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Supplied JSON data doesn&#39;t fit in the board&quot;</span><span class="p">)</span>
+
+            <span class="n">board</span> <span class="o">=</span> <span class="n">potential_placement</span>
+
+        <span class="k">return</span> <span class="n">board</span>
+
+    <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Invalid Argument for algorithm parameter&#39;</span><span class="p">)</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Invalid Argument for algorithm parameter&#39;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="in_board">
+<a class="viewcode-back" href="../../battleships.html#battleships.components.in_board">[docs]</a>
+<span class="k">def</span> <span class="nf">in_board</span><span class="p">(</span><span class="n">location</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">board</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns whether a point is inside the board or not</span>
+
+<span class="sd">    :param location: The point to query</span>
+<span class="sd">    :param board: Reference to the board so we can find it&#39;s size</span>
+<span class="sd">    :return: Whether its inside</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">board</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;parameter type error&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;parameter type error&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">location</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">location</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;incorrect location parameter format&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;incorrect location parameter format&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">location</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;incorrect location parameter length&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;incorrect location parameter length&#39;</span><span class="p">)</span>
+
+    <span class="n">inside</span> <span class="o">=</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">location</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">board</span><span class="p">)</span> <span class="ow">and</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">location</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">board</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">inside</span></div>
+
+
+
+<div class="viewcode-block" id="get_positions_by_name">
+<a class="viewcode-back" href="../../battleships.html#battleships.components.get_positions_by_name">[docs]</a>
+<span class="k">def</span> <span class="nf">get_positions_by_name</span><span class="p">(</span><span class="n">board</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">],</span> <span class="n">names</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns a list of all the tuple positions on the board that are occupied by a ship</span>
+<span class="sd">    with name in list names. Primarily used for finding sunk ships</span>
+
+<span class="sd">    :param board: The board to search in</span>
+<span class="sd">    :param names: The names of the ships to look for</span>
+<span class="sd">    :return: A list of the positions with name in list &#39;names&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Check parameters</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">board</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;parameters are incorrect type&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;parameters are incorrect type&#39;</span><span class="p">)</span>
+    <span class="c1"># Check that each row of the board list is also a list</span>
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">board</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;parameter board is not a list of lists&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;parameter board is not a list of lists&#39;</span><span class="p">)</span>
+
+    <span class="n">positions</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">row_idx</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">board</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">cell</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
+
+            <span class="k">if</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">names</span><span class="p">:</span>  <span class="c1"># If the cell name is in names</span>
+                <span class="n">positions</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">idx</span><span class="p">,</span> <span class="n">row_idx</span><span class="p">))</span>  <span class="c1"># Append the tuple of its coordinates</span>
+
+    <span class="k">return</span> <span class="n">positions</span></div>
+
+
+
+<div class="viewcode-block" id="get_sunken_ships">
+<a class="viewcode-back" href="../../battleships.html#battleships.components.get_sunken_ships">[docs]</a>
+<span class="k">def</span> <span class="nf">get_sunken_ships</span><span class="p">(</span><span class="n">player_data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculate which of a player&#39;s ships we have sunk based on its original board</span>
+
+<span class="sd">    :param player_data: The dict containing boards, ships etc.</span>
+<span class="sd">    :return: A list of positions that have been sunk</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;ships&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">player_data</span> <span class="ow">or</span> <span class="s1">&#39;original_board&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">player_data</span>
+            <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">player_data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)):</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;incomplete player data variable&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;incomplete player data variable&#39;</span><span class="p">)</span>
+
+    <span class="n">sunk_ship_types</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">player_data</span><span class="p">[</span><span class="s1">&#39;ships&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">v</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span>
+    <span class="n">sunken_places</span> <span class="o">=</span> <span class="n">get_positions_by_name</span><span class="p">(</span><span class="n">player_data</span><span class="p">[</span><span class="s1">&#39;original_board&#39;</span><span class="p">],</span>
+                                          <span class="n">sunk_ship_types</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">sunken_places</span></div>
+
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">Battleships</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2023, Student 730003140.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.2.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

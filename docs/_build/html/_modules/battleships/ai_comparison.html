@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>battleships.ai_comparison &#8212; Battleships 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=4f649999" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css?v=039e1c02" />
+    <script src="../../_static/documentation_options.js?v=f2a433a1"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for battleships.ai_comparison</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This script is for comparing different difficulties of AI over many games</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1"># Import gameplay libs</span>
+<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="c1"># Import battleships libs, pycharm likes it one way, terminal likes it the other</span>
+<span class="c1"># using this try except bit here makes it work either way round</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">battleships</span> <span class="kn">import</span> <span class="n">game_engine</span>
+    <span class="kn">from</span> <span class="nn">battleships</span> <span class="kn">import</span> <span class="n">components</span>
+    <span class="kn">from</span> <span class="nn">battleships</span> <span class="kn">import</span> <span class="n">advanced_ai</span> <span class="k">as</span> <span class="n">ai</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">game_engine</span>
+    <span class="kn">import</span> <span class="nn">components</span>
+    <span class="kn">import</span> <span class="nn">advanced_ai</span> <span class="k">as</span> <span class="nn">ai</span>
+
+
+<div class="viewcode-block" id="ai_loop">
+<a class="viewcode-back" href="../../battleships.html#battleships.ai_comparison.ai_loop">[docs]</a>
+<span class="k">def</span> <span class="nf">ai_loop</span><span class="p">(</span><span class="n">ai_mode_1</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ai_mode_2</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Runs a single game between two AIs</span>
+
+<span class="sd">    :param ai_mode_1: the difficulty of AI 1</span>
+<span class="sd">    :param ai_mode_2: the difficulty of AI 2</span>
+<span class="sd">    :return: &#39;AI1&#39; if AI1 won or &#39;AI2&#39; if AI2 won</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ai_mode_1</span><span class="p">,</span><span class="nb">int</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ai_mode_2</span><span class="p">,</span><span class="nb">int</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;parameters not ints&#39;</span><span class="p">)</span>
+
+    <span class="n">board_size</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="n">moves</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># Keep track of how many moves its taken</span>
+
+    <span class="n">players</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;AI2&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;board&#39;</span><span class="p">:</span> <span class="n">components</span><span class="o">.</span><span class="n">initialise_board</span><span class="p">(</span><span class="n">board_size</span><span class="p">),</span>
+                       <span class="s1">&#39;ships&#39;</span><span class="p">:</span> <span class="n">components</span><span class="o">.</span><span class="n">create_battleships</span><span class="p">(),</span>
+                       <span class="s1">&#39;history&#39;</span><span class="p">:</span> <span class="p">[]},</span>
+               <span class="s1">&#39;AI&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;board&#39;</span><span class="p">:</span> <span class="n">components</span><span class="o">.</span><span class="n">initialise_board</span><span class="p">(</span><span class="n">board_size</span><span class="p">),</span>
+                      <span class="s1">&#39;ships&#39;</span><span class="p">:</span> <span class="n">components</span><span class="o">.</span><span class="n">create_battleships</span><span class="p">(),</span>
+                      <span class="s1">&#39;history&#39;</span><span class="p">:</span> <span class="p">[]}}</span>
+
+    <span class="n">players</span><span class="p">[</span><span class="s1">&#39;AI&#39;</span><span class="p">][</span><span class="s1">&#39;board&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">components</span><span class="o">.</span><span class="n">place_battleships</span><span class="p">(</span><span class="n">players</span><span class="p">[</span><span class="s1">&#39;AI&#39;</span><span class="p">][</span><span class="s1">&#39;board&#39;</span><span class="p">],</span>
+                                                          <span class="n">players</span><span class="p">[</span><span class="s1">&#39;AI&#39;</span><span class="p">][</span><span class="s1">&#39;ships&#39;</span><span class="p">],</span>
+                                                          <span class="n">algorithm</span><span class="o">=</span><span class="s1">&#39;random&#39;</span><span class="p">)</span>
+    <span class="c1"># Now AI1 has made its board lets save the original board so we can keep track</span>
+    <span class="c1"># of what&#39;s sunk and where</span>
+    <span class="n">players</span><span class="p">[</span><span class="s1">&#39;AI&#39;</span><span class="p">][</span><span class="s1">&#39;original_board&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">players</span><span class="p">[</span><span class="s1">&#39;AI&#39;</span><span class="p">][</span><span class="s1">&#39;board&#39;</span><span class="p">])</span>
+
+    <span class="n">players</span><span class="p">[</span><span class="s1">&#39;AI2&#39;</span><span class="p">][</span><span class="s1">&#39;board&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">components</span><span class="o">.</span><span class="n">place_battleships</span><span class="p">(</span><span class="n">players</span><span class="p">[</span><span class="s1">&#39;AI2&#39;</span><span class="p">][</span><span class="s1">&#39;board&#39;</span><span class="p">],</span>
+                                                           <span class="n">players</span><span class="p">[</span><span class="s1">&#39;AI2&#39;</span><span class="p">][</span><span class="s1">&#39;ships&#39;</span><span class="p">],</span>
+                                                           <span class="n">algorithm</span><span class="o">=</span><span class="s1">&#39;random&#39;</span><span class="p">)</span>
+    <span class="c1"># Now AI2 has made its board lets save the original board so we can keep track</span>
+    <span class="c1"># of what&#39;s sunk and where</span>
+    <span class="n">players</span><span class="p">[</span><span class="s1">&#39;AI2&#39;</span><span class="p">][</span><span class="s1">&#39;original_board&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">players</span><span class="p">[</span><span class="s1">&#39;AI2&#39;</span><span class="p">][</span><span class="s1">&#39;board&#39;</span><span class="p">])</span>
+
+    <span class="n">finished</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">while</span> <span class="ow">not</span> <span class="n">finished</span><span class="p">:</span>
+        <span class="n">moves</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="c1"># AI1 can attack</span>
+        <span class="n">ai_coords</span> <span class="o">=</span> <span class="n">ai</span><span class="o">.</span><span class="n">generate_advanced_attack</span><span class="p">(</span><span class="n">ai_mode_1</span><span class="p">,</span>
+                                                <span class="n">players</span><span class="p">[</span><span class="s1">&#39;AI2&#39;</span><span class="p">],</span>
+                                                <span class="n">players</span><span class="p">[</span><span class="s1">&#39;AI&#39;</span><span class="p">][</span><span class="s1">&#39;history&#39;</span><span class="p">])</span>
+        <span class="n">game_engine</span><span class="o">.</span><span class="n">attack</span><span class="p">(</span><span class="n">ai_coords</span><span class="p">,</span> <span class="n">players</span><span class="p">[</span><span class="s1">&#39;AI2&#39;</span><span class="p">][</span><span class="s1">&#39;board&#39;</span><span class="p">],</span>
+                           <span class="n">players</span><span class="p">[</span><span class="s1">&#39;AI2&#39;</span><span class="p">][</span><span class="s1">&#39;ships&#39;</span><span class="p">])</span>
+        <span class="n">players</span><span class="p">[</span><span class="s1">&#39;AI&#39;</span><span class="p">][</span><span class="s1">&#39;history&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ai_coords</span><span class="p">)</span>
+
+        <span class="c1"># AI2 can attack now</span>
+        <span class="n">ai_coords</span> <span class="o">=</span> <span class="n">ai</span><span class="o">.</span><span class="n">generate_advanced_attack</span><span class="p">(</span><span class="n">ai_mode_2</span><span class="p">,</span>
+                                                <span class="n">players</span><span class="p">[</span><span class="s1">&#39;AI&#39;</span><span class="p">],</span>
+                                                <span class="n">players</span><span class="p">[</span><span class="s1">&#39;AI2&#39;</span><span class="p">][</span><span class="s1">&#39;history&#39;</span><span class="p">])</span>
+        <span class="n">game_engine</span><span class="o">.</span><span class="n">attack</span><span class="p">(</span><span class="n">ai_coords</span><span class="p">,</span> <span class="n">players</span><span class="p">[</span><span class="s1">&#39;AI&#39;</span><span class="p">][</span><span class="s1">&#39;board&#39;</span><span class="p">],</span>
+                           <span class="n">players</span><span class="p">[</span><span class="s1">&#39;AI&#39;</span><span class="p">][</span><span class="s1">&#39;ships&#39;</span><span class="p">])</span>
+        <span class="n">players</span><span class="p">[</span><span class="s1">&#39;AI2&#39;</span><span class="p">][</span><span class="s1">&#39;history&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ai_coords</span><span class="p">)</span>
+
+        <span class="c1"># Check if finished</span>
+        <span class="n">finished</span> <span class="o">=</span> <span class="p">(</span><span class="n">game_engine</span><span class="o">.</span><span class="n">count_ships_remaining</span><span class="p">(</span><span class="n">players</span><span class="p">[</span><span class="s1">&#39;AI2&#39;</span><span class="p">][</span><span class="s1">&#39;ships&#39;</span><span class="p">])</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span>
+                    <span class="n">game_engine</span><span class="o">.</span><span class="n">count_ships_remaining</span><span class="p">(</span><span class="n">players</span><span class="p">[</span><span class="s1">&#39;AI&#39;</span><span class="p">][</span><span class="s1">&#39;ships&#39;</span><span class="p">])</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+
+    <span class="n">ai_won</span> <span class="o">=</span> <span class="n">game_engine</span><span class="o">.</span><span class="n">count_ships_remaining</span><span class="p">(</span><span class="n">players</span><span class="p">[</span><span class="s1">&#39;AI2&#39;</span><span class="p">][</span><span class="s1">&#39;ships&#39;</span><span class="p">])</span> <span class="o">==</span> <span class="mi">0</span>
+    <span class="c1"># Return who won and how many moves it took</span>
+    <span class="k">return</span> <span class="s1">&#39;AI1&#39;</span> <span class="k">if</span> <span class="n">ai_won</span> <span class="k">else</span> <span class="s1">&#39;AI2&#39;</span><span class="p">,</span> <span class="n">moves</span></div>
+
+
+
+<div class="viewcode-block" id="run_trials">
+<a class="viewcode-back" href="../../battleships.html#battleships.ai_comparison.run_trials">[docs]</a>
+<span class="k">def</span> <span class="nf">run_trials</span><span class="p">(</span><span class="n">ai1_mode</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ai2_mode</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">trials</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Runs a number of games against the AI and prints the result</span>
+
+<span class="sd">    :param ai1_mode: the difficulty of AI 1</span>
+<span class="sd">    :param ai2_mode: the difficulty of AI 2</span>
+<span class="sd">    :param trials: How many trials to run</span>
+<span class="sd">    :return: None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Keeps track of how many times a1 or a2 win</span>
+    <span class="n">ai1_score</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">ai2_score</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="c1"># Keeps track of when ai1 / ai2 does win how many moves it look</span>
+    <span class="n">ai1_completion_moves</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">ai2_completion_moves</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># Run it &#39;trials&#39; number of times</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">trials</span><span class="p">):</span>
+        <span class="n">winner</span><span class="p">,</span> <span class="n">moves</span> <span class="o">=</span> <span class="n">ai_loop</span><span class="p">(</span><span class="n">ai1_mode</span><span class="p">,</span> <span class="n">ai2_mode</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">winner</span> <span class="o">==</span> <span class="s1">&#39;AI1&#39;</span><span class="p">:</span>
+            <span class="n">ai1_score</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">ai1_completion_moves</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">moves</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ai2_score</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">ai2_completion_moves</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">moves</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Game </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">  </span><span class="si">{</span><span class="n">winner</span><span class="si">}</span><span class="s1"> won&#39;</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;AI1 won </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">ai1_score</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="p">(</span><span class="n">trials</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">),</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s1">%&#39;</span>
+          <span class="sa">f</span><span class="s1">&#39;  AI2 won </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">ai2_score</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="p">(</span><span class="n">trials</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">),</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s1">% &#39;</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;AI1 finished in mean = </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">ai1_completion_moves</span><span class="p">),</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s1"> moves&#39;</span>
+          <span class="sa">f</span><span class="s1">&#39;   std = </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">ai1_completion_moves</span><span class="p">),</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
+          <span class="sa">f</span><span class="s1">&#39;   n = </span><span class="si">{</span><span class="n">trials</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;AI2 finished in mean = </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">ai2_completion_moves</span><span class="p">),</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s1"> moves&#39;</span>
+          <span class="sa">f</span><span class="s1">&#39;   std = </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">ai2_completion_moves</span><span class="p">),</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
+          <span class="sa">f</span><span class="s1">&#39;   n = </span><span class="si">{</span><span class="n">trials</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
+
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">run_trials</span><span class="p">(</span><span class="n">ai1_mode</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ai2_mode</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">trials</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">Battleships</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2023, Student 730003140.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.2.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

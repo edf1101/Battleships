@@ -4,16 +4,18 @@
 A python application to simulate a Battleships game against an AI in both a command line interface and a Flask GUI.
 
 ## Coursework Self assessment
-All features required by specification are complete.
+All features required by specification are complete (including testing & logging)
 ### Additional 
 #### Entry Screen
 The user can select the game settings (size, difficulty) on an Entry page.
 Game screen has a return to menu button so games can be replayed
 #### Storm Mode
 When this is turned on The board will shift 1 space each turn in a predetermined direction
-#### HTML Template sunken ships
+#### HTML Template Sunken ships
 If a ship has been sunk, the main.py script sends a list of sunk positions for
 either the AI or Player to the HTML code, and it colours those tiles green
+#### Other Frontend modifications
+In the placement HTML file originally allowed users to place fewer than required number of ships. This was fixed.
 #### AI attacking
 There are 5 AI difficulties [code here](battleships/advanced_ai.py)
 0. Pure Random Guessing
@@ -47,8 +49,16 @@ There are 3 modes to run the game:
 - Run the [main file](battleships/main.py) for a full GUI game
 
 
-## Documentation
-[Code documentation can be found here](battleships/docs/index.html)
+## Developer Documentation
+All documentation for source code [can be found here](docs/_build/html/index.html)
+
+In general
+- [Components.py](battleships/components.py): Contains the basic functions for creating Battleships games
+- [game_engine.py](battleships/game_engine.py): Contains functions to run a single player game and to run a single player game
+- [mp_game_engine.py](battleships/mp_game_engine.py): Contains functions needed for multiplayer games (against AI)
+- [main.py](battleships/main.py): Contains the framework needed for a Flask GUI game
+- [advanced_ai.py](battleships/advanced_ai.py): Contains the functions needed for the extension 5 versions of AI
+- [ai_comparison.py](battleships/ai_comparison.py): Contains functions to compare different versions of AI difficulties
 
 ## Testing
 If pytest & plugins are installed then you can test in 2 ways.

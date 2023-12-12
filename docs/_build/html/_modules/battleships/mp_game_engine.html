@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>battleships.mp_game_engine &#8212; Battleships 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=4f649999" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css?v=039e1c02" />
+    <script src="../../_static/documentation_options.js?v=f2a433a1"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for battleships.mp_game_engine</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Contains functions needed for a multiplayer game, ie generating attacks etc.</span>
+<span class="sd">Also contains a simple Command line game when module itself is executed</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="c1"># Import battleships libs, pycharm likes it one way, terminal likes it the other</span>
+<span class="c1"># using this try except bit here makes it work either way round</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">battleships</span> <span class="kn">import</span> <span class="n">game_engine</span>
+    <span class="kn">from</span> <span class="nn">battleships</span> <span class="kn">import</span> <span class="n">components</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">game_engine</span>
+    <span class="kn">import</span> <span class="nn">components</span>
+
+<span class="n">players</span> <span class="o">=</span> <span class="p">{}</span>
+
+<span class="c1"># Set up the logging</span>
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">,</span>
+                    <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;[</span><span class="si">%(asctime)s</span><span class="s2">-</span><span class="si">%(levelname)s</span><span class="s2"> - </span><span class="si">%(funcName)20s</span><span class="s2">() ] </span><span class="si">%(message)s</span><span class="s2">&quot;</span><span class="p">,</span>
+                    <span class="n">filemode</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="generate_attack">
+<a class="viewcode-back" href="../../battleships.html#battleships.mp_game_engine.generate_attack">[docs]</a>
+<span class="k">def</span> <span class="nf">generate_attack</span><span class="p">(</span><span class="n">board</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generates a position to attack via specification random method</span>
+
+<span class="sd">    :param board: input the board to attack so the algorithm knows how large it is. Unittests assume</span>
+<span class="sd">    there are no arguments for generate_attack so if we get not argument assume board_size = 10</span>
+<span class="sd">    :return: a tuple coordinate on the grid</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">board</span><span class="p">:</span>  <span class="c1"># if argument provided for the board make the length the size</span>
+        <span class="n">board_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">board</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">board_size</span> <span class="o">=</span> <span class="mi">10</span>
+
+    <span class="c1"># Purely random attack method</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">board_size</span><span class="p">),</span> <span class="n">random</span><span class="o">.</span><span class="n">randrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">board_size</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span></div>
+
+
+
+<div class="viewcode-block" id="display_ascii">
+<a class="viewcode-back" href="../../battleships.html#battleships.mp_game_engine.display_ascii">[docs]</a>
+<span class="k">def</span> <span class="nf">display_ascii</span><span class="p">(</span><span class="n">board</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Displays a given board on the command line</span>
+
+<span class="sd">    :param board: The board to display</span>
+<span class="sd">    :return: None, it prints the result</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">board_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">board</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;   &#39;</span> <span class="o">+</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="sa">f</span><span class="s1">&#39;  </span><span class="si">{</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s1">   &#39;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">board_size</span><span class="p">)]))</span>  <span class="c1"># Prints top numbers row</span>
+
+    <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">board_size</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;  &#39;</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span> <span class="o">*</span> <span class="p">((</span><span class="n">board_size</span> <span class="o">*</span> <span class="mi">6</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>  <span class="c1"># divider on top of each row</span>
+        <span class="n">row</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">y</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span>
+
+        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">board_size</span><span class="p">):</span>
+            <span class="n">row</span> <span class="o">+=</span> <span class="s2">&quot;|&quot;</span>  <span class="c1"># Divider at the start of each cell</span>
+
+            <span class="k">if</span> <span class="n">board</span><span class="p">[</span><span class="n">y</span><span class="p">][</span><span class="n">x</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">row</span> <span class="o">+=</span> <span class="s1">&#39; ### &#39;</span>  <span class="c1"># wider cells so they are similar scaling width / height</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">row</span> <span class="o">+=</span> <span class="s1">&#39;     &#39;</span>
+
+        <span class="n">row</span> <span class="o">+=</span> <span class="s1">&#39;|&#39;</span>  <span class="c1"># final divider on the end of rows</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;  &#39;</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span> <span class="o">*</span> <span class="p">((</span><span class="n">board_size</span> <span class="o">*</span> <span class="mi">6</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>  <span class="c1"># Bottom divider at the end</span></div>
+
+
+
+<div class="viewcode-block" id="ai_opponent_game_loop">
+<a class="viewcode-back" href="../../battleships.html#battleships.mp_game_engine.ai_opponent_game_loop">[docs]</a>
+<span class="k">def</span> <span class="nf">ai_opponent_game_loop</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plays a command line game of battleships against an AI</span>
+
+<span class="sd">    :return: None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;#### WELCOME TO BATTLESHIPS  AGAINST AI ###&quot;</span><span class="p">)</span>
+    <span class="c1"># Initialise data</span>
+    <span class="n">players</span><span class="p">[</span><span class="s1">&#39;Human&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;board&#39;</span><span class="p">:</span> <span class="n">components</span><span class="o">.</span><span class="n">initialise_board</span><span class="p">(),</span>
+                        <span class="s1">&#39;ships&#39;</span><span class="p">:</span> <span class="n">components</span><span class="o">.</span><span class="n">create_battleships</span><span class="p">()}</span>
+    <span class="n">players</span><span class="p">[</span><span class="s1">&#39;AI&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;board&#39;</span><span class="p">:</span> <span class="n">components</span><span class="o">.</span><span class="n">initialise_board</span><span class="p">(),</span>
+                     <span class="s1">&#39;ships&#39;</span><span class="p">:</span> <span class="n">components</span><span class="o">.</span><span class="n">create_battleships</span><span class="p">()}</span>
+
+    <span class="c1"># Place the ships</span>
+    <span class="n">players</span><span class="p">[</span><span class="s1">&#39;Human&#39;</span><span class="p">][</span><span class="s1">&#39;board&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">components</span><span class="o">.</span><span class="n">place_battleships</span><span class="p">(</span><span class="n">players</span><span class="p">[</span><span class="s1">&#39;Human&#39;</span><span class="p">][</span><span class="s1">&#39;board&#39;</span><span class="p">],</span>
+                                                             <span class="n">players</span><span class="p">[</span><span class="s1">&#39;Human&#39;</span><span class="p">][</span><span class="s1">&#39;ships&#39;</span><span class="p">],</span>
+                                                             <span class="n">algorithm</span><span class="o">=</span><span class="s1">&#39;custom&#39;</span><span class="p">)</span>
+    <span class="n">players</span><span class="p">[</span><span class="s1">&#39;AI&#39;</span><span class="p">][</span><span class="s1">&#39;board&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">components</span><span class="o">.</span><span class="n">place_battleships</span><span class="p">(</span><span class="n">players</span><span class="p">[</span><span class="s1">&#39;AI&#39;</span><span class="p">][</span><span class="s1">&#39;board&#39;</span><span class="p">],</span>
+                                                          <span class="n">players</span><span class="p">[</span><span class="s1">&#39;AI&#39;</span><span class="p">][</span><span class="s1">&#39;ships&#39;</span><span class="p">],</span>
+                                                          <span class="n">algorithm</span><span class="o">=</span><span class="s1">&#39;random&#39;</span><span class="p">)</span>
+
+    <span class="k">while</span> <span class="p">(</span><span class="n">game_engine</span><span class="o">.</span><span class="n">count_ships_remaining</span><span class="p">(</span><span class="n">players</span><span class="p">[</span><span class="s1">&#39;Human&#39;</span><span class="p">][</span><span class="s1">&#39;ships&#39;</span><span class="p">])</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">and</span>
+           <span class="n">game_engine</span><span class="o">.</span><span class="n">count_ships_remaining</span><span class="p">(</span><span class="n">players</span><span class="p">[</span><span class="s1">&#39;AI&#39;</span><span class="p">][</span><span class="s1">&#39;ships&#39;</span><span class="p">])</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="c1"># Main game loop, continues as long as both players have ships (ie no one has won)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-- USER&#39;S TURN --&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Input validation for the coordinates, check they&#39;re in board range</span>
+        <span class="n">user_coords</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">user_coords</span> <span class="o">=</span> <span class="n">game_engine</span><span class="o">.</span><span class="n">cli_coordinates_input</span><span class="p">()</span>
+
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;the human guessed </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">user_coords</span><span class="p">)</span>
+        <span class="n">attack_status</span> <span class="o">=</span> <span class="n">game_engine</span><span class="o">.</span><span class="n">attack</span><span class="p">(</span><span class="n">user_coords</span><span class="p">,</span>
+                                           <span class="n">players</span><span class="p">[</span><span class="s1">&#39;AI&#39;</span><span class="p">][</span><span class="s1">&#39;board&#39;</span><span class="p">],</span>
+                                           <span class="n">players</span><span class="p">[</span><span class="s1">&#39;AI&#39;</span><span class="p">][</span><span class="s1">&#39;ships&#39;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">attack_status</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;You got a HIT!&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;You got a MISS!&quot;</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-- AI&#39;S TURN --&quot;</span><span class="p">)</span>
+        <span class="n">ai_coords</span> <span class="o">=</span> <span class="n">generate_attack</span><span class="p">(</span><span class="n">players</span><span class="p">[</span><span class="s1">&#39;AI&#39;</span><span class="p">][</span><span class="s1">&#39;board&#39;</span><span class="p">])</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;the AI guessed </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span><span class="n">ai_coords</span><span class="p">)</span>
+        <span class="n">attack_status</span> <span class="o">=</span> <span class="n">game_engine</span><span class="o">.</span><span class="n">attack</span><span class="p">(</span><span class="n">ai_coords</span><span class="p">,</span>
+                                           <span class="n">players</span><span class="p">[</span><span class="s1">&#39;Human&#39;</span><span class="p">][</span><span class="s1">&#39;board&#39;</span><span class="p">],</span>
+                                           <span class="n">players</span><span class="p">[</span><span class="s1">&#39;Human&#39;</span><span class="p">][</span><span class="s1">&#39;ships&#39;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">attack_status</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The AI got a HIT!&quot;</span><span class="p">)</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;the AI hit&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The AI got a MISS!&quot;</span><span class="p">)</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;the AI missed&#39;</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; Player&#39;s Board :&quot;</span><span class="p">)</span>
+        <span class="n">display_ascii</span><span class="p">(</span><span class="n">players</span><span class="p">[</span><span class="s1">&#39;Human&#39;</span><span class="p">][</span><span class="s1">&#39;board&#39;</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="n">game_engine</span><span class="o">.</span><span class="n">count_ships_remaining</span><span class="p">(</span><span class="n">players</span><span class="p">[</span><span class="s1">&#39;Human&#39;</span><span class="p">][</span><span class="s1">&#39;ships&#39;</span><span class="p">])</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; The Human LOST! Better luck next time&quot;</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;the AI won&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; The Human WON! Well done&quot;</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;the human won&#39;</span><span class="p">)</span></div>
+
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;starting a game in mp_game_engine.py&#39;</span><span class="p">)</span>
+    <span class="n">ai_opponent_game_loop</span><span class="p">()</span>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">Battleships</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2023, Student 730003140.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.2.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

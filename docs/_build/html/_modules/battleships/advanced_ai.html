@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>battleships.advanced_ai &#8212; Battleships 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=4f649999" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css?v=039e1c02" />
+    <script src="../../_static/documentation_options.js?v=f2a433a1"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for battleships.advanced_ai</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module just deals with the AI when its doing more advanced</span>
+<span class="sd"> attacking rather than random guesses</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="c1"># import libs</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="c1"># Import battleships libs, pycharm likes it one way, terminal likes it the other</span>
+<span class="c1"># using this try except bit here makes it work either way round</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">battleships</span> <span class="kn">import</span> <span class="n">components</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">components</span>
+
+
+<span class="c1">###############################</span>
+<span class="c1"># MAIN ATTACK FUNCTION</span>
+<span class="c1">###############################</span>
+<div class="viewcode-block" id="generate_advanced_attack">
+<a class="viewcode-back" href="../../battleships.html#battleships.advanced_ai.generate_advanced_attack">[docs]</a>
+<span class="k">def</span> <span class="nf">generate_advanced_attack</span><span class="p">(</span><span class="n">difficulty</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">enemy_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">history</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generates more advanced attack position than the attack function in the specification</span>
+
+<span class="sd">    :param difficulty: 0 (easy) -&gt; 4 (intelligent)</span>
+<span class="sd">    :param enemy_dict: So we can get the enemy&#39;s board and original board</span>
+<span class="sd">    :param history: Our move history, so we know where we have already guessed</span>
+<span class="sd">    :return: A location on the board as a tuple</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">difficulty</span><span class="p">,</span><span class="nb">int</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">enemy_dict</span><span class="p">,</span><span class="nb">dict</span><span class="p">)</span>
+            <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">history</span><span class="p">,</span><span class="nb">list</span><span class="p">)):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;A parameter is of incorrect type&#39;</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>  <span class="c1"># Error checking for incorrect enemy_dict parameter</span>
+        <span class="n">enemy_board</span> <span class="o">=</span> <span class="n">enemy_dict</span><span class="p">[</span><span class="s1">&#39;board&#39;</span><span class="p">]</span>
+    <span class="k">except</span> <span class="ne">KeyError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;enemy_dict is incomplete&quot;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">exc</span>
+
+    <span class="k">if</span> <span class="n">difficulty</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="c1"># Purely random attacking method (what&#39;s defined in the spec)</span>
+        <span class="k">return</span> <span class="n">generate_attack_difficulty_0</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">enemy_board</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">difficulty</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="c1"># Semi random - ie its random but it won&#39;t guess the same place twice</span>
+        <span class="k">return</span> <span class="n">generate_attack_difficulty_1</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">enemy_board</span><span class="p">),</span> <span class="n">history</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">difficulty</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="c1"># This does semi intelligent guessing around unsunk hits (it chooses a random</span>
+        <span class="c1"># location adjacent to unsunk hits) if no unsunk hits it guesses randomly</span>
+        <span class="k">return</span> <span class="n">generate_attack_difficulty_2</span><span class="p">(</span><span class="n">enemy_dict</span><span class="p">,</span> <span class="n">history</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">difficulty</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="c1"># A bit better than difficulty 2, this tries to follow lines in the unsunk hits</span>
+        <span class="c1"># Still does random guessing if it can&#39;t find any unsunk hits</span>
+        <span class="k">return</span> <span class="n">generate_attack_difficulty_3</span><span class="p">(</span><span class="n">enemy_dict</span><span class="p">,</span> <span class="n">history</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">difficulty</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+        <span class="c1"># If it has unsunk hits then it does the same as difficulty 3</span>
+        <span class="c1"># But if no unsunk hits found then it does more intelligent random guessing</span>
+        <span class="k">return</span> <span class="n">generate_attack_difficulty_4</span><span class="p">(</span><span class="n">enemy_dict</span><span class="p">,</span> <span class="n">history</span><span class="p">)</span>
+
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Difficulty not in range 0-4!&#39;</span><span class="p">)</span></div>
+
+
+
+<span class="c1">########################################################</span>
+<span class="c1"># FUNCTIONS FOR EACH DIFFICULTY</span>
+<span class="c1">########################################################</span>
+<span class="c1"># (had to lay out like this as pylint was unhappy</span>
+<span class="c1"># about too many return statements in main function</span>
+<div class="viewcode-block" id="generate_attack_difficulty_0">
+<a class="viewcode-back" href="../../battleships.html#battleships.advanced_ai.generate_attack_difficulty_0">[docs]</a>
+<span class="k">def</span> <span class="nf">generate_attack_difficulty_0</span><span class="p">(</span><span class="n">board_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Purely random attacking method (what&#39;s defined in the spec)</span>
+
+<span class="sd">    :param board_size: Size of the board</span>
+<span class="sd">    :return: attack coordinate</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">board_size</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">board_size</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span></div>
+
+
+
+<div class="viewcode-block" id="generate_attack_difficulty_1">
+<a class="viewcode-back" href="../../battleships.html#battleships.advanced_ai.generate_attack_difficulty_1">[docs]</a>
+<span class="k">def</span> <span class="nf">generate_attack_difficulty_1</span><span class="p">(</span><span class="n">board_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                                 <span class="n">history</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Semi random guess - ie its random but it won&#39;t guess the same place twice</span>
+
+<span class="sd">    :param board_size: Size of board</span>
+<span class="sd">    :param history: list of where has been guessed before</span>
+<span class="sd">    :return: The guess</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># generate an initial random guess</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">board_size</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">board_size</span><span class="p">)</span>
+
+    <span class="k">while</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="ow">in</span> <span class="n">history</span><span class="p">:</span>  <span class="c1"># Keep generating guesses until we find one not in history list</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">board_size</span><span class="p">)</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">board_size</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span></div>
+
+
+
+<div class="viewcode-block" id="generate_attack_difficulty_2">
+<a class="viewcode-back" href="../../battleships.html#battleships.advanced_ai.generate_attack_difficulty_2">[docs]</a>
+<span class="k">def</span> <span class="nf">generate_attack_difficulty_2</span><span class="p">(</span><span class="n">enemy_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+                                 <span class="n">history</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This does semi intelligent guessing around unsunk hits (it chooses a random</span>
+<span class="sd">    location adjacent to unsunk hits) if no unsunk hits it guesses randomly</span>
+
+<span class="sd">    :param enemy_dict: So we can get the enemy&#39;s board and original board</span>
+<span class="sd">    :param history: list of where has been guessed before</span>
+<span class="sd">    :return: The guess</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># This does semi intelligent guessing around unsunk hits (it chooses a random</span>
+    <span class="c1"># location adjacent to unsunk hits) if no unsunk hits it guesses randomly</span>
+
+    <span class="k">try</span><span class="p">:</span>  <span class="c1"># Error checking for incorrect enemy_dict parameter</span>
+        <span class="n">enemy_board</span> <span class="o">=</span> <span class="n">enemy_dict</span><span class="p">[</span><span class="s1">&#39;board&#39;</span><span class="p">]</span>
+    <span class="k">except</span> <span class="ne">KeyError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;enemy_dict is incomplete&quot;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">exc</span>
+
+    <span class="n">unsunk_hits</span> <span class="o">=</span> <span class="n">get_unsunk_hits</span><span class="p">(</span><span class="n">enemy_dict</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">unsunk_hits</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># guess a space around an unsunk hit randomly</span>
+        <span class="n">surrounding_tiles</span> <span class="o">=</span> <span class="n">get_surrounding_tiles</span><span class="p">(</span><span class="n">unsunk_hits</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">enemy_board</span><span class="p">))</span>
+        <span class="c1"># Make sure this doesn&#39;t include tiles we have already guessed using sets</span>
+        <span class="n">surrounding_tiles</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">surrounding_tiles</span><span class="p">)</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">history</span><span class="p">)))</span>
+        <span class="k">return</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">surrounding_tiles</span><span class="p">)</span>
+
+    <span class="c1"># Otherwise Guess randomly</span>
+    <span class="k">return</span> <span class="n">generate_advanced_attack</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">enemy_dict</span><span class="p">,</span> <span class="n">history</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="generate_attack_difficulty_3">
+<a class="viewcode-back" href="../../battleships.html#battleships.advanced_ai.generate_attack_difficulty_3">[docs]</a>
+<span class="k">def</span> <span class="nf">generate_attack_difficulty_3</span><span class="p">(</span><span class="n">enemy_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+                                 <span class="n">history</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A bit better than difficulty 2, this tries to follow lines in the unsunk hits</span>
+<span class="sd">    Still does random guessing if it can&#39;t find any unsunk hits</span>
+
+<span class="sd">    :param enemy_dict: So we can get the enemy&#39;s board and original board</span>
+<span class="sd">    :param history: list of where has been guessed before</span>
+<span class="sd">    :return: The guess location</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Error check enemy dict</span>
+    <span class="k">if</span> <span class="s1">&#39;board&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">enemy_dict</span> <span class="ow">or</span> <span class="s1">&#39;original_board&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">enemy_dict</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;enemy_dict is incomplete&quot;</span><span class="p">)</span>
+
+    <span class="n">unsunk_hits</span> <span class="o">=</span> <span class="n">get_unsunk_hits</span><span class="p">(</span><span class="n">enemy_dict</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">unsunk_hits</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># No unsunk hits so guess randomly</span>
+        <span class="k">return</span> <span class="n">generate_advanced_attack</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">enemy_dict</span><span class="p">,</span> <span class="n">history</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">guess_line_attack</span><span class="p">(</span><span class="n">enemy_dict</span><span class="p">,</span> <span class="n">history</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="generate_attack_difficulty_4">
+<a class="viewcode-back" href="../../battleships.html#battleships.advanced_ai.generate_attack_difficulty_4">[docs]</a>
+<span class="k">def</span> <span class="nf">generate_attack_difficulty_4</span><span class="p">(</span><span class="n">enemy_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+                                 <span class="n">history</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    If it has unsunk hits then it does the same as difficulty 3</span>
+<span class="sd">    But if no unsunk hits found then it does more intelligent random guessing</span>
+
+<span class="sd">    :param enemy_dict: So we can get the enemy&#39;s board and original board</span>
+<span class="sd">    :param history: list of where has been guessed before</span>
+<span class="sd">    :return: The guess location</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># error check enemy dict</span>
+    <span class="k">if</span> <span class="s1">&#39;board&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">enemy_dict</span> <span class="ow">or</span> <span class="s1">&#39;original_board&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">enemy_dict</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;enemy_dict is incomplete&quot;</span><span class="p">)</span>
+
+    <span class="n">unsunk_hits</span> <span class="o">=</span> <span class="n">get_unsunk_hits</span><span class="p">(</span><span class="n">enemy_dict</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">unsunk_hits</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="c1"># Do a guess with difficulty 3</span>
+        <span class="k">return</span> <span class="n">generate_advanced_attack</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">enemy_dict</span><span class="p">,</span> <span class="n">history</span><span class="p">)</span>
+
+    <span class="c1"># No unsunk hits found so do an intelligent blind guess</span>
+
+    <span class="n">pos</span> <span class="o">=</span> <span class="n">generate_intelligent_blind_guess</span><span class="p">(</span><span class="n">enemy_dict</span><span class="p">,</span> <span class="n">history</span><span class="p">)</span>
+    <span class="n">pos</span> <span class="o">=</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">pos</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span><span class="nb">int</span><span class="p">(</span><span class="n">pos</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+    <span class="c1"># print(pos)</span>
+    <span class="k">return</span> <span class="n">pos</span></div>
+
+
+
+<span class="c1">####################</span>
+<span class="c1"># OTHER FUNCTIONS</span>
+<span class="c1">####################</span>
+<div class="viewcode-block" id="generate_intelligent_blind_guess">
+<a class="viewcode-back" href="../../battleships.html#battleships.advanced_ai.generate_intelligent_blind_guess">[docs]</a>
+<span class="k">def</span> <span class="nf">generate_intelligent_blind_guess</span><span class="p">(</span><span class="n">enemy_dict</span><span class="p">,</span> <span class="n">history</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    When there are no unsunk ships to guess around this algorithm gives the best place to</span>
+<span class="sd">    try and look for a ship</span>
+
+<span class="sd">    :param enemy_dict: So we can get the enemy&#39;s board and original board</span>
+<span class="sd">    :param history: list of where has been guessed before</span>
+<span class="sd">    :return: A location to guess</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># The algorithm works by trying to put each ship in every cell on the grid</span>
+    <span class="c1"># we then pick the cell that has the most ships potentially in it</span>
+
+    <span class="c1"># enemy dict error checking</span>
+    <span class="k">if</span> <span class="s1">&#39;board&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">enemy_dict</span> <span class="ow">or</span> <span class="s1">&#39;original_board&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">enemy_dict</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;enemy_dict is incomplete&quot;</span><span class="p">)</span>
+
+    <span class="n">board_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">enemy_dict</span><span class="p">[</span><span class="s1">&#39;board&#39;</span><span class="p">])</span>
+    <span class="n">enemy_ships</span> <span class="o">=</span> <span class="n">enemy_dict</span><span class="p">[</span><span class="s1">&#39;ships&#39;</span><span class="p">]</span>
+
+    <span class="c1"># Find a list of the ships we haven&#39;t hit any of yet</span>
+    <span class="n">ships_unseen</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">({</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">enemy_ships</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">if</span> <span class="n">i</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">}),</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># We&#39;ll create a blank board then fill it up with our guess history</span>
+    <span class="n">blank_board</span> <span class="o">=</span> <span class="n">components</span><span class="o">.</span><span class="n">initialise_board</span><span class="p">(</span><span class="n">board_size</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">history</span><span class="p">:</span>
+        <span class="n">blank_board</span><span class="p">[</span><span class="n">i</span><span class="p">[</span><span class="mi">1</span><span class="p">]][</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="s1">&#39;Guessed&#39;</span>
+
+    <span class="c1"># This numpy array stores the frequencies of a ship being in a tile for each cell</span>
+    <span class="n">frequencies</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">board_size</span><span class="p">,</span> <span class="n">board_size</span><span class="p">))</span>
+
+    <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">board_size</span><span class="p">):</span>  <span class="c1"># Go through every possible cell</span>
+        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">board_size</span><span class="p">):</span>
+
+            <span class="k">for</span> <span class="n">ship</span> <span class="ow">in</span> <span class="n">ships_unseen</span><span class="p">:</span>  <span class="c1"># Go through all unseen ships</span>
+
+                <span class="c1"># Test whether that ship fits into the position either vertically or horizontally</span>
+                <span class="n">fitted</span> <span class="o">=</span> <span class="n">components</span><span class="o">.</span><span class="n">try_place_ship</span><span class="p">(</span><span class="n">blank_board</span><span class="p">,</span> <span class="s1">&#39;test&#39;</span><span class="p">,</span> <span class="n">ship</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> <span class="s1">&#39;h&#39;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">fitted</span><span class="p">:</span> <span class="c1"># If it fits then add 1 to the frequency array</span>
+                    <span class="n">frequencies</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">fitted</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+                <span class="n">fitted</span> <span class="o">=</span> <span class="n">components</span><span class="o">.</span><span class="n">try_place_ship</span><span class="p">(</span><span class="n">blank_board</span><span class="p">,</span> <span class="s1">&#39;test&#39;</span><span class="p">,</span> <span class="n">ship</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> <span class="s1">&#39;v&#39;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">fitted</span><span class="p">:</span>
+                    <span class="n">frequencies</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">fitted</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">history</span><span class="p">:</span> <span class="c1"># remove all the guesses in our history from the frequency array</span>
+        <span class="n">frequencies</span><span class="p">[</span><span class="n">i</span><span class="p">[</span><span class="mi">1</span><span class="p">]][</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="c1"># There may be multiple cells that share a maximum ship potential so put them in a list</span>
+    <span class="n">positions</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">frequencies</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">frequencies</span><span class="p">))[</span><span class="mi">1</span><span class="p">],</span>
+                         <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">frequencies</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">frequencies</span><span class="p">))[</span><span class="mi">0</span><span class="p">]))</span>
+
+    <span class="k">return</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">positions</span><span class="p">)</span>  <span class="c1"># and pick a random one from the list</span></div>
+
+
+
+<div class="viewcode-block" id="guess_line_attack">
+<a class="viewcode-back" href="../../battleships.html#battleships.advanced_ai.guess_line_attack">[docs]</a>
+<span class="k">def</span> <span class="nf">guess_line_attack</span><span class="p">(</span><span class="n">enemy_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">history</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates a guess based on following lines in the unsunk hits to try and find ships</span>
+
+<span class="sd">        :param enemy_dict: So we can get the enemy&#39;s board and original board</span>
+<span class="sd">        :param history: Our move history, so we know where we have already guessed</span>
+<span class="sd">        :return: A guess following a line if possible</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+    <span class="c1"># Error checking for enemy_dict</span>
+    <span class="k">if</span> <span class="s1">&#39;board&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">enemy_dict</span> <span class="ow">or</span> <span class="s1">&#39;original_board&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">enemy_dict</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;enemy_dict is incomplete&quot;</span><span class="p">)</span>
+
+    <span class="n">board_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">enemy_dict</span><span class="p">[</span><span class="s1">&#39;board&#39;</span><span class="p">])</span>
+    <span class="n">unsunk_hits</span> <span class="o">=</span> <span class="n">get_unsunk_hits</span><span class="p">(</span><span class="n">enemy_dict</span><span class="p">)</span>
+
+    <span class="n">line_moves</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># will hold the moves that form a line</span>
+    <span class="k">for</span> <span class="n">unsunk_hit</span> <span class="ow">in</span> <span class="n">unsunk_hits</span><span class="p">:</span>
+
+        <span class="c1"># Go through each position around an unsunk hit, up down etc.</span>
+        <span class="n">offsets</span> <span class="o">=</span> <span class="p">[(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)]</span>
+        <span class="k">for</span> <span class="n">offset</span> <span class="ow">in</span> <span class="n">offsets</span><span class="p">:</span>
+            <span class="c1"># if the tile on the opposite side to the offset we are currently looking at</span>
+            <span class="c1"># is also unsunk hit, then it&#39;s likely that current offset is part of a line</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">unsunk_hit</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">offset</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">unsunk_hit</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">offset</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="ow">in</span> <span class="n">unsunk_hits</span><span class="p">:</span>
+                <span class="n">potential_move</span> <span class="o">=</span> <span class="p">(</span><span class="n">unsunk_hit</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">offset</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">unsunk_hit</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">offset</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                <span class="k">if</span> <span class="n">board_size</span> <span class="o">&gt;</span> <span class="n">potential_move</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">board_size</span> <span class="o">&gt;</span> <span class="n">potential_move</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">line_moves</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">potential_move</span><span class="p">)</span>
+
+    <span class="c1"># just make sure line_moves doesn&#39;t contain anywhere we have guessed already</span>
+    <span class="n">line_moves</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">line_moves</span><span class="p">)</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">history</span><span class="p">)))</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">line_moves</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="c1"># Found no moves that form a line so just pick a move surrounding an unsunk hit</span>
+        <span class="c1"># basically difficulty 2</span>
+        <span class="k">return</span> <span class="n">generate_advanced_attack</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">enemy_dict</span><span class="p">,</span> <span class="n">history</span><span class="p">)</span>
+
+    <span class="c1"># We have found at least 1 line move so choose one from the list</span>
+    <span class="k">return</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">line_moves</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="get_surrounding_tiles">
+<a class="viewcode-back" href="../../battleships.html#battleships.advanced_ai.get_surrounding_tiles">[docs]</a>
+<span class="k">def</span> <span class="nf">get_surrounding_tiles</span><span class="p">(</span><span class="n">search_tiles</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]],</span>
+                          <span class="n">board_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Gives a list of the tiles surrounding the tiles given by &#39;search_tiles&#39; parameter</span>
+<span class="sd">    primarily used for finding tiles around unsunk hits</span>
+
+<span class="sd">    :param search_tiles: The tiles to look around</span>
+<span class="sd">    :param board_size: The size of the board</span>
+<span class="sd">    :return: The list of surrounding tiles</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">offsets</span> <span class="o">=</span> <span class="p">[(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)]</span>
+    <span class="n">surrounding_tiles</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">tile</span> <span class="ow">in</span> <span class="n">search_tiles</span><span class="p">:</span>
+        <span class="c1"># For each tile in search_list go through the tiles next to it</span>
+        <span class="k">for</span> <span class="n">offset</span> <span class="ow">in</span> <span class="n">offsets</span><span class="p">:</span>
+            <span class="c1"># check if offset tile is within board</span>
+            <span class="n">potential_tile</span> <span class="o">=</span> <span class="p">(</span><span class="n">tile</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">offset</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">tile</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">offset</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">board_size</span> <span class="o">&gt;</span> <span class="n">potential_tile</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">board_size</span> <span class="o">&gt;</span> <span class="n">potential_tile</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">surrounding_tiles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">potential_tile</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">surrounding_tiles</span></div>
+
+
+
+<div class="viewcode-block" id="get_unsunk_hits">
+<a class="viewcode-back" href="../../battleships.html#battleships.advanced_ai.get_unsunk_hits">[docs]</a>
+<span class="k">def</span> <span class="nf">get_unsunk_hits</span><span class="p">(</span><span class="n">enemy_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Find all the cells in the board that have been hit but not sunk</span>
+
+<span class="sd">    :param enemy_dict: So we can get the enemy&#39;s board and original board</span>
+<span class="sd">    :return: The list of unsunk hit locations</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Check enemy dict set up correctly</span>
+    <span class="k">try</span><span class="p">:</span>  <span class="c1"># Error checking for incorrect enemy_dict parameter</span>
+        <span class="n">enemy_board</span> <span class="o">=</span> <span class="n">enemy_dict</span><span class="p">[</span><span class="s1">&#39;board&#39;</span><span class="p">]</span>
+        <span class="n">enemy_original_board</span> <span class="o">=</span> <span class="n">enemy_dict</span><span class="p">[</span><span class="s1">&#39;original_board&#39;</span><span class="p">]</span>
+
+    <span class="k">except</span> <span class="ne">KeyError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;enemy_dict is incomplete&quot;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">exc</span>
+
+    <span class="n">sunk_locations</span> <span class="o">=</span> <span class="n">components</span><span class="o">.</span><span class="n">get_sunken_ships</span><span class="p">(</span><span class="n">enemy_dict</span><span class="p">)</span>
+
+    <span class="c1"># Find all the places in the board that have been hit (difference</span>
+    <span class="c1"># between original board and current board)</span>
+    <span class="n">hit_locations</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">y</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">enemy_board</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">cell</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">cell</span> <span class="o">!=</span> <span class="n">enemy_original_board</span><span class="p">[</span><span class="n">y</span><span class="p">][</span><span class="n">x</span><span class="p">]:</span>
+                <span class="n">hit_locations</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
+
+    <span class="c1"># Find the unsunk hits by doing a set difference between all hits and sunks</span>
+    <span class="n">unsunk_hits</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">hit_locations</span><span class="p">)</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">sunk_locations</span><span class="p">)))</span>
+
+    <span class="k">return</span> <span class="n">unsunk_hits</span></div>
+
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">Battleships</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2023, Student 730003140.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.2.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

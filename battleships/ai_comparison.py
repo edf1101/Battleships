@@ -20,6 +20,7 @@ except ImportError:
 def ai_loop(ai_mode_1: int, ai_mode_2: int) -> tuple[str, int]:
     """
     Runs a single game between two AIs
+
     :param ai_mode_1: the difficulty of AI 1
     :param ai_mode_2: the difficulty of AI 2
     :return: 'AI1' if AI1 won or 'AI2' if AI2 won
@@ -84,6 +85,7 @@ def ai_loop(ai_mode_1: int, ai_mode_2: int) -> tuple[str, int]:
 def run_trials(ai1_mode: int, ai2_mode: int, trials: int = 1000) -> None:
     """
     Runs a number of games against the AI and prints the result
+
     :param ai1_mode: the difficulty of AI 1
     :param ai2_mode: the difficulty of AI 2
     :param trials: How many trials to run
