@@ -37,7 +37,7 @@ class BattleshipsGame:
         self.game_running = False
         self.board_size = 10
         self.ai_difficulty = 4
-        self.storm_direction = (0, 0)
+        self.stormy = False
         self.players = {}
 
     def entry_interface(self) -> dict | None:
@@ -55,6 +55,8 @@ class BattleshipsGame:
             json_data = json.loads(request.get_json())
             self.board_size = int(json_data['board_size'])
             self.ai_difficulty = int(json_data['difficulty'])
+            self.stormy = bool(json_data['stormy_mode'])
+            print(self.stormy)
 
             # Start the game but make sure the board isn't set
             self.game_running = True
@@ -198,7 +200,8 @@ class BattleshipsGame:
 
             # Go to gameplay page If game running and board set
             return render_template('main.html',
-                                   player_board=self.players['Human']['board'])
+                                   player_board=self.players['Human']['board'],
+                                   stormy = self.stormy)
 
         # If game not started go to the menu page
         return render_template('entry.html')

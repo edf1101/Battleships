@@ -52,6 +52,8 @@
     <script>
         //Get the board that is passed from the python flask code
         let board = {{player_board|tojson}};
+        let is_stormy = {{ stormy|int }};
+        let storm_offset =0;
 
         // Load the grid format once the page has loaded
         document.addEventListener('DOMContentLoaded', function() {
@@ -63,13 +65,21 @@
             /**
             * do a GET request to the server with the x and y coordinates for our attack
             */
+            is_stormy = {{ stormy|int }};
+            console.log(is_stormy);
+            console.log(is_stormy === 1);
+            let board_size = {{player_board|length}};
 
-            fetch(url+'?x='+x+'&y='+y, {
+            let real_x = (((x + storm_offset) % board_size) + board_size) % board_size;
+            if (is_stormy === 0){
+                real_x = x;
+            }
+
+            fetch(url+'?x='+real_x+'&y='+y, {
                 method: 'GET',
             })
             .then(response => response.json())
             .then(data => {
-                //Process the response
 
                 let cell = document.getElementById('cell-' + x + '-' + y);
                 if (data['hit'] === true || cell.style.backgroundColor === 'red') {
@@ -101,6 +111,10 @@
                     let ai_sunken_positions = data['sunk'][0];
                     for (let i=0; i<ai_sunken_positions.length; i++){
                         let pos = ai_sunken_positions[i];
+                        if (is_stormy===1){
+                            pos[0] = (((pos[0]+1 - storm_offset) % board_size) + board_size) % board_size;
+
+                        }
                         let cell = document.getElementById('cell-' + pos[0] + '-' + pos[1]);
                         cell.style.backgroundColor = 'green';
                     }
@@ -122,11 +136,31 @@
                     document.getElementById('messageBox').innerHTML = data['finished'].toString();
                     alert(data['finished'].toString());
                 }
+
+                if(is_stormy === 1) {
+                    // shift board
+                    for (let y = 0; y < board_size; y++) {
+                        let temp = document.getElementById('cell-' + 0 + '-' + y).style.backgroundColor;
+
+                        for (let x = 0; x < board_size - 1; x++) {
+                            let this_cell = document.getElementById('cell-' + x + '-' + y);
+                            let next_cell = document.getElementById('cell-' + (x + 1) + '-' + y);
+                            this_cell.style.backgroundColor = next_cell.style.backgroundColor;
+                        }
+                        document.getElementById('cell-' + (board_size - 1) + '-' + y).style.backgroundColor = temp;
+                    }
+                }
+
             }
             )
             .catch((error) => {
                 console.error('Error:', error);
             });
+            if (is_stormy === 1){
+            storm_offset ++;
+
+            }
+
         }
 
         function loadPlayersShips() {

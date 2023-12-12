@@ -16,6 +16,9 @@ If a ship has been sunk, the main.py script sends a list of sunk positions for
 either the AI or Player to the HTML code, and it colours those tiles green
 #### Other Frontend modifications
 In the placement HTML file originally allowed users to place fewer than required number of ships. This was fixed.
+#### Storm mode
+To make it a more challenging if you select storm mode the player's board will shift one space each turn. Since the HTML
+grid isn't persistent this had to be coded in javascript
 #### AI attacking
 There are 5 AI difficulties [code here](battleships/advanced_ai.py)
 0. Pure Random Guessing
@@ -40,7 +43,11 @@ Wrote [a script](battleships/ai_comparison.py) to test AI's against each other
 _Version used in running = Python 3.11.4_
 
 ## Installation
-Run in Terminal ``` pip install Flask```
+There are two ways to install
+### Manually
+
+
+### pip
 
 ## Getting Started
 There are 3 modes to run the game:
