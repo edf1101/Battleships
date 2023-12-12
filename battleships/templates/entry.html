@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Battleships Menu</title>
+    <style>
+h1 {text-align: center;}
+div {text-align: center;}
+
+ img {
+     display: block;
+     width: 20%;
+     height: auto;
+     margin: auto;
+}
+
+</style>
+    <script>
+        function startGame() {
+
+            let data ={'difficulty':document.getElementById("difficulty").value,
+                'board_size':document.getElementById("board_size").value,
+                'stormy_mode':document.getElementById("stormy").checked
+            }
+
+            let json_data = JSON.stringify(data)
+            console.log(json_data);
+            fetch('/entry', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                        },
+                body: JSON.stringify(json_data),
+            })
+            .then(response => response.json())
+                .then(data => {
+                    window.location.href = '/';
+
+                })
+                .catch((error) => {
+                    // alert("Error sending data: " + error);
+                });
+        }
+    </script>
+</head>
+
+<body style="background-color:azure;">
+<h1>Battleships Menu</h1>
+
+<img src="{{ url_for('static', filename='images/menu.jpeg') }}" >
+<br>
+<br>
+<br>
+<div>
+<! Difficulty menu >
+<label for="difficulty">Choose an AI difficulty (1-5):</label>
+    <select name="difficulty" id="difficulty">
+        <option value=0>1</option>
+        <option  value=1>2</option>
+        <option value=2>3</option>
+        <option value=3>4</option>
+        <option selected value=4>5</option>
+
+    </select>
+
+
+<br>
+<br>
+<br>
+<! Board size menu >
+<label for="board_size">Choose a Board Size:</label>
+    <select name="board_size" id="board_size">
+        <option value=5>5</option>
+        <option  value=8>8</option>
+        <option selected value=10>10</option>
+        <option value=15>15</option>
+
+
+    </select>
+
+<br>
+<br>
+    <br>
+    <input type="checkbox" id="stormy" name="stormy_checkbox">
+  <label for="stormy"> Stormy Mode?</label><br>
+    <br>
+    <br>
+
+<button class="startButton" onclick="startGame()">Start Game</button>
+    </div>
+</body>
+</html>
