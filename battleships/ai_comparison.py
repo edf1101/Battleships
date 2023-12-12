@@ -24,6 +24,10 @@ def ai_loop(ai_mode_1: int, ai_mode_2: int) -> tuple[str, int]:
     :param ai_mode_2: the difficulty of AI 2
     :return: 'AI1' if AI1 won or 'AI2' if AI2 won
     """
+
+    if not isinstance(ai_mode_1,int) or not isinstance(ai_mode_2,int):
+        raise TypeError('parameters not ints')
+
     board_size = 10
     moves = 0  # Keep track of how many moves its taken
 
