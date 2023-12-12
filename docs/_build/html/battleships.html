@@ -71,6 +71,8 @@
 <li><a class="reference internal" href="#battleships.components.in_board"><code class="docutils literal notranslate"><span class="pre">in_board()</span></code></a></li>
 <li><a class="reference internal" href="#battleships.components.initialise_board"><code class="docutils literal notranslate"><span class="pre">initialise_board()</span></code></a></li>
 <li><a class="reference internal" href="#battleships.components.place_battleships"><code class="docutils literal notranslate"><span class="pre">place_battleships()</span></code></a></li>
+<li><a class="reference internal" href="#battleships.components.place_battleships_custom"><code class="docutils literal notranslate"><span class="pre">place_battleships_custom()</span></code></a></li>
+<li><a class="reference internal" href="#battleships.components.place_battleships_random"><code class="docutils literal notranslate"><span class="pre">place_battleships_random()</span></code></a></li>
 <li><a class="reference internal" href="#battleships.components.try_place_ship"><code class="docutils literal notranslate"><span class="pre">try_place_ship()</span></code></a></li>
 </ul>
 </li>
@@ -435,7 +437,7 @@ with name in list names. Primarily used for finding sunk ships</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="battleships.components.place_battleships">
-<span class="sig-prename descclassname"><span class="pre">battleships.components.</span></span><span class="sig-name descname"><span class="pre">place_battleships</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">board</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ships</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">algorithm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'simple'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/battleships/components.html#place_battleships"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#battleships.components.place_battleships" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">battleships.components.</span></span><span class="sig-name descname"><span class="pre">place_battleships</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">board</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ships</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">algorithm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'simple'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_absolute_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/battleships/components.html#place_battleships"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#battleships.components.place_battleships" title="Link to this definition"></a></dt>
 <dd><p>Places all the ships onto the board using a specified placement algorithm</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -443,6 +445,42 @@ with name in list names. Primarily used for finding sunk ships</p>
 <li><p><strong>board</strong> – A list of lists representing the board</p></li>
 <li><p><strong>ships</strong> – A dictionary of ships in the game and their sizes</p></li>
 <li><p><strong>algorithm</strong> – either ‘simple’, ‘random’ or ‘custom’</p></li>
+<li><p><strong>use_absolute_path</strong> – Should it use a relative or absolute path (for pytest)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of lists representing the board, with tiles filled where ships are</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="battleships.components.place_battleships_custom">
+<span class="sig-prename descclassname"><span class="pre">battleships.components.</span></span><span class="sig-name descname"><span class="pre">place_battleships_custom</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">board</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ships</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_absolute_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/battleships/components.html#place_battleships_custom"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#battleships.components.place_battleships_custom" title="Link to this definition"></a></dt>
+<dd><p>Places all the ships onto the board using a custom placement algorithm</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>board</strong> – A list of lists representing the board</p></li>
+<li><p><strong>ships</strong> – A dictionary of ships in the game and their sizes</p></li>
+<li><p><strong>use_absolute_path</strong> – Should it use a relative or absolute path (for pytest)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of lists representing the board, with tiles filled where ships are</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="battleships.components.place_battleships_random">
+<span class="sig-prename descclassname"><span class="pre">battleships.components.</span></span><span class="sig-name descname"><span class="pre">place_battleships_random</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">board</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ships</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/battleships/components.html#place_battleships_random"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#battleships.components.place_battleships_random" title="Link to this definition"></a></dt>
+<dd><p>Places all the ships onto the board using a random placement</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>board</strong> – A list of lists representing the board</p></li>
+<li><p><strong>ships</strong> – A dictionary of ships in the game and their sizes</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>

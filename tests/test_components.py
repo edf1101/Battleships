@@ -379,7 +379,9 @@ def test_place_battleships_functionality() -> None:
                           [None, None, None, None, None],
                           [None, None, None, None, None],
                           [None, None, None, None, None]]
-        test_board = components.place_battleships(deepcopy(board), ships, algorithm='custom')
+        test_board = components.place_battleships(deepcopy(board), ships,
+                                                  algorithm='custom',
+                                                  use_absolute_path=False)
         assert test_board == expected_board, "Custom algorithm doesn't work"
 
     except AssertionError as msg:
@@ -617,7 +619,7 @@ def test_get_positions_by_name_exists():
     """
     try:
         components = importlib.import_module('battleships.components')
-        assert hasattr(components, 'get_positions_by_name'),\
+        assert hasattr(components, 'get_positions_by_name'), \
             "get_positions_by_name function does not exist"
     except AssertionError:
         testReport.add_message("get_positions_by_name function does not exist in your solution.")
@@ -684,7 +686,7 @@ def test_get_positions_by_name_functionality() -> None:
         names = ['ship1', 'ship2']
 
         expected_output = [(2, 0), (3, 0), (0, 2)]
-        assert components.get_positions_by_name(board, names) == expected_output,\
+        assert components.get_positions_by_name(board, names) == expected_output, \
             "Didn't find the ships"
 
     except AssertionError as msg:
@@ -752,7 +754,7 @@ def test_get_sunken_ships_invalid_arguments() -> None:
 
         # Test with a dict missing original_board
         with pytest.raises(ValueError):
-            components.get_sunken_ships({'ships': {'ship1':2}})
+            components.get_sunken_ships({'ships': {'ship1': 2}})
 
     except AssertionError as msg:
         testReport.add_message('test_get_sunken_ships_invalid_arguments failed')
@@ -770,9 +772,9 @@ def test_get_sunken_ships_functionality() -> None:
         board = [[None, None, 'ship1', 'ship1'],
                  [None, None, None, None],
                  ['ship2', None, None, None]]
-        ships = {'ship1':3, 'ship2':0}
+        ships = {'ship1': 3, 'ship2': 0}
 
-        player_dict = {"ships":ships, 'original_board':board}
+        player_dict = {"ships": ships, 'original_board': board}
 
         expected_output = [(0, 2)]  # Expect it to only have found the bottom left sunk ship
         # As the top right is still intact according to ships dict

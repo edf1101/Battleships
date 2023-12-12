@@ -143,13 +143,15 @@ def try_place_ship(board: list[list],
 
 def place_battleships(board: list[list],
                       ships: dict[str, int],
-                      algorithm: str = 'simple') -> list[list[str]]:
+                      algorithm: str = 'simple',
+                      use_absolute_path: bool = True) -> list[list[str]]:
     """
     Places all the ships onto the board using a specified placement algorithm
 
     :param board: A list of lists representing the board
     :param ships: A dictionary of ships in the game and their sizes
     :param algorithm: either 'simple', 'random' or 'custom'
+    :param use_absolute_path: Should it use a relative or absolute path (for pytest)
     :return: A list of lists representing the board, with tiles filled where ships are
     """
 
@@ -180,55 +182,88 @@ def place_battleships(board: list[list],
 
     # Ships will be placed with random position + orientation, as long as they fit
     if algorithm == 'random':
-        for ship_name, ship_size in ships.items():
-
-            # First guess at a position
-            position = (random.randrange(0, len(board)), random.randrange(0, len(board)))
-            orientation = random.choice(['v', 'h'])
-            potential_placement = try_place_ship(board, ship_name, ship_size, position, orientation)
-
-            while potential_placement is None:  # try random spots until one is valid
-                position = (random.randrange(0, len(board)), random.randrange(0, len(board)))
-                orientation = random.choice(['v', 'h'])
-                potential_placement = try_place_ship(board,
-                                                     ship_name,
-                                                     ship_size,
-                                                     position,
-                                                     orientation)
-
-            board = potential_placement
-        return board
+        return place_battleships_random(board, ships)
 
     # Ships will be placed with a position and orientation as specified in a JSON file
     if algorithm == 'custom':
+        return place_battleships_custom(board, ships, use_absolute_path)
 
+    logging.error('Invalid Argument for algorithm parameter')
+    raise ValueError('Invalid Argument for algorithm parameter')
+
+
+def place_battleships_random(board: list[list],
+                             ships: dict[str, int]) -> list[list[str]]:
+    """
+    Places all the ships onto the board using a random placement
+
+    :param board: A list of lists representing the board
+    :param ships: A dictionary of ships in the game and their sizes
+    :return: A list of lists representing the board, with tiles filled where ships are
+    """
+    for ship_name, ship_size in ships.items():
+
+        # First guess at a position
+        position = (random.randrange(0, len(board)), random.randrange(0, len(board)))
+        orientation = random.choice(['v', 'h'])
+        potential_placement = try_place_ship(board, ship_name, ship_size, position, orientation)
+
+        while potential_placement is None:  # try random spots until one is valid
+            position = (random.randrange(0, len(board)), random.randrange(0, len(board)))
+            orientation = random.choice(['v', 'h'])
+            potential_placement = try_place_ship(board,
+                                                 ship_name,
+                                                 ship_size,
+                                                 position,
+                                                 orientation)
+
+        board = potential_placement
+    return board
+
+
+def place_battleships_custom(board: list[list],
+                             ships: dict[str, int],
+                             use_absolute_path: bool = True) -> list[list[str]]:
+    """
+    Places all the ships onto the board using a custom placement algorithm
+
+    :param board: A list of lists representing the board
+    :param ships: A dictionary of ships in the game and their sizes
+    :param use_absolute_path: Should it use a relative or absolute path (for pytest)
+    :return: A list of lists representing the board, with tiles filled where ships are
+    """
+
+    # pytest doesn't like the use of absolute paths, so we'll create an optional argument
+    # to not use it with that
+    if use_absolute_path:
         # recreate placement.json filename using absolute path
         with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'placement.json'),
                   'r', encoding="utf-8") as file:
             json_data = json.loads(file.read())
+    else:
+        # use relative path placement.json
+        with open('placement.json', 'r', encoding="utf-8") as file:
+            json_data = json.loads(file.read())
 
-        ship_names = list(json_data.keys())
+    ship_names = list(json_data.keys())
 
-        for ship_name in ship_names:
+    for ship_name in ship_names:
 
-            # example file had a dict of ship_name : [position.x,position.y,orientation]
-            ship_position = (int(json_data[ship_name][0]), int(json_data[ship_name][1]))
-            ship_orientation = json_data[ship_name][2]
+        # example file had a dict of ship_name : [position.x,position.y,orientation]
+        ship_position = (int(json_data[ship_name][0]), int(json_data[ship_name][1]))
+        ship_orientation = json_data[ship_name][2]
 
-            potential_placement = try_place_ship(board, ship_name,
-                                                 ships[ship_name],
-                                                 ship_position,
-                                                 ship_orientation)
-            if potential_placement is None:
-                logging.error("Supplied JSON data doesn't fit in the board")
-                raise ValueError("Supplied JSON data doesn't fit in the board")
+        potential_placement = try_place_ship(board, ship_name,
+                                             ships[ship_name],
+                                             ship_position,
+                                             ship_orientation)
+        if potential_placement is None:
+            logging.error("Supplied JSON data doesn't fit in the board")
+            raise ValueError("Supplied JSON data doesn't fit in the board")
 
-            board = potential_placement
+        board = potential_placement
 
-        return board
-
-    logging.error('Invalid Argument for algorithm parameter')
-    raise ValueError('Invalid Argument for algorithm parameter')
+    return board
 
 
 def in_board(location: tuple[int, int], board: list[list]) -> bool:

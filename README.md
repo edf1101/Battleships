@@ -74,7 +74,7 @@ my unittests were not intended to mock_
 MIT License: [found here](LICENSE)
 
 #### Authors
-- Ed Fillingham
+- Student 730003140
 
 #### Source
-Code hosted (privately) at https://github.com/edf1101/Battleships/
+Code hosted (may be public or private depending on time of reading) at https://github.com/edf1101/Battleships/
