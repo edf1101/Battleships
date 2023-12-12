@@ -22,7 +22,7 @@ def test_components_exists() -> None:
     """
 
     try:
-        importlib.import_module('components')
+        importlib.import_module('battleships.components')
     except ImportError:
         testReport.add_message("components module does not exist in your solution.")
         pytest.fail("components module does not exist")
@@ -39,7 +39,7 @@ def test_initialise_board_return_size() -> None:
     """
 
     try:
-        components = importlib.import_module('components')
+        components = importlib.import_module('battleships.components')
 
         size = 10
         # Run the function
@@ -68,7 +68,7 @@ def test_initialise_board_return_none() -> None:
     :return: None
     """
     try:
-        components = importlib.import_module('components')
+        components = importlib.import_module('battleships.components')
         size = 10
         # Run the function
         board = components.initialise_board(size)
@@ -91,7 +91,7 @@ def test_initialise_board_invalid_arguments() -> None:
         :return: None
         """
     try:
-        components = importlib.import_module('components')
+        components = importlib.import_module('battleships.components')
         with pytest.raises(TypeError):
             components.initialise_board('ten')
 
@@ -109,7 +109,7 @@ def test_initialise_board_argument() -> None:
     Test if the initialise_board function accepts an integer argument.
     """
     try:
-        components = importlib.import_module('components')
+        components = importlib.import_module('battleships.components')
 
         try:
             components.initialise_board(10)
@@ -128,7 +128,7 @@ def test_initialise_board_return_type() -> None:
     Test if the initialise_board function returns a list.
     """
     try:
-        components = importlib.import_module('components')
+        components = importlib.import_module('battleships.components')
 
         try:
             assert thf.is_list_of_lists(components.initialise_board(10), str)
@@ -148,7 +148,7 @@ def test_create_battleships_exists() -> None:
     """
     Test if the create_battleships function exists.
     """
-    components = importlib.import_module('components')
+    components = importlib.import_module('battleships.components')
 
     try:
         assert hasattr(components, 'create_battleships'), ("create_battleships function "
@@ -165,7 +165,7 @@ def test_battleships_txt_exists() -> None:
     """
 
     try:
-        with open("../Battleships/battleships.txt", 'r', encoding="utf-8"):
+        with open("../battleships/battleships.txt", 'r', encoding="utf-8"):
             pass
     except FileNotFoundError:
         testReport.add_message("battleships.txt file does not exist in your solution.")
@@ -177,7 +177,7 @@ def test_create_battleships_argument() -> None:
     """
     Test if the create_battleships function accepts a string argument.
     """
-    components = importlib.import_module('components')
+    components = importlib.import_module('battleships.components')
 
     try:
         components.create_battleships("battleships.txt")
@@ -191,7 +191,7 @@ def test_create_battleships_return_type() -> None:
     """
     Test if the create_battleships function returns a dictionary.
     """
-    components = importlib.import_module('components')
+    components = importlib.import_module('battleships.components')
 
     try:
         assert thf.is_dict_of_type(components.create_battleships("battleships.txt"), str, int)
@@ -205,7 +205,7 @@ def test_create_battleships_invalid_args() -> None:
     """
     Tests what happens if we give it invalid arguments
     """
-    components = importlib.import_module('components')
+    components = importlib.import_module('battleships.components')
 
     try:
 
@@ -231,7 +231,7 @@ def test_place_battleships_exists() -> None:
     """
     Test if the place_battleships function exists.
     """
-    components = importlib.import_module('components')
+    components = importlib.import_module('battleships.components')
 
     try:
         assert hasattr(components, 'place_battleships'), "place_battleships function does not exist"
@@ -245,7 +245,7 @@ def test_place_battleships_arguments() -> None:
     """
     Test if the place_battleships function accepts a list and a dictionary argument.
     """
-    components = importlib.import_module('components')
+    components = importlib.import_module('battleships.components')
 
     try:
         # Check to make sure the place_battleships function has a board ships and algorithm argument
@@ -281,7 +281,7 @@ def test_place_battleships_return_type() -> None:
     """
     Test if the place_battleships function returns a list of lists of strings/None values.
     """
-    components = importlib.import_module('components')
+    components = importlib.import_module('battleships.components')
 
     board = components.initialise_board(10)
     ships = components.create_battleships("battleships.txt")
@@ -305,7 +305,7 @@ def test_place_battleships_argument_errors() -> None:
     """
 
     try:
-        components = importlib.import_module('components')
+        components = importlib.import_module('battleships.components')
         board = components.initialise_board(10)
         ships = components.create_battleships("battleships.txt")
         with pytest.raises(ValueError):
@@ -344,7 +344,7 @@ def test_place_battleships_functionality() -> None:
 
     try:
 
-        components = importlib.import_module('components')
+        components = importlib.import_module('battleships.components')
 
         # Test if the simple mode works
         board = components.initialise_board(5)
@@ -395,7 +395,7 @@ def test_in_board_exists() -> None:
     """
     Test if the place_battleships function exists.
     """
-    components = importlib.import_module('components')
+    components = importlib.import_module('battleships.components')
 
     try:
         assert hasattr(components, 'in_board'), "in_board function does not exist"
@@ -409,7 +409,7 @@ def test_in_board_arguments() -> None:
     """
     Test if the in_board function accepts correct arguments.
     """
-    components = importlib.import_module('components')
+    components = importlib.import_module('battleships.components')
 
     try:
         # Check to make sure the place_battleships function has a board ships and algorithm argument
@@ -430,7 +430,7 @@ def test_in_board_functionality() -> None:
     :return: None
     """
     try:
-        components = importlib.import_module('components')
+        components = importlib.import_module('battleships.components')
 
         board = components.initialise_board(5)
 
@@ -454,7 +454,7 @@ def test_in_board_invalid_arguments() -> None:
     :return: None
     """
     try:
-        components = importlib.import_module('components')
+        components = importlib.import_module('battleships.components')
 
         board = components.initialise_board(5)
 
@@ -487,7 +487,7 @@ def test_try_place_ship_exists() -> None:
     """
     Test if the place_battleships function exists.
     """
-    components = importlib.import_module('components')
+    components = importlib.import_module('battleships.components')
 
     try:
         assert hasattr(components, 'try_place_ship'), "try_place_ship function does not exist"
@@ -504,7 +504,7 @@ def test_try_place_ship_invalid_arguments() -> None:
     """
 
     try:
-        components = importlib.import_module('components')
+        components = importlib.import_module('battleships.components')
 
         board = components.initialise_board(5)
         ship_name = 'ship1'
@@ -553,7 +553,7 @@ def test_try_place_ship_incorrect_placement() -> None:
     :return: None
     """
     try:
-        components = importlib.import_module('components')
+        components = importlib.import_module('battleships.components')
 
         blank_board = components.initialise_board(5)
         ship_name = 'ship1'
@@ -585,7 +585,7 @@ def test_try_place_ship_correct_placement() -> None:
     """
 
     try:
-        components = importlib.import_module('components')
+        components = importlib.import_module('battleships.components')
 
         blank_board = components.initialise_board(5)
         ship_name = 'ship1'
@@ -616,7 +616,7 @@ def test_get_positions_by_name_exists():
     Test if the get_positions_by_name function exists.
     """
     try:
-        components = importlib.import_module('components')
+        components = importlib.import_module('battleships.components')
         assert hasattr(components, 'get_positions_by_name'),\
             "get_positions_by_name function does not exist"
     except AssertionError:
@@ -629,7 +629,7 @@ def test_get_positions_by_name_arguments() -> None:
     """
     Test if the get_positions_by_name function accepts correct arguments.
     """
-    components = importlib.import_module('components')
+    components = importlib.import_module('battleships.components')
 
     try:
         # Check to make sure the place_battleships function has a board ships and algorithm argument
@@ -651,7 +651,7 @@ def test_get_positions_by_name_invalid_arguments() -> None:
     """
 
     try:
-        components = importlib.import_module('components')
+        components = importlib.import_module('battleships.components')
 
         # Test giving board parameter as a string not a list of lists
         with pytest.raises(TypeError):
@@ -676,7 +676,7 @@ def test_get_positions_by_name_functionality() -> None:
     Test the get_positions_by_name function works
     """
     try:
-        components = importlib.import_module('components')
+        components = importlib.import_module('battleships.components')
 
         board = [[None, None, 'ship1', 'ship1'],
                  [None, None, None, None],
@@ -701,7 +701,7 @@ def test_get_sunken_ships_exists():
     Test if the get_sunken_ships function exists.
     """
     try:
-        components = importlib.import_module('components')
+        components = importlib.import_module('battleships.components')
         assert hasattr(components, 'get_sunken_ships'), "get_sunken_ships function does not exist"
     except AssertionError:
         testReport.add_message("get_sunken_ships function does not exist in your solution.")
@@ -713,7 +713,7 @@ def test_get_sunken_ships_arguments() -> None:
     """
     Test if the get_sunken_ships function accepts correct arguments.
     """
-    components = importlib.import_module('components')
+    components = importlib.import_module('battleships.components')
 
     try:
         # Check to make sure the place_battleships function has a board ships and algorithm argument
@@ -733,7 +733,7 @@ def test_get_sunken_ships_invalid_arguments() -> None:
     """
 
     try:
-        components = importlib.import_module('components')
+        components = importlib.import_module('battleships.components')
 
         # Test giving player_data parameter not a complete required dictionary
         # This func need a dict with the keys 'ships' and 'original_board'
@@ -765,7 +765,7 @@ def test_get_sunken_ships_functionality() -> None:
     Test the get_sunken_ships function works
     """
     try:
-        components = importlib.import_module('components')
+        components = importlib.import_module('battleships.components')
 
         board = [[None, None, 'ship1', 'ship1'],
                  [None, None, None, None],

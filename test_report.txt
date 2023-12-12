@@ -1,0 +1,9 @@
+Test Report
+===========
+
+battleships.txt file does not exist in your solution.
+battleships.txt file does not exist in your solution. A file called battleships_temp.txt has been created in the expected location. Please rename this file to battleships.txt and add your battleships to it.
+test_create_battleships_argument failed as the function create_battleships threw an unexpected error. (Crashed before test completed) Check the test output window for details
+test_create_battleships_return_type failed as the function create_battleships threw an unexpected error. (Crashed before test completed) Check the test output window for details
+test_place_battleships_arguments failed as one of the functions place_battleships, initialise_board or create_battleships threw an unexpected error. (Crashed before test completed) Check the test output window for details
+test_attack_arguments failed as one of the functions place_battleships, initialise_board or create_battleships or attack threw an unexpected error. (Crashed before test completed). Check the test output window for deatils

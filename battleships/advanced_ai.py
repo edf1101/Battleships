@@ -5,8 +5,12 @@ This module just deals with the AI when its doing more advanced
 # import libs
 import random
 import numpy as np
-
-import components
+# Import battleships libs, pycharm likes it one way, terminal likes it the other
+# using this try except bit here makes it work either way round
+try:
+    from battleships import components
+except ImportError:
+    import components
 
 
 ###############################

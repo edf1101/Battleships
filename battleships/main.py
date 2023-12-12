@@ -1,15 +1,21 @@
 """
-This module runs the main Battleships game
+This module runs the main battleships game
 """
 
 import json
 from copy import deepcopy
 from flask import Flask, request, render_template
 
-# Import gameplay libs
-import game_engine
-import components
-import advanced_ai as ai
+# Import battleships libs, pycharm likes it one way, terminal likes it the other
+# using this try except bit here makes it work either way round
+try:
+    from battleships import game_engine
+    from battleships import components
+    from battleships import advanced_ai as ai
+except ImportError:
+    import game_engine
+    import components
+    import advanced_ai as ai
 
 app = Flask(__name__)
 
@@ -21,7 +27,6 @@ class BattleshipsGame:
     """
 
     def __init__(self):
-
         self.set_board = False
         self.game_running = False
         self.board_size = 10
@@ -45,7 +50,6 @@ class BattleshipsGame:
             # Start the game but make sure the board isn't set
             self.game_running = True
             self.set_board = False
-
             # Reset the player dictionaries and create boards, ships etc
             self.players = {'Human': {'board': components.initialise_board(self.board_size),
                                       'ships': components.create_battleships(),

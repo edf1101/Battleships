@@ -21,7 +21,7 @@ def test_advanced_ai_exists() -> None:
     """
 
     try:
-        importlib.import_module('advanced_ai')
+        importlib.import_module('battleships.advanced_ai')
     except ImportError:
         testReport.add_message("advanced_ai module does not exist in your solution.")
         pytest.fail("advanced_ai module does not exist")
@@ -39,7 +39,7 @@ def test_generate_advanced_attack_1unsunk() -> None:
     """
 
     try:
-        ai = importlib.import_module('advanced_ai')
+        ai = importlib.import_module('battleships.advanced_ai')
         # This scenario is for when we have one unsunk hit so we can't form a line with it yet
         org_board = [[None, None, None, None, 'Cruiser', 'Cruiser', 'Cruiser', None, None, None],
                      [None, None, None, None, None, None, None, None, None, None],
@@ -98,7 +98,7 @@ def test_generate_advanced_attack_blind_intelligent() -> None:
     """
 
     try:
-        ai = importlib.import_module('advanced_ai')
+        ai = importlib.import_module('battleships.advanced_ai')
 
         # This scenario is for if we have no unsunk hits so we use blind guessing
         board = [[None, None, 'Destroyer', 'Destroyer', None, None, None, None, None, None],
@@ -153,7 +153,7 @@ def test_generate_advanced_attack_line_unsunk() -> None:
     """
 
     try:
-        ai = importlib.import_module('advanced_ai')
+        ai = importlib.import_module('battleships.advanced_ai')
         # This scenario is for testing in a line of unsunk hits
 
         our_history = [(5, 5), (6, 5), (4, 5), (7, 5), (3, 4),
@@ -207,7 +207,7 @@ def test_generate_advanced_attack_args_invalid() -> None:
     :return: None
     """
     try:
-        ai = importlib.import_module('advanced_ai')
+        ai = importlib.import_module('battleships.advanced_ai')
 
         difficulty = 2
         enemy_dict = {'board': [[None, None, None, None, None],
@@ -258,7 +258,7 @@ def test_incomplete_dicts() -> None:
     :return: None
     """
     try:
-        ai = importlib.import_module('advanced_ai')
+        ai = importlib.import_module('battleships.advanced_ai')
 
         enemy_dict_incomplete_1 = {
             'ships': {'Aircraft_Carrier': 0, 'Battleship': 2,

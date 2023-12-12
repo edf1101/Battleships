@@ -5,13 +5,19 @@ This script is for comparing different difficulties of AI over many games
 # Import gameplay libs
 from copy import deepcopy
 import numpy as np
+# Import battleships libs, pycharm likes it one way, terminal likes it the other
+# using this try except bit here makes it work either way round
+try:
+    from battleships import game_engine
+    from battleships import components
+    from battleships import advanced_ai as ai
+except ImportError:
+    import game_engine
+    import components
+    import advanced_ai as ai
 
-import game_engine
-import components
-import advanced_ai as ai
 
-
-def ai_loop(ai_mode_1, ai_mode_2):
+def ai_loop(ai_mode_1: int, ai_mode_2: int) -> tuple[str, int]:
     """
     Runs a single game between two AIs
     :param ai_mode_1: the difficulty of AI 1
@@ -103,8 +109,8 @@ def run_trials(ai1_mode: int, ai2_mode: int, trials: int = 1000) -> None:
     print(f'AI1 won {round(100 * ai1_score / (trials - 1), 2)}%'
           f'  AI2 won {round(100 * ai2_score / (trials - 1), 2)}% ')
 
-    print(f'AI1 finished in mean = {round(np.average(ai1_completion_moves),2)} moves'
-          f'   std = { round(np.std(ai1_completion_moves),2)}'
+    print(f'AI1 finished in mean = {round(np.average(ai1_completion_moves), 2)} moves'
+          f'   std = {round(np.std(ai1_completion_moves), 2)}'
           f'   n = {trials}')
 
     print(f'AI2 finished in mean = {round(np.average(ai2_completion_moves), 2)} moves'

@@ -4,8 +4,14 @@ Also contains a simple Command line game when module itself is executed
 """
 
 import random
-import components
-import game_engine
+# Import battleships libs, pycharm likes it one way, terminal likes it the other
+# using this try except bit here makes it work either way round
+try:
+    from battleships import game_engine
+    from battleships import components
+except ImportError:
+    import game_engine
+    import components
 
 players = {}
 

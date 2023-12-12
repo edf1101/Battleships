@@ -41,7 +41,7 @@ def create_battleships(filename: str = "battleships.txt") -> dict[str, int]:
         with open(filename, 'r', encoding="utf-8") as file:
             data = file.read()
     except FileNotFoundError as ex:
-        raise ValueError("filename parameter doesn't exist")
+        raise ValueError(f"filename {filename} doesn't exist") from ex
 
     data = data.split('\n')  # each new line should be data entry
 

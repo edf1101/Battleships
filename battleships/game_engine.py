@@ -2,9 +2,12 @@
 Functions used in gameplay
 Also contains a single-player game if module is executed
 """
-
-from copy import deepcopy
-import components
+# Import battleships libs, pycharm likes it one way, terminal likes it the other
+# using this try except bit here makes it work either way round
+try:
+    from battleships import components
+except ImportError:
+    import components
 
 
 def attack(coordinates: tuple[int, int],
@@ -17,6 +20,34 @@ def attack(coordinates: tuple[int, int],
     :param battleships: The list of enemy ships to decrement if there's a hit
     :return: Bool Whether anything was hit
     """
+
+    # Check board param is set up correctly
+    if not isinstance(board, list):
+        raise TypeError('board should be a list of lists')
+    for row in board:
+        if not isinstance(row, list):
+            raise TypeError('board should be a list of lists, one row isn\'t a list')
+        for cell in row:
+            if not (isinstance(cell, str) or cell is None):
+                raise TypeError('each cell in the board should be None or a string')
+    board_size = len(board)
+
+    # Check coordinates is right type
+    if (not isinstance(coordinates, tuple) or not isinstance(coordinates[0], int)
+            or not isinstance(coordinates[1], int)):
+        raise TypeError('coordinates is not a tuple of 2 ints')
+    # Check coordinates is right length
+    if len(coordinates) != 2:
+        raise ValueError('coordinates tuple should be 2 ints long')
+    if not (0 <= coordinates[0] < board_size and 0 <= coordinates[1] < board_size):
+        raise ValueError('coordinates out of the board')
+
+    # Check the battleships dict
+    if len(battleships) == 0:
+        raise ValueError('battleships dict is empty')
+    for key, value in battleships.items():
+        if not isinstance(key,str) or not isinstance(value,int):
+            raise TypeError('Dictionary keys/ values are not of type str then int')
 
     is_hit = board[coordinates[1]][coordinates[0]] is not None
 
@@ -58,66 +89,18 @@ def count_ships_remaining(ships: dict[str, int]) -> int:
     :param ships: The dictionary of a player's ships
     :return: the number of ship tiles left
     """
+    # Check the battleships dict
+    if len(ships) == 0:
+        raise ValueError('battleships dict is empty')
+    for key, value in ships.items():
+        if not isinstance(key, str) or not isinstance(value, int):
+            raise TypeError('Dictionary keys/ values are not of type str then int')
+
     total = 0
     for partial_remaining in ships.values():
         total += partial_remaining
 
     return total
-
-
-# Functions below are for the extension 'storm' functionality (board moves each turn)
-def shift_down(board: list[list]) -> list[list]:
-    """
-    Shifts a list of lists down 1 space
-    :param board: The list to shift
-    :return: The shifted list
-    """
-    board_write = deepcopy(board)  # deep copy of the board we'll write to
-
-    for i in range(len(board)):
-        board_write[i] = board[i - 1]  # Swap with one above it
-
-    return board_write
-
-
-def shift_right(board: list[list]) -> list[list]:
-    """
-    Shifts a list of lists right 1 space
-    :param board: The list to shift
-    :return: The shifted list
-    """
-    board = deepcopy(board)  # deep copy of the board we'll write to so we don't modify original
-
-    for row_ind, _ in enumerate(board):  # Go through each row
-
-        modify_row = board[row_ind].copy()
-        for cell_index, _ in enumerate(board):
-            modify_row[cell_index] = board[row_ind][cell_index - 1]
-
-        board[row_ind] = modify_row
-
-    return board
-
-
-def shift(board: list[list], direction: tuple[int, int]) -> list[list]:
-    """
-    Shifts a board in any direction
-    :param board: The board to shift
-    :param direction: how many spaces in each x,y direction to move
-    :return: The shifted board
-    """
-
-    # This bit makes it able to handle large and negative numbers in either direction
-    dir_y = (direction[1] + len(board)) % len(board)
-    dir_x = (direction[0] + len(board)) % len(board)
-
-    for _ in range(dir_y):
-        board = shift_down(board)
-
-    for _ in range(dir_x):
-        board = shift_right(board)
-
-    return board
 
 
 def simple_game_loop() -> None:
