@@ -53,7 +53,7 @@ There are 3 modes to run the game:
 ## Testing
 If pytest & plugins are installed then you can test in 2 ways.
 
-_Note scripts like game_engine.py or main.py don't have full coverage as some functions require input statements which
+_Note scripts like game_engine.py, mp_game_engine and main.py don't have full coverage as some functions require input statements which
 my unittests were not intended to mock_
 1. Use an IDE like PyCharm to run the tests manually
 2. Navigate to the tests folder in the project (from the root directory it would be

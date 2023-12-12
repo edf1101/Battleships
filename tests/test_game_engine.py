@@ -6,8 +6,6 @@ Matt Collison (Example Unit Tests provided)
 """
 
 import importlib
-import inspect
-from copy import deepcopy
 import pytest
 import test_helper_functions as thf
 

@@ -117,10 +117,22 @@ class BattleshipsGame:
         """
 
         # Deal with the human attack
-        user_coords = int(request.args.get('x')), int(request.args.get('y'))
-        attack_status = game_engine.attack(user_coords, self.players['AI']['board'],
-                                           self.players['AI']['ships'])
-        self.players['Human']['history'].append(user_coords)
+        valid_coordinate = False
+        try:
+            user_coords = int(request.args.get('x')), int(request.args.get('y'))
+            if (0 <= user_coords[0] < len(self.players['AI']['board']) and
+                    0 <= user_coords[1] < len(self.players['AI']['board'])):
+                valid_coordinate = True
+
+        except ValueError:
+            user_coords = (0, 0)
+
+        if valid_coordinate:  # If we didn't enter valid coordinates then assume we missed
+            attack_status = game_engine.attack(user_coords, self.players['AI']['board'],
+                                               self.players['AI']['ships'])
+            self.players['Human']['history'].append(user_coords)
+        else:
+            attack_status = False
 
         # Calculate which of the AI ships we have sunk based on its original board
         ai_sunken_places = components.get_sunken_ships(self.players['AI'])
