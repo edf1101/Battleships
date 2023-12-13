@@ -89,6 +89,11 @@ my unittests were not intended to mock_
 pylint can be run by going to either the root of the project or the source code folder in the terminal then running
 ```pylint battleships```
 
+### Logging
+Logs are taken for error events and for general game actions.
+
+Logs can be found at the working directory for python, this will be different depending on how you installed the package.
+
 ## Details
 #### License
 MIT License: [found here](LICENSE)

@@ -5,8 +5,8 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="battleships-edf1101",
-    version="1.3",
-    author="Student 130003140 ",
+    version="1.4",
+    author="Student 130003140",
     author_email="ef494@exeter.ac.uk",
     description="2023 ECM1400 Coursework - Battleships",
     long_description=readme,

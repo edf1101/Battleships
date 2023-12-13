@@ -1,0 +1,24 @@
+[2023-12-13 00:05:30,375-DEBUG -             <module>() ] This is an info message.
+[2023-12-13 00:05:30,382-INFO -                 _log() ] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+[2023-12-13 00:05:30,382-INFO -                 _log() ] [33mPress CTRL+C to quit[0m
+[2023-12-13 00:05:31,340-INFO -                 _log() ] 127.0.0.1 - - [13/Dec/2023 00:05:31] "GET / HTTP/1.1" 200 -
+[2023-12-13 00:05:31,353-INFO -                 _log() ] 127.0.0.1 - - [13/Dec/2023 00:05:31] "GET /static/images/menu.jpeg HTTP/1.1" 200 -
+[2023-12-13 00:05:32,571-INFO -      entry_interface() ] Just loaded into the placement interface
+[2023-12-13 00:05:32,573-INFO -                 _log() ] 127.0.0.1 - - [13/Dec/2023 00:05:32] "POST /entry HTTP/1.1" 200 -
+[2023-12-13 00:05:32,586-INFO -                 _log() ] 127.0.0.1 - - [13/Dec/2023 00:05:32] "GET / HTTP/1.1" 200 -
+[2023-12-13 00:05:35,960-INFO -  placement_interface() ] Just received placement ship data
+[2023-12-13 00:05:35,961-INFO -                 _log() ] 127.0.0.1 - - [13/Dec/2023 00:05:35] "POST /placement HTTP/1.1" 200 -
+[2023-12-13 00:05:36,340-INFO -                 _log() ] 127.0.0.1 - - [13/Dec/2023 00:05:36] "GET / HTTP/1.1" 200 -
+[2023-12-13 00:06:34,572-DEBUG -             <module>() ] This is an info message.
+[2023-12-13 00:06:34,577-INFO -                 _log() ] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+[2023-12-13 00:06:34,577-INFO -                 _log() ] [33mPress CTRL+C to quit[0m
+[2023-12-13 00:06:35,519-INFO -                 _log() ] 127.0.0.1 - - [13/Dec/2023 00:06:35] "GET / HTTP/1.1" 200 -
+[2023-12-13 00:06:35,531-INFO -                 _log() ] 127.0.0.1 - - [13/Dec/2023 00:06:35] "[36mGET /static/images/menu.jpeg HTTP/1.1[0m" 304 -
+[2023-12-13 00:06:37,117-INFO -      entry_interface() ] Just loaded into the placement interface
+[2023-12-13 00:06:37,119-INFO -                 _log() ] 127.0.0.1 - - [13/Dec/2023 00:06:37] "POST /entry HTTP/1.1" 200 -
+[2023-12-13 00:06:37,131-INFO -                 _log() ] 127.0.0.1 - - [13/Dec/2023 00:06:37] "GET / HTTP/1.1" 200 -
+[2023-12-13 00:06:41,044-INFO -  placement_interface() ] Just received placement ship data
+[2023-12-13 00:06:41,046-INFO -                 _log() ] 127.0.0.1 - - [13/Dec/2023 00:06:41] "POST /placement HTTP/1.1" 200 -
+[2023-12-13 00:06:41,520-INFO -                 _log() ] 127.0.0.1 - - [13/Dec/2023 00:06:41] "GET / HTTP/1.1" 200 -

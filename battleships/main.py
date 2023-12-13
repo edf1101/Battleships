@@ -2,6 +2,7 @@
 This module runs the main battleships game
 """
 
+import os
 import json
 from copy import deepcopy
 import logging
@@ -56,7 +57,6 @@ class BattleshipsGame:
             self.board_size = int(json_data['board_size'])
             self.ai_difficulty = int(json_data['difficulty'])
             self.stormy = bool(json_data['stormy_mode'])
-            print(self.stormy)
 
             # Start the game but make sure the board isn't set
             self.game_running = True
@@ -104,7 +104,10 @@ class BattleshipsGame:
             app.logger.info('Just received placement ship data')
 
             # Because we can only read a JSON ship data from file we need to save it then load it in
-            with open("placement.json", "w", encoding="utf-8") as outfile:
+
+            # recreate placement.json filename using absolute path
+            new_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'placement.json')
+            with open(new_path, "w", encoding="utf-8") as outfile:
                 json.dump(json_data, outfile)
 
             new_layout = components.place_battleships(self.players['Human']['board'],
