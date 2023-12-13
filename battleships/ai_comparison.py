@@ -5,14 +5,15 @@ This script is for comparing different difficulties of AI over many games
 # Import gameplay libs
 from copy import deepcopy
 import numpy as np
+
 # Import battleships libs, pycharm likes it one way, terminal likes it the other
 # using this try except bit here makes it work either way round
 try:
-    from battleships import game_engine
+    from battleships import game_engine as ge
     from battleships import components
     from battleships import advanced_ai as ai
 except ImportError:
-    import game_engine
+    import game_engine as ge
     import components
     import advanced_ai as ai
 
@@ -26,7 +27,7 @@ def ai_loop(ai_mode_1: int, ai_mode_2: int) -> tuple[str, int]:
     :return: 'AI1' if AI1 won or 'AI2' if AI2 won
     """
 
-    if not isinstance(ai_mode_1,int) or not isinstance(ai_mode_2,int):
+    if not isinstance(ai_mode_1, int) or not isinstance(ai_mode_2, int):
         raise TypeError('parameters not ints')
 
     board_size = 10
@@ -61,23 +62,23 @@ def ai_loop(ai_mode_1: int, ai_mode_2: int) -> tuple[str, int]:
         ai_coords = ai.generate_advanced_attack(ai_mode_1,
                                                 players['AI2'],
                                                 players['AI']['history'])
-        game_engine.attack(ai_coords, players['AI2']['board'],
-                           players['AI2']['ships'])
+        ge.attack(ai_coords, players['AI2']['board'],
+                  players['AI2']['ships'])
         players['AI']['history'].append(ai_coords)
 
         # AI2 can attack now
         ai_coords = ai.generate_advanced_attack(ai_mode_2,
                                                 players['AI'],
                                                 players['AI2']['history'])
-        game_engine.attack(ai_coords, players['AI']['board'],
-                           players['AI']['ships'])
+        ge.attack(ai_coords, players['AI']['board'],
+                  players['AI']['ships'])
         players['AI2']['history'].append(ai_coords)
 
         # Check if finished
-        finished = (game_engine.count_ships_remaining(players['AI2']['ships']) == 0 or
-                    game_engine.count_ships_remaining(players['AI']['ships']) == 0)
+        finished = (ge.count_ships_remaining(players['AI2']['ships']) == 0 or
+                    ge.count_ships_remaining(players['AI']['ships']) == 0)
 
-    ai_won = game_engine.count_ships_remaining(players['AI2']['ships']) == 0
+    ai_won = ge.count_ships_remaining(players['AI2']['ships']) == 0
     # Return who won and how many moves it took
     return 'AI1' if ai_won else 'AI2', moves
 

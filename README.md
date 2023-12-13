@@ -44,7 +44,8 @@ _Version used in running = Python 3.11.4_
 There are 3 modes to run the game:
 - Run the [game_engine file](battleships/game_engine.py) as a module for a CLI game against yourself
 - Run the [mp_game_engine file](battleships/mp_game_engine.py) for a CLI game against an AI
-- Run the [main file](battleships/main.py) for a full GUI game
+- Run the [main file](battleships/main.py) for a full GUI game. Once you have run this program navigate to http://127.0.0.1:5000 on a 
+browser of choice.
 
 <br>
 There are two ways to install the package:

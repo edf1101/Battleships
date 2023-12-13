@@ -83,22 +83,23 @@ def cli_coordinates_input() -> tuple[int, int]:
     :return: returns the tuple position of inputted coordinates
     """
 
-    x, y = 0, 0
+    x_co, y_co = 0, 0
     valid_input = False
 
     while not valid_input:
 
-        x = input("What x coordinate?")
-        y = input("What y coordinate?")
+        x_co = input("What x coordinate?")
+        y_co = input("What y coordinate?")
 
-        valid_input = x.isnumeric() and y.isnumeric() and int(x) > 0 and int(y) > 0
+        valid_input = (x_co.isnumeric() and y_co.isnumeric()
+                       and int(x_co) > 0 and int(y_co) > 0)
 
         if not valid_input:
-            logging.warning(' user entered an invalid input of %s', {x, y})
+            logging.warning(' user entered an invalid input of %s', {x_co, y_co})
             print("INVALID ENTRY - values must be positive and integers")
 
-    x, y = int(x) - 1, int(y) - 1
-    return x, y
+    x_co, y_co = int(x_co) - 1, int(y_co) - 1
+    return x_co, y_co
 
 
 def count_ships_remaining(ships: dict[str, int]) -> int:

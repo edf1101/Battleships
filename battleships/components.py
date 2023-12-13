@@ -68,9 +68,9 @@ def create_battleships(filename: str = "battleships.txt") -> dict[str, int]:
 
         try:  # Check the sizes are ints
             size = int(size.strip())
-        except ValueError as e:
+        except ValueError as exc:
             logging.error("battleships.txt error one value isn't of type int")
-            raise ValueError("battleships.txt error one value isn't of type int") from e
+            raise ValueError("battleships.txt error one value isn't of type int") from exc
 
         battleships[str(name)] = size
 
@@ -174,8 +174,8 @@ def place_battleships(board: list[list],
         row = 0
         for ship_name, ship_size in ships.items():
 
-            for x in range(ship_size):
-                board[row][x] = ship_name
+            for x_co in range(ship_size):
+                board[row][x_co] = ship_name
             row += 1  # go down a row
 
         return board

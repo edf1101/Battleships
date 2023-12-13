@@ -73,9 +73,9 @@ def generate_attack_difficulty_0(board_size: int) -> tuple[int, int]:
     :param board_size: Size of the board
     :return: attack coordinate
     """
-    x = random.randrange(0, board_size)
-    y = random.randrange(0, board_size)
-    return x, y
+    x_co = random.randrange(0, board_size)
+    y_co = random.randrange(0, board_size)
+    return x_co, y_co
 
 
 def generate_attack_difficulty_1(board_size: int,
@@ -88,14 +88,14 @@ def generate_attack_difficulty_1(board_size: int,
     :return: The guess
     """
     # generate an initial random guess
-    x = random.randrange(0, board_size)
-    y = random.randrange(0, board_size)
+    x_co = random.randrange(0, board_size)
+    y_co = random.randrange(0, board_size)
 
-    while (x, y) in history:  # Keep generating guesses until we find one not in history list
-        x = random.randrange(0, board_size)
-        y = random.randrange(0, board_size)
+    while (x_co, y_co) in history:  # Keep generating guesses until we find one not in history list
+        x_co = random.randrange(0, board_size)
+        y_co = random.randrange(0, board_size)
 
-    return x, y
+    return x_co, y_co
 
 
 def generate_attack_difficulty_2(enemy_dict: dict,
@@ -211,17 +211,19 @@ def generate_intelligent_blind_guess(enemy_dict, history):
     # This numpy array stores the frequencies of a ship being in a tile for each cell
     frequencies = np.zeros((board_size, board_size))
 
-    for y in range(board_size):  # Go through every possible cell
-        for x in range(board_size):
+    for y_co in range(board_size):  # Go through every possible cell
+        for x_co in range(board_size):
 
             for ship in ships_unseen:  # Go through all unseen ships
 
                 # Test whether that ship fits into the position either vertically or horizontally
-                fitted = components.try_place_ship(blank_board, 'test', ship, (x, y), 'h')
+                fitted = components.try_place_ship(blank_board, 'test',
+                                                   ship, (x_co, y_co), 'h')
                 if fitted: # If it fits then add 1 to the frequency array
                     frequencies += np.where(np.array(fitted), 1, 0)
 
-                fitted = components.try_place_ship(blank_board, 'test', ship, (x, y), 'v')
+                fitted = components.try_place_ship(blank_board, 'test', ship,
+                                                   (x_co, y_co), 'v')
                 if fitted:
                     frequencies += np.where(np.array(fitted), 1, 0)
 
@@ -320,10 +322,10 @@ def get_unsunk_hits(enemy_dict: dict) -> list[tuple[int, int]]:
     # Find all the places in the board that have been hit (difference
     # between original board and current board)
     hit_locations = []
-    for y, row in enumerate(enemy_board):
-        for x, cell in enumerate(row):
-            if cell != enemy_original_board[y][x]:
-                hit_locations.append((x, y))
+    for y_co, row in enumerate(enemy_board):
+        for x_co, cell in enumerate(row):
+            if cell != enemy_original_board[y_co][x_co]:
+                hit_locations.append((x_co, y_co))
 
     # Find the unsunk hits by doing a set difference between all hits and sunks
     unsunk_hits = list(set(hit_locations).difference(set(sunk_locations)))

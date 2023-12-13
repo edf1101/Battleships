@@ -37,8 +37,8 @@ def generate_attack(board: list[list[str | None]] = None) -> tuple[int, int]:
         board_size = 10
 
     # Purely random attack method
-    x, y = random.randrange(0, board_size), random.randrange(0, board_size)
-    return x, y
+    x_co, y_co = random.randrange(0, board_size), random.randrange(0, board_size)
+    return x_co, y_co
 
 
 def display_ascii(board: list[list[str | None]]) -> None:
@@ -53,14 +53,14 @@ def display_ascii(board: list[list[str | None]]) -> None:
 
     print('   ' + ''.join([f'  {i + 1}   ' for i in range(board_size)]))  # Prints top numbers row
 
-    for y in range(board_size):
+    for y_co in range(board_size):
         print('  ' + '-' * ((board_size * 6) + 1))  # divider on top of each row
-        row = str(y + 1) + " "
+        row = str(y_co + 1) + " "
 
-        for x in range(board_size):
+        for x_co in range(board_size):
             row += "|"  # Divider at the start of each cell
 
-            if board[y][x] is not None:
+            if board[y_co][x_co] is not None:
                 row += ' ### '  # wider cells so they are similar scaling width / height
             else:
                 row += '     '
