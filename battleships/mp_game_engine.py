@@ -97,8 +97,11 @@ def ai_opponent_game_loop() -> None:
         print("-- USER'S TURN --")
 
         # Input validation for the coordinates, check they're in board range
-        user_coords = (-1, -1)
         user_coords = game_engine.cli_coordinates_input()
+        while (user_coords[0] >= len(players['Human']['board']) or
+               user_coords[1] >= len(players['Human']['board'])):
+            print("That's too big, try again")
+            user_coords = game_engine.cli_coordinates_input()
 
         logging.info('the human guessed %s', user_coords)
         attack_status = game_engine.attack(user_coords,

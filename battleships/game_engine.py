@@ -61,7 +61,7 @@ def attack(coordinates: tuple[int, int],
         logging.error('battleships dict is empty')
         raise ValueError('battleships dict is empty')
     for key, value in battleships.items():
-        if not isinstance(key,str) or not isinstance(value,int):
+        if not isinstance(key, str) or not isinstance(value, int):
             logging.error('Dictionary keys/ values are not of type str then int')
             raise TypeError('Dictionary keys/ values are not of type str then int')
 
@@ -138,6 +138,9 @@ def simple_game_loop() -> None:
     while count_ships_remaining(ships) > 0:
 
         coordinates = cli_coordinates_input()
+        while coordinates[0] >= len(board) or coordinates[1] >= len(board):
+            print("That's too big, try again")
+            coordinates = cli_coordinates_input()
 
         attack_status = attack(coordinates, board, ships)
         if attack_status:

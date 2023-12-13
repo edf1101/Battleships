@@ -22,3 +22,13 @@
 [2023-12-13 00:06:41,044-INFO -  placement_interface() ] Just received placement ship data
 [2023-12-13 00:06:41,046-INFO -                 _log() ] 127.0.0.1 - - [13/Dec/2023 00:06:41] "POST /placement HTTP/1.1" 200 -
 [2023-12-13 00:06:41,520-INFO -                 _log() ] 127.0.0.1 - - [13/Dec/2023 00:06:41] "GET / HTTP/1.1" 200 -
+[2023-12-13 11:43:39,984-INFO -             <module>() ] starting a game in game_engine.py
+[2023-12-13 11:43:43,819-DEBUG -     simple_game_loop() ] user got a miss
+[2023-12-13 11:44:02,706-WARNING - cli_coordinates_input() ]  user entered an invalid input of {'3', '-1'}
+[2023-12-13 11:44:08,560-WARNING - cli_coordinates_input() ]  user entered an invalid input of {'[,1,1]', 'a'}
+[2023-12-13 11:45:01,896-INFO -             <module>() ] starting a game in mp_game_engine.py
+[2023-12-13 11:45:04,787-INFO - ai_opponent_game_loop() ] the human guessed (0, 0)
+[2023-12-13 11:45:04,788-INFO - ai_opponent_game_loop() ] the AI guessed (9, 6)
+[2023-12-13 11:45:04,788-INFO - ai_opponent_game_loop() ] the AI missed
+[2023-12-13 11:45:08,202-WARNING - cli_coordinates_input() ]  user entered an invalid input of {'1', '0'}
+[2023-12-13 11:45:09,862-WARNING - cli_coordinates_input() ]  user entered an invalid input of {'4', 'a'}
