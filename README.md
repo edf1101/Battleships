@@ -61,8 +61,8 @@ There are two ways to install the package:
 - Open it either either with a virtual environment (useful if using PyCharm) and install Flask and numpy manually as 
 shown in prerequisites
 - Or you can install Flask and numpy for the whole PC
-- To open files you can cd to the battleships directory (the source code folder not the project root) and run python -m
-main etc
+- To open files you can cd to the battleships directory (the source code folder not the project root) and run ```python -m
+main``` (note if you are running it from within the source code directory you don't need to have battleships. prefix)
 - Alternatively you could open them manually in a file browser and run them
 
 
