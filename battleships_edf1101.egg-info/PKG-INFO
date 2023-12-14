@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: battleships-edf1101
-Version: 1.6
+Version: 1.8
 Summary: 2023 ECM1400 Coursework - Battleships
 Home-page: https://github.com/edf1101/Battleships
 Author: Student 130003140
@@ -8,7 +8,7 @@ Author-email: ef494@exeter.ac.uk
 Classifier: Programming Language :: Python :: 3
 Classifier: License :: OSI Approved :: MIT License
 Classifier: Operating System :: OS Independent
-Requires-Python: >=3.11.4
+Requires-Python: >=3.11
 Description-Content-Type: text/markdown
 License-File: LICENSE
 
@@ -18,29 +18,30 @@ License-File: LICENSE
 A python package (availible on PyPi) to simulate a Battleships game against an AI in both a command line interface and a Flask GUI.
 
 ## Coursework Self assessment
-All features required by specification are complete (including testing & logging)
-### Additional 
+All features required by specification are complete (including testing & logging). Note: main.py uses classes to avoid global
+variables.
+### Extensions 
 #### Entry Screen
-The user can select the game settings (size, difficulty) on an Entry page.
-Game screen has a return to menu button so games can be replayed
+Users can select game settings (size, difficulty, storm mode) on an Entry page.
+main.html now has a menu button so games can be replayed.
 #### HTML Template Sunken ships
-If a ship has been sunk, the main.py script sends a list of sunk positions for
-either the AI or Player to the HTML code, and it colours those tiles green
-#### Other Frontend modifications
-In the placement HTML file originally allowed users to place fewer than required number of ships. This was fixed.
+Sunken ship positions for either the AI or Player to the HTML code, and it colours those tiles green.
 #### Storm mode
-When turned on the player's board will shift one space each turn (as suggested by specification). Since the HTML grid isn't persistent this had to be
-coded in javascript
+When activated, the player's board shifts one space each turn (as suggested by specification). Since the main.html's grid
+isn't persistent this had to be in javascript
+#### Packaging
+- Packaged with PyPi
+- Detailed documentation from sphinx
 #### AI attacking
-There are 5 AI difficulties [code here](battleships/advanced_ai.py)
+There are 5 difficulties [code here](battleships/advanced_ai.py)
 0. Pure Random Guessing
 1. Random but it won't guess same space twice
-2. Guessing a random position around unsunk hits
-3. Trying to guess in a line around unsunk hits
-4. Guesses in a line if there are unsunk hits, if none it calculates the probability of a ship being in any 
-unguessed tile and guesses there
+2. Guessing a random position around hits where the ship is still unsunk. If no unsunk hits it guesses randomly
+3. Guesses in a line following unsunk hits (more accurate method)
+4. Guesses in a line if there are unsunk hits, if not it calculates all possible ship placements in the board
+given what's already guessed. Then chooses the tile that has the highest probability of a ship
 
-Wrote [a script](battleships/ai_comparison.py) to test AI's against each other
+Wrote [a script](battleships/ai_comparison.py) to score AIs against themselves.
 
 <img src="Images/AI scoring 2.png" alt="drawing" width="500"/>
 <img src="Images/AI scoring image.png" alt="drawing" width="500"/> 
@@ -50,7 +51,7 @@ Wrote [a script](battleships/ai_comparison.py) to test AI's against each other
 - numpy must be installed ```pip install numpy```
 - For testing pytest must be installed ```pip install pytest``` 
 - Pytest plugins must be installed```pip install pytest-depends``` ```pip install pytest-cov```
-- Python version must be ≥ 3.10 due to ```|``` symbol in typehinting
+- Python version must be ≥ 3.10 (pip package requires ≥ 3.11) due to ```|``` symbol in typehinting
 
 _Version used in running = Python 3.11.4_
 
@@ -60,6 +61,9 @@ There are 3 modes to run the game:
 - Run the [mp_game_engine file](battleships/mp_game_engine.py) for a CLI game against an AI
 - Run the [main file](battleships/main.py) for a full GUI game. Once you have run this program navigate to http://127.0.0.1:5000 on a 
 browser of choice.
+
+If you are using the Flask (main.py) application then on my version you do not need to enter via /placement. The script 
+will automatically render the correct webpage and handle logic (entry, placement or main) depending on your game status.
 
 <br>
 There are two ways to install the package:
@@ -71,7 +75,7 @@ There are two ways to install the package:
 ```python -m battleships.mp_game_engine``` to run each mode
 
 ### Manually
-- Get the this repository's folder (clone from github, or download otherwise)
+- Get this repository's folder (clone from github, or download otherwise)
 - Open it either either with a virtual environment (useful if using PyCharm) and install Flask and numpy manually as 
 shown in prerequisites
 - Or you can install Flask and numpy for the whole PC
@@ -115,6 +119,11 @@ MIT License: [found here](LICENSE)
 
 #### Authors
 - Student 730003140
+
+#### Acknowledgments
+This coursework is for the University of Exeter.
+
+Thank you to the Computer Science department.
 
 #### Source
 Code hosted (may be public or private depending on time of reading) on [GitHub](https://github.com/edf1101/Battleships/)

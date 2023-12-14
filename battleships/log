@@ -32,3 +32,8 @@
 [2023-12-13 11:45:04,788-INFO - ai_opponent_game_loop() ] the AI missed
 [2023-12-13 11:45:08,202-WARNING - cli_coordinates_input() ]  user entered an invalid input of {'1', '0'}
 [2023-12-13 11:45:09,862-WARNING - cli_coordinates_input() ]  user entered an invalid input of {'4', 'a'}
+[2023-12-14 16:36:42,201-DEBUG -             <module>() ] This is an info message.
+[2023-12-14 16:36:42,205-INFO -                 _log() ] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+[2023-12-14 16:36:42,205-INFO -                 _log() ] [33mPress CTRL+C to quit[0m
+[2023-12-14 16:36:43,311-INFO -                 _log() ] 127.0.0.1 - - [14/Dec/2023 16:36:43] "GET / HTTP/1.1" 200 -

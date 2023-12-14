@@ -140,11 +140,15 @@ class BattleshipsGame:
         # Deal with the human attack
         valid_coordinate = False
         try:
-            user_coords = int(request.args.get('x')), int(request.args.get('y'))
-            if (0 <= user_coords[0] < len(self.players['AI']['board']) and
-                    0 <= user_coords[1] < len(self.players['AI']['board'])):
+            user_coords = request.args.get('x'), request.args.get('y')
+
+            if (user_coords[0] and user_coords[1] and  # checks it's not a none coordinate
+                    0 <= int(user_coords[0]) < len(self.players['AI']['board']) and
+                    0 <= int(user_coords[1]) < len(self.players['AI']['board'])):
                 valid_coordinate = True
-            app.logger.info(' user guesses %s',user_coords)
+                user_coords = int(user_coords[0]), int(user_coords[1])
+
+            app.logger.info(' user guesses %s', user_coords)
 
         except ValueError:
             user_coords = (0, 0)

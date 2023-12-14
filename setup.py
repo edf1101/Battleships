@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="battleships-edf1101",
-    version="1.6",
+    version="1.8",
     author="Student 130003140",
     author_email="ef494@exeter.ac.uk",
     description="2023 ECM1400 Coursework - Battleships",
@@ -20,6 +20,6 @@ setuptools.setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    python_requires=">=3.11.4",
+    python_requires=">=3.11",
     install_requires=["Flask==3.0.0", "numpy==1.26.2"]
 )
