@@ -23,6 +23,7 @@ isn't persistent this had to be in javascript
 - Detailed documentation from sphinx
 #### AI attacking
 There are 5 difficulties [code here](battleships/advanced_ai.py)
+
 0. Pure Random Guessing
 1. Random but it won't guess same space twice
 2. Guessing a random position around hits where the ship is still unsunk. If no unsunk hits it guesses randomly
